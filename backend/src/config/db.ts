@@ -1,6 +1,9 @@
 import { Visitors } from "../entities/visitors";
 import { Plans } from "../entities/plans";
 import { Billing } from "../entities/billing";
+import { FilesToken } from "../entities/filesToken";
+import { Files } from "../entities/files";
+import { Users } from "../entities/users";
 import { DataSource } from "typeorm";
 
 export const dataSource = new DataSource({
@@ -12,5 +15,5 @@ export const dataSource = new DataSource({
   database: "postgres",
   synchronize: true,
   logging: ["error", "query"],
-  entities: [Plans, Visitors, Billing],
+  entities: [Plans, Visitors, Billing, FilesToken, Files, Users],
 });

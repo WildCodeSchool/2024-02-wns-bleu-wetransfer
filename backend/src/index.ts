@@ -7,7 +7,6 @@ import jwt from "jsonwebtoken";
 import setCookieParser from "set-cookie-parser";
 import { dataSource } from "./config/db";
 import PlansResolver from "./resolvers/PlansResolver";
-// import CategoryResolver from "./resolvers/CategoryResolver";
 
 export type Context = {
   id: number;
