@@ -1,11 +1,27 @@
 import {FC} from "react";
 import { Input, Form, Button, Checkbox } from 'antd';
+import { useMutation } from "@apollo/client";
 import styled from "@emotion/styled";
+import { SIGN_UP_USER } from "../../../graphql/mutations";
 
 const SignUp: FC = () => {
-    const handleSignUp = (value: any) => {
+    const handleSignUp = async (value: any) => {
         console.log(value)
+        const result = await signUpUser({
+            variables: {
+              data: value,
+            },
+          });
     }
+
+    const [signUpUser] = useMutation(SIGN_UP_USER, {
+        onCompleted(data) {
+          console.log("mutation completed data", data);
+        },
+        onError(error) {
+          console.log("error after executing mutation", error);
+        },
+      });
 
 	return (
             <InputWrapper>
