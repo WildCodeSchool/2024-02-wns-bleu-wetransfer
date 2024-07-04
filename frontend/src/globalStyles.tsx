@@ -17,6 +17,25 @@ export const GlobalStyles = () => (
                 margin: 0;
                 box-sizing: border-box;
             }
+
+            html {
+                scroll-behavior: smooth;
+            }
+
+            /* Webkit Browsers (Chrome, Safari, etc.) */
+
+            ::-webkit-scrollbar {
+                width: 8px;
+            }
+
+            ::-webkit-scrollbar-thumb {
+                background: white;
+                border-radius: 5px;
+            }
+
+            ::-webkit-scrollbar-track {
+                background: transparent;
+            }
 		`}
 	/>
 );

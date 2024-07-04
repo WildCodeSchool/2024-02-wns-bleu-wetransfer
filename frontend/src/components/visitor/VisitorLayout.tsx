@@ -16,19 +16,20 @@ const VisitorLayout: FC = () => {
 	)
 }
 
-const WildTransferLogo = styled.h1`
+export const WildTransferLogo = styled.h1`
     color: ${colors.white};
     font-weight: 500;
     font-size: 30px;
 `
 
-const HeaderContainer = styled.div`
+export const HeaderContainer = styled.div`
     height: 70px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 0 40px 0 40px;
     margin-top: 30px;
+    border: 2px solid lime;
 `
 
 const LayoutContainer = styled.div`
