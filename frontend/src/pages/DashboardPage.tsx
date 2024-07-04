@@ -13,5 +13,4 @@ const DashboardWrapper = styled.div`
     height: 100vh;
 `
 
-
 export default Dashboard

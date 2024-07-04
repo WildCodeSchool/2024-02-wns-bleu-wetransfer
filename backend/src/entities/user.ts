@@ -37,7 +37,7 @@ export class User extends BaseEntity {
   password: string;
 
   @Field()
-  @Column()
+  @Column({ nullable: true })
   profile_picture_name: string;
 
   @Field()

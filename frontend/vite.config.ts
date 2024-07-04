@@ -1,32 +1,28 @@
-import { defineConfig } from 'vite';
+import {defineConfig} from 'vite';
 import react from '@vitejs/plugin-react';
-import envCompatible from 'vite-plugin-env-compatible';
+import envCompatible from "vite-plugin-env-compatible";
 
 export default defineConfig({
-  plugins: [
-    react(),
-    envCompatible()
-  ],
-  css: {
-    preprocessorOptions: {
-      less: {
-        javascriptEnabled: true,
-      },
-    },
-  },
+	plugins: [
+		react({
+			babel: {
+				plugins: ['@emotion/babel-plugin']
+			}
+		}),
+		envCompatible()
+	],
   server: {
     host: true,
-    port: 5173,
+    hmr: {
+      path: "/hmr",
+      port: 5174,
+    },
   },
-  optimizeDeps: {
-    include: [
-      'react', 
-      'react-dom'
-    ],
-  },
-  build: {
-    rollupOptions: {
-      input: './index.html', 
-    }
-  }
+	css: {
+		preprocessorOptions: {
+			less: {
+				javascriptEnabled: true,
+			},
+		},
+	},
 });

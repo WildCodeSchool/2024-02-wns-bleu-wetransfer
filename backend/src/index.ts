@@ -7,6 +7,13 @@ import jwt from "jsonwebtoken";
 import setCookieParser from "set-cookie-parser";
 import { dataSource } from "./config/db";
 import PlanResolver from "./resolvers/PlanResolver";
+import ReportResolver from "./resolvers/ReportResolver";
+import UploadResolver from "./resolvers/UploadResolver";
+import VisitorResolver from "./resolvers/VisitorResolver";
+import UserResolver from "./resolvers/UserResolver";
+import FileResolver from "./resolvers/FileResolver";
+import UserAccessFileResolver from "./resolvers/UserAccessFileResolver";
+import BillingResolver from "./resolvers/BillingResolver";
 
 export type Context = {
   id: number;
@@ -14,11 +21,12 @@ export type Context = {
   role: string;
 };
 
+export default UserResolver;
+
 const start = async () => {
   await dataSource.initialize();
   const schema = await buildSchema({
-    // Pas encore de resolver
-    resolvers: [PlanResolver],
+    resolvers: [PlanResolver, UserResolver, ReportResolver, UploadResolver, VisitorResolver, FileResolver, UserAccessFileResolver, BillingResolver],
     authChecker: ({ context }: { context: Context }, roles) => {
       console.log("roles for this query/mutation ", roles);
       // Check user
