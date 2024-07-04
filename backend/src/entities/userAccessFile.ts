@@ -8,6 +8,7 @@ import {
   PrimaryGeneratedColumn,
 } from "typeorm";
 import { File } from "./file";
+import { User } from "./user";
 
 @ObjectType()
 @Entity()
@@ -23,4 +24,8 @@ export class UserAccessFile extends BaseEntity {
   @OneToOne(() => File)
   @JoinColumn()
   file: File;
+
+  @OneToOne(() => User)
+  @JoinColumn()
+  user: User;
 }

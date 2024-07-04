@@ -11,6 +11,7 @@ import {
 } from "typeorm";
 import { Billing } from "./billing";
 import { File } from "./file";
+import { UserAccessFile } from "./userAccessFile";
 
 @ObjectType()
 @Entity()
@@ -53,4 +54,8 @@ export class User extends BaseEntity {
 
   @OneToMany(() => File, (file) => file.user)
   files: File;
+
+  @OneToOne(() => UserAccessFile)
+  @JoinColumn()
+  user_access_file: UserAccessFile;
 }
