@@ -3,13 +3,18 @@ services:
         build: ./backend
         volumes:
             - ./backend/src:/app/src
+        env_file:
+            - ./backend/.env
         healthcheck:
-            test: 'curl --fail --request POST --header ''content-type: application/json'' --url ''http://localhost:5432'' --data ''{"query":"query { __typename }"}'' || exit 1'
-            interval: 1s
-            timeout: 2s
+            test: 'curl --fail --request POST --header ''content-type: application/json'' --url ''http://localhost:4000'' --data ''{"query":"query { __typename }"}'' || exit 1'
+            interval: 3s
+            timeout: 3s
+            retries: 3
         depends_on:
             db:
                 condition: service_healthy
+        ports:
+            - "4000:4000"
     frontend:
         build: ./frontend
         depends_on:
@@ -17,36 +22,42 @@ services:
                 condition: service_healthy
         healthcheck:
             test: "curl --fail --request GET --url 'http://localhost:5173' || exit 1"
-            interval: 1s
-            timeout: 2s
+            interval: 3s
+            timeout: 3s
+            retries: 3
+        ports:
+            - "5173:5173"
     db:
         image: postgres
         healthcheck:
             test: ["CMD-SHELL", "pg_isready -d postgres -U postgres"]
-            interval: 1s
-            timeout: 2s
+            interval: 5s
+            timeout: 5s
+            retries: 3
         environment:
             POSTGRES_PASSWORD: postgres
+        volumes:
+            - ./init.sql:/docker-entrypoint-initdb.d/init.sql
     adminer:
         image: adminer
         ports:
             - 8080:8080
-    apigateway:
-        image: nginx
-        volumes:
-            - ./nginx.conf:/etc/nginx/nginx.conf
-        depends_on:
-            backend:
-                condition: service_healthy
-            frontend:
-                condition: service_healthy
-            img:
-                condition: service_healthy
-        ports:
-            - 7000:80
-    img:
-        build: ./img
-        healthcheck:
-            test: "curl --fail --request GET --url 'http://localhost:5173' || exit 1"
-            interval: 1s
-            timeout: 2s
+    # apigateway:
+    #     image: nginx
+    #     volumes:
+    #         - ./nginx.conf:/etc/nginx/nginx.conf
+    #     depends_on:
+    #         backend:
+    #             condition: service_healthy
+    #         frontend:
+    #             condition: service_healthy
+    #         img:
+    #             condition: service_healthy
+    #     ports:
+    #         - 7000:80
+    # img:
+    #     build: ./img
+    #     healthcheck:
+    #         test: "curl --fail --request GET --url 'http://localhost:5173' || exit 1"
+    #         interval: 1s
+    #         timeout: 2s
