@@ -4,7 +4,11 @@ import envCompatible from "vite-plugin-env-compatible";
 
 export default defineConfig({
 	plugins: [
-		react(),
+		react({
+			babel: {
+				plugins: ['@emotion/babel-plugin']
+			}
+		}),
 		envCompatible()
 	],
 	css: {

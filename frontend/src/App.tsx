@@ -6,6 +6,7 @@ import Dashboard from "./pages/DashboardPage.tsx";
 import SettingsPage from "./pages/SettingsPage.tsx";
 import UserLayout from "./components/user/UserLayout.tsx";
 import VisitorLayout from "./components/visitor/VisitorLayout.tsx";
+import {Container} from "./globalStyles.tsx";
 
 
 const App = () => {
@@ -28,7 +29,9 @@ const App = () => {
 	])
 
 	return (
-		<RouterProvider router={router}/>
+		<Container>
+			<RouterProvider router={router}/>
+		</Container>
 	);
 }
 

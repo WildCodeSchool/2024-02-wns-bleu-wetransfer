@@ -1,22 +1,39 @@
 import {FC} from "react";
 import {Outlet} from "react-router-dom";
 import styled from "@emotion/styled";
+import {colors} from "../../_colors.ts";
+import VisitorHeader from "./layout/VisitorHeader.tsx";
 
 const VisitorLayout: FC = () => {
 	return (
-		<>
-			<Navbar/>
+		<LayoutContainer>
+			<HeaderContainer>
+				<WildTransferLogo>WildTransfer</WildTransferLogo>
+				<VisitorHeader/>
+			</HeaderContainer>
 			<Outlet/>
-		</>
+		</LayoutContainer>
 	)
 }
 
-const Navbar = styled.div`
-    width: 100%;
+const WildTransferLogo = styled.h1`
+    color: ${colors.white};
+    font-weight: 500;
+    font-size: 30px;
+`
+
+const HeaderContainer = styled.div`
     height: 70px;
-    background: purple;
-    position: relative;
-    top: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 40px 0 40px;
+    margin-top: 30px;
+`
+
+const LayoutContainer = styled.div`
+    height: auto;
+    width: 100%;
 `
 
 

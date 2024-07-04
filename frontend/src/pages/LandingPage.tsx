@@ -11,7 +11,6 @@ const LandingPage: FC = () => {
 }
 
 const LandingPageWrapper = styled.div`
-    background: #c9c9c9;
     width: 100%;
     height: 100vh;
 `
