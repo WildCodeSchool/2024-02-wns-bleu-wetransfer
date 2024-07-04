@@ -1,11 +1,13 @@
 import {FC} from "react";
 import styled from "@emotion/styled";
+import SignUp from "../components/visitor/signUp/SignUp";
 
 
 const LandingPage: FC = () => {
 
 	return (
 		<LandingPageWrapper>
+			<SignUp/>
 		</LandingPageWrapper>
 	)
 }

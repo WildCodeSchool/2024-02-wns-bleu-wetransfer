@@ -14,7 +14,7 @@ class UserResolver {
     @Arg("lastname") lastname: string,
     @Arg("email") email: string,
     @Arg("password") password: string,
-    @Arg("confirmPassword", { nullable: true }) confirmPassword: string
+    @Arg("confirmPassword") confirmPassword: string
   ) {
     if (password !== confirmPassword) {
       throw new Error("Password does not match");

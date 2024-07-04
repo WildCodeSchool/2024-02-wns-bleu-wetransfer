@@ -19,5 +19,4 @@ const Navbar = styled.div`
     top: 0;
 `
 
-
 export default VisitorLayout
