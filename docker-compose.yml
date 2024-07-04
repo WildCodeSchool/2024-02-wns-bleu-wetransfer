@@ -7,9 +7,9 @@ services:
             - ./backend/.env
         healthcheck:
             test: 'curl --fail --request POST --header ''content-type: application/json'' --url ''http://localhost:4000'' --data ''{"query":"query { __typename }"}'' || exit 1'
-            interval: 3s
-            timeout: 3s
-            retries: 3
+            interval: 1s
+            timeout: 2s
+            retries: 100
         depends_on:
             db:
                 condition: service_healthy
@@ -22,18 +22,19 @@ services:
                 condition: service_healthy
         healthcheck:
             test: "curl --fail --request GET --url 'http://localhost:5173' || exit 1"
-            interval: 3s
-            timeout: 3s
-            retries: 3
+            interval: 1s
+            timeout: 2s
+            retries: 100
         ports:
             - "5173:5173"
+            - "5174:5174"
     db:
         image: postgres
         healthcheck:
             test: ["CMD-SHELL", "pg_isready -d postgres -U postgres"]
-            interval: 5s
-            timeout: 5s
-            retries: 3
+            interval: 1s
+            timeout: 2s
+            retries: 100
         environment:
             POSTGRES_PASSWORD: postgres
         volumes:
