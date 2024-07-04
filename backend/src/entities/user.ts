@@ -4,15 +4,28 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
+  OneToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
 } from "typeorm";
+import { Billing } from "./billing";
+import { File } from "./file";
 
 @ObjectType()
 @Entity()
-export class Visitors extends BaseEntity {
+export class User extends BaseEntity {
   @Field()
   @PrimaryGeneratedColumn()
   id: number;
+
+  @Field()
+  @Column()
+  firstname: string;
+
+  @Field()
+  @Column()
+  lastname: string;
 
   @Field()
   @Column()
@@ -20,11 +33,11 @@ export class Visitors extends BaseEntity {
 
   @Field()
   @Column()
-  email_is_verified: boolean;
+  password: string;
 
   @Field()
   @Column()
-  code: number;
+  profile_picture_name: string;
 
   @Field()
   @CreateDateColumn()
@@ -33,4 +46,11 @@ export class Visitors extends BaseEntity {
   @Field()
   @CreateDateColumn()
   updated_at: Date;
+
+  @OneToOne(() => Billing)
+  @JoinColumn()
+  billing: Billing;
+
+  @OneToMany(() => File, (file) => file.user)
+  files: File;
 }

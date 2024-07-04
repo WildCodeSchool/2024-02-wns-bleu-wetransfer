@@ -5,9 +5,11 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToOne,
   PrimaryGeneratedColumn,
 } from "typeorm";
-import { Plans } from "./plans";
+import { Plan } from "./plan";
+import { User } from "./user";
 
 @ObjectType()
 @Entity()
@@ -40,7 +42,11 @@ export class Billing extends BaseEntity {
   @CreateDateColumn()
   updated_at: Date;
 
-  @ManyToOne(() => Plans)
-  @JoinColumn({ name: "plans_id", referencedColumnName: "id" })
-  plan: Plans;
+  @ManyToOne(() => Plan)
+  @JoinColumn({ name: "plan_id", referencedColumnName: "id" })
+  plan: Plan;
+
+  @OneToOne(() => Billing)
+  @JoinColumn()
+  user: User;
 }

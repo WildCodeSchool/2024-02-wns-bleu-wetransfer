@@ -4,12 +4,18 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from "typeorm";
+import { Visitor } from "./visitor";
+import { User } from "./user";
+import { Upload } from "./upload";
+import { Report } from "./report";
 
 @ObjectType()
 @Entity()
-export class Files extends BaseEntity {
+export class File extends BaseEntity {
   @Field()
   @PrimaryGeneratedColumn()
   id: number;
@@ -46,5 +52,15 @@ export class Files extends BaseEntity {
   @CreateDateColumn()
   updated_at: Date;
 
-  // Clés étrangères à ajouter
+  @ManyToOne(() => Visitor, (visitor) => visitor.files)
+  visitor: Visitor;
+
+  @ManyToOne(() => User, (user) => user.files)
+  user: User;
+
+  @ManyToOne(() => Upload, (upload) => upload.files)
+  upload: Upload;
+
+  @OneToMany(() => Report, (report) => report.file)
+  reports: Report[];
 }

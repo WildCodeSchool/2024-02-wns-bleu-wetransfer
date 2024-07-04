@@ -6,7 +6,7 @@ import { startStandaloneServer } from "@apollo/server/standalone";
 import jwt from "jsonwebtoken";
 import setCookieParser from "set-cookie-parser";
 import { dataSource } from "./config/db";
-import PlansResolver from "./resolvers/PlansResolver";
+import PlanResolver from "./resolvers/PlanResolver";
 
 export type Context = {
   id: number;
@@ -18,7 +18,7 @@ const start = async () => {
   await dataSource.initialize();
   const schema = await buildSchema({
     // Pas encore de resolver
-    resolvers: [PlansResolver],
+    resolvers: [PlanResolver],
     authChecker: ({ context }: { context: Context }, roles) => {
       console.log("roles for this query/mutation ", roles);
       // Check user

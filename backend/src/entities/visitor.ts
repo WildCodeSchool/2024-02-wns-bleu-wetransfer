@@ -4,23 +4,29 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from "typeorm";
+import { File } from "./file";
 
 @ObjectType()
 @Entity()
-export class Reports extends BaseEntity {
+export class Visitor extends BaseEntity {
   @Field()
   @PrimaryGeneratedColumn()
   id: number;
 
   @Field()
   @Column()
-  comment: string;
+  email: string;
 
   @Field()
   @Column()
-  status: string;
+  email_is_verified: boolean;
+
+  @Field()
+  @Column()
+  code: number;
 
   @Field()
   @CreateDateColumn()
@@ -29,4 +35,7 @@ export class Reports extends BaseEntity {
   @Field()
   @CreateDateColumn()
   updated_at: Date;
+
+  @OneToMany(() => File, (file) => file.visitor)
+  files: File[];
 }

@@ -4,35 +4,25 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from "typeorm";
+import { File } from "./file";
 
 @ObjectType()
 @Entity()
-export class Users extends BaseEntity {
+export class Upload extends BaseEntity {
   @Field()
   @PrimaryGeneratedColumn()
   id: number;
 
   @Field()
   @Column()
-  firstname: string;
+  token_value: string;
 
   @Field()
   @Column()
-  lastname: string;
-
-  @Field()
-  @Column()
-  email: string;
-
-  @Field()
-  @Column()
-  password: string;
-
-  @Field()
-  @Column()
-  profile_picture_name: string;
+  is_activated: boolean;
 
   @Field()
   @CreateDateColumn()
@@ -42,5 +32,6 @@ export class Users extends BaseEntity {
   @CreateDateColumn()
   updated_at: Date;
 
-  // Clé étrangère à ajouter (subscription_id)
+  @OneToMany(() => File, (file) => file.upload)
+  files: File[];
 }

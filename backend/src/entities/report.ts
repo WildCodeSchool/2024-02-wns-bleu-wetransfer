@@ -4,39 +4,34 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  OneToMany,
+  ManyToOne,
   PrimaryGeneratedColumn,
 } from "typeorm";
-
-import { Billing } from "./billing";
+import { File } from "./file";
 
 @ObjectType()
 @Entity()
-export class Plans extends BaseEntity {
+export class Report extends BaseEntity {
   @Field()
   @PrimaryGeneratedColumn()
   id: number;
 
   @Field()
   @Column()
-  name: string;
+  comment: string;
 
   @Field()
   @Column()
-  price: number;
+  status: string;
 
   @Field()
-  @Column()
-  billing: string;
-
-  @Field()
-  @CreateDateColumn({ type: "timestamp" })
+  @CreateDateColumn()
   created_at: Date;
 
   @Field()
-  @CreateDateColumn({ type: "timestamp" })
+  @CreateDateColumn()
   updated_at: Date;
 
-  @OneToMany(() => Billing, (billing) => billing.plan)
-  billings: Billing;
+  @ManyToOne(() => File, (file) => file.reports)
+  file: File;
 }
