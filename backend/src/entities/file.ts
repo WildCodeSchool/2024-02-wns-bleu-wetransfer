@@ -4,14 +4,17 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
   ManyToOne,
   OneToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
 } from "typeorm";
 import { Visitor } from "./visitor";
 import { User } from "./user";
 import { Upload } from "./upload";
 import { Report } from "./report";
+import { UserAccessFile } from "./userAccessFile";
 
 @ObjectType()
 @Entity()
@@ -63,4 +66,8 @@ export class File extends BaseEntity {
 
   @OneToMany(() => Report, (report) => report.file)
   reports: Report[];
+
+  @OneToOne(() => UserAccessFile)
+  @JoinColumn()
+  user_access_file: UserAccessFile;
 }

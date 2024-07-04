@@ -3,10 +3,11 @@ import {
   BaseEntity,
   CreateDateColumn,
   Entity,
-  JoinTable,
-  ManyToMany,
+  JoinColumn,
+  OneToOne,
   PrimaryGeneratedColumn,
 } from "typeorm";
+import { File } from "./file";
 
 @ObjectType()
 @Entity()
@@ -19,17 +20,7 @@ export class UserAccessFile extends BaseEntity {
   @CreateDateColumn()
   created_at: Date;
 
-  @ManyToMany(() => UserAccessFile)
-  @JoinTable({
-    name: "user_file",
-    joinColumn: {
-      name: "file",
-      referencedColumnName: "id",
-    },
-    inverseJoinColumn: {
-      name: "user",
-      referencedColumnName: "id",
-    },
-  })
-  user_access_file: UserAccessFile[];
+  @OneToOne(() => File)
+  @JoinColumn()
+  file: File;
 }
