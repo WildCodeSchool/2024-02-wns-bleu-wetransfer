@@ -2,12 +2,12 @@ import { FC } from "react";
 import styled from "@emotion/styled";
 import Signin from "../../assets/Signin.png";
 
-const SigninLayout: FC = () => {
+const SignupLayout: FC = () => {
 	return (
-		<SignInLayout>
+		<SignUpLayout>
 			<FormSign>test</FormSign>
 			<StyledImage src={Signin} alt="" />
-		</SignInLayout>
+		</SignUpLayout>
 	);
 };
 
@@ -26,14 +26,15 @@ const StyledImage = styled.img`
 	object-fit: cover;
 `;
 
-const SignInLayout = styled.div`
+const SignUpLayout = styled.div`
 	width: 750px;
 	height: auto;
 	border-radius: 20px;
 	padding-top: 6px;
 	margin: 0 auto;
 	display: flex;
+	flex-direction: row-reverse;
 	background: white;
 `;
 
-export default SigninLayout;
+export default SignupLayout;

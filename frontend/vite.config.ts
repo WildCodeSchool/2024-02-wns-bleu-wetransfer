@@ -17,6 +17,7 @@ export default defineConfig({
 			path: "/hmr",
 			port: 5174,
 		},
+		watch: { usePolling: true },
 	},
 	css: {
 		preprocessorOptions: {
