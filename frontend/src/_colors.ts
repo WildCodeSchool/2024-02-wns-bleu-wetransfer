@@ -11,5 +11,5 @@ export const mainTheme: ThemeConfig = {
 	token: {
 		colorPrimary: colors.mainOrange,
 		borderRadius: 10,
-	}
+	},
 }

@@ -6,11 +6,11 @@ const AccessPage: FC = () => {
 	const location = useLocation()
 
 	return (
-		<Acceespagewrapper>{location.pathname}</Acceespagewrapper>
+		<AccessPageWrapper>{location.pathname}</AccessPageWrapper>
 	)
 }
 
-const Acceespagewrapper = styled.div`
+const AccessPageWrapper = styled.div`
     background: lime;
     width: 100%;
     height: 100vh;

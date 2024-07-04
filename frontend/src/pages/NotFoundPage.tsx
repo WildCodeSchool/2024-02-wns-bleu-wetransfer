@@ -3,7 +3,9 @@ import styled from "@emotion/styled";
 
 const NotFoundPage: FC = () => {
 	return (
-		<NotFoundTitle>Page not found</NotFoundTitle>
+		<NotFoundTitle>
+			Not found
+		</NotFoundTitle>
 	)
 }
 
