@@ -17,6 +17,8 @@ services:
             - "4000:4000"
     frontend:
         build: ./frontend
+        volumes:
+            - ./frontend/src:/app/src
         depends_on:
             backend:
                 condition: service_healthy
