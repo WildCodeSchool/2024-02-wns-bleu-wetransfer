@@ -1,19 +1,20 @@
-import {FC} from "react";
+import { FC } from "react";
 import styled from "@emotion/styled";
-import {useLocation} from "react-router-dom";
+import SigninLayout from "../components/Signin/SigninLayout";
 
 const AccessPage: FC = () => {
-	const location = useLocation()
-
 	return (
-		<AccessPageWrapper>{location.pathname}</AccessPageWrapper>
-	)
-}
+		<AccessPageWrapper>
+			<SigninLayout />
+		</AccessPageWrapper>
+	);
+};
 
 const AccessPageWrapper = styled.div`
-    background: lime;
-    width: 100%;
-    height: 100vh;
-`
+	background: #0a0025;
+	width: 100%;
+	height: 100vh;
+	align-content: center;
+`;
 
-export default AccessPage
+export default AccessPage;

@@ -17,7 +17,7 @@ const App = () => {
 			path: '/access', element: <VisitorLayout/>, children: [
 				{path: 'login', element: <AccessPage/>},
 				{path: 'register', element: <AccessPage/>}
-			]
+			]	
 		},
 		{
 			path: '/dashboard', element: <UserLayout/>, children: [
