@@ -9,7 +9,6 @@ import VisitorLayout from "./components/visitor/VisitorLayout.tsx";
 import {Container} from "./globalStyles.tsx";
 import PricingPage from "./pages/PricingPage.tsx";
 
-
 const App = () => {
 
 	const router = createBrowserRouter([
@@ -18,7 +17,7 @@ const App = () => {
 		{
 			path: '/access', element: <VisitorLayout/>, children: [
 				{path: 'login', element: <AccessPage/>},
-				{path: 'register', element: <AccessPage/>}
+				{path: 'register', element: <AccessPage/>},
 			]	
 		},
 		{
