@@ -6,7 +6,7 @@ services:
         env_file:
             - ./backend/.env
         healthcheck:
-            test: 'curl --fail --request POST --header ''content-type: application/json'' --url ''http://localhost:4000'' --data ''{"query":"query { __typename }"}'' || exit 1'
+            test: 'curl --fail --request POST --header ''content-type: application/json'' --url ''http://localhost:4000/graphql'' --data ''{"query":"query { __typename }"}'' || exit 1'
             interval: 1s
             timeout: 2s
             retries: 100
@@ -41,6 +41,7 @@ services:
             POSTGRES_PASSWORD: postgres
         volumes:
             - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+            - ./postgres-data/data:/var/lib/postgresql/data
     adminer:
         image: adminer
         ports:

@@ -37,3 +37,4 @@ const LayoutContainer = styled.div`
 `;
 
 export default VisitorLayout;
+
