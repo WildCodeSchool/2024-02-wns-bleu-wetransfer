@@ -2,7 +2,11 @@ import "reflect-metadata";
 import "dotenv/config";
 import { buildSchema } from "type-graphql";
 import { ApolloServer } from "@apollo/server";
-import { startStandaloneServer } from "@apollo/server/standalone";
+import { expressMiddleware } from '@apollo/server/express4';
+import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer';
+import express from "express";
+import http from "http";
+import cors from "cors";
 import jwt from "jsonwebtoken";
 import setCookieParser from "set-cookie-parser";
 import { dataSource } from "./config/db";
@@ -25,8 +29,18 @@ export default UserResolver;
 
 const start = async () => {
   await dataSource.initialize();
+  
   const schema = await buildSchema({
-    resolvers: [PlanResolver, UserResolver, ReportResolver, UploadResolver, VisitorResolver, FileResolver, UserAccessFileResolver, BillingResolver],
+    resolvers: [
+      PlanResolver,
+      UserResolver,
+      ReportResolver,
+      UploadResolver,
+      VisitorResolver,
+      FileResolver,
+      UserAccessFileResolver,
+      BillingResolver,
+    ],
     authChecker: ({ context }: { context: Context }, roles) => {
       console.log("roles for this query/mutation ", roles);
       // Check user
@@ -41,7 +55,7 @@ const start = async () => {
         return true;
       }
 
-      // Check '@Authorized(...)' roles inclues the role of user
+      // Check '@Authorized(...)' roles includes the role of user
       if (roles.includes(context.role)) {
         return true;
       } else {
@@ -50,32 +64,53 @@ const start = async () => {
     },
   });
 
-  const server = new ApolloServer({ schema });
+  const app = express();
+  const httpServer = http.createServer(app);
 
-  const { url } = await startStandaloneServer(server, {
-    listen: { port: 4000 },
-    context: async ({ req, res }) => {
-      if (process.env.JWT_SECRET_KEY === undefined) {
-        throw new Error("NO JWT SECRET KEY CONFIGURED");
-      }
-      const cookies = setCookieParser.parse(req.headers.cookie ?? "", {
-        map: true,
-      });
+  const corsOptions = {
+    origin: 'http://localhost:5173',
+    credentials: true,
+  };
 
-      if (cookies.token && cookies.token.value) {
-        const payload = jwt.verify(
-          cookies.token.value,
-          process.env.JWT_SECRET_KEY
-        ) as jwt.JwtPayload;
-        if (payload) {
-          return { ...payload, res: res };
-        }
-      }
-      return { res: res };
-    },
+  app.use(cors(corsOptions));
+
+  const server = new ApolloServer({
+    schema,
+    plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
   });
+  
+  await server.start();
 
-  console.log(`🚀  Server ready at: ${url}`);
+  app.use(
+    '/graphql',
+    express.json(),
+    expressMiddleware(server, {
+      context: async ({ req, res }) => {
+        if (process.env.JWT_SECRET_KEY === undefined) {
+          throw new Error("NO JWT SECRET KEY CONFIGURED");
+        }
+        const cookies = setCookieParser.parse(req.headers.cookie ?? "", {
+          map: true,
+        });
+
+        if (cookies.token && cookies.token.value) {
+          const payload = jwt.verify(
+            cookies.token.value,
+            process.env.JWT_SECRET_KEY
+          ) as jwt.JwtPayload;
+          if (payload) {
+            return { ...payload, res: res };
+          }
+        }
+        return { res: res };
+      },
+    }),
+  );
+
+  await new Promise<void>((resolve) =>
+    httpServer.listen({ port: 4000 }, resolve)
+  );
+  console.log(`🚀 Server ready at http://localhost:4000/graphql`);
 };
 
 start();

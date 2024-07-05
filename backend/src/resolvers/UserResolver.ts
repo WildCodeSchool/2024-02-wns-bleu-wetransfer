@@ -16,7 +16,11 @@ class UserResolver {
     @Arg("password") password: string,
     @Arg("confirmPassword") confirmPassword: string
   ) {
+    console.log("mutating.......")
     if (password !== confirmPassword) {
+      console.log("received:")
+      console.log("password:", password)
+      console.log("confirmPassword", confirmPassword)
       throw new Error("Password does not match");
     }
     return await User.create({

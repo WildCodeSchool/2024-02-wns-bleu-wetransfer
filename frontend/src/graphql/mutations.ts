@@ -7,7 +7,6 @@ export const SIGN_UP_USER = gql`
         firstname
         email
         password
-        confirmPassword
         }
     }
 `;
