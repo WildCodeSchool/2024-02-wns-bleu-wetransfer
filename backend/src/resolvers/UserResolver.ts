@@ -21,6 +21,12 @@ class UserResolver {
       throw new Error("Password does not match");
     }
 
+    const findUser = await User.findOne({ where: { email } });
+
+    if (findUser) {
+      throw new Error("You cannot sign up with this email");
+    }
+
     password = await argon2.hash(password);
 
     const createdUser = await User.create({
