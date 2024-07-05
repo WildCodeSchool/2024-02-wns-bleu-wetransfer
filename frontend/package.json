@@ -1,39 +1,40 @@
 {
-  "name": "frontend",
-  "private": true,
-  "version": "0.0.0",
-  "type": "module",
-  "scripts": {
-    "dev": "vite --host",
-    "build": "tsc -b && vite build",
-    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview"
-  },
-  "dependencies": {
-    "@ant-design/icons": "^5.3.7",
-    "@apollo/client": "^3.10.8",
-    "@emotion/react": "^11.11.4",
-    "@emotion/styled": "^11.11.5",
-    "antd": "^5.19.0",
-    "dotenv": "^16.4.5",
-    "graphql": "^16.9.0",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "react-router-dom": "^6.24.0",
-    "vite-plugin-env-compatible": "^2.0.1"
-  },
-  "devDependencies": {
-    "@emotion/babel-plugin": "^11.11.0",
-    "@types/node": "^20.14.9",
-    "@types/react": "^18.3.3",
-    "@types/react-dom": "^18.3.0",
-    "@typescript-eslint/eslint-plugin": "^7.13.1",
-    "@typescript-eslint/parser": "^7.13.1",
-    "@vitejs/plugin-react": "^4.3.1",
-    "eslint": "^8.57.0",
-    "eslint-plugin-react-hooks": "^4.6.2",
-    "eslint-plugin-react-refresh": "^0.4.7",
-    "typescript": "^5.5.3",
-    "vite": "^5.3.3"
-  }
+	"name": "frontend",
+	"private": true,
+	"version": "0.0.0",
+	"type": "module",
+	"scripts": {
+		"dev": "vite --host",
+		"build": "tsc -b && vite build",
+		"lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+		"preview": "vite preview"
+	},
+	"dependencies": {
+		"@ant-design/icons": "^5.3.7",
+		"@apollo/client": "^3.10.8",
+		"@emotion/react": "^11.11.4",
+		"@emotion/styled": "^11.11.5",
+		"@types/styled-components": "^5.1.34",
+		"antd": "^5.19.0",
+		"dotenv": "^16.4.5",
+		"graphql": "^16.9.0",
+		"react": "^18.3.1",
+		"react-dom": "^18.3.1",
+		"react-router-dom": "^6.24.0",
+		"styled-components": "^6.1.11",
+		"vite-plugin-env-compatible": "^2.0.1"
+	},
+	"devDependencies": {
+		"@types/node": "^20.14.9",
+		"@types/react": "^18.3.3",
+		"@types/react-dom": "^18.3.0",
+		"@typescript-eslint/eslint-plugin": "^7.13.1",
+		"@typescript-eslint/parser": "^7.13.1",
+		"@vitejs/plugin-react": "^4.3.1",
+		"eslint": "^8.57.0",
+		"eslint-plugin-react-hooks": "^4.6.2",
+		"eslint-plugin-react-refresh": "^0.4.7",
+		"typescript": "^5.5.3",
+		"vite": "^5.3.3"
+	}
 }
