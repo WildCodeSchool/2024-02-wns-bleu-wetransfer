@@ -18,7 +18,7 @@ class UserResolver {
     @Arg("confirmPassword") confirmPassword: string
   ) {
     if (password !== confirmPassword) {
-      throw new Error("Password does not match");
+      throw new Error("Passwords does not match");
     }
 
     const findUser = await User.findOne({ where: { email } });

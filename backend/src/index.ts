@@ -20,9 +20,9 @@ import UserAccessFileResolver from "./resolvers/UserAccessFileResolver";
 import BillingResolver from "./resolvers/BillingResolver";
 
 export type Context = {
-  id: number;
-  email: string;
-  role: string;
+	id: number;
+	email: string;
+	role: string;
 };
 
 export default UserResolver;
@@ -49,11 +49,11 @@ const start = async () => {
         return false;
       }
 
-      // Check '@Authorized()'
-      if (roles.length === 0) {
-        // Only authentication required
-        return true;
-      }
+			// Check '@Authorized()'
+			if (roles.length === 0) {
+				// Only authentication required
+				return true;
+			}
 
       // Check '@Authorized(...)' roles includes the role of user
       if (roles.includes(context.role)) {

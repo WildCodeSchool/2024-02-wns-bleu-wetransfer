@@ -6,18 +6,19 @@ export default defineConfig({
 	plugins: [
 		react({
 			babel: {
-				plugins: ['@emotion/babel-plugin']
-			}
+				plugins: ["@emotion/babel-plugin"],
+			},
 		}),
-		envCompatible()
+		envCompatible(),
 	],
-  server: {
-    host: true,
-    hmr: {
-      path: "/hmr",
-      port: 5174,
-    },
-  },
+	server: {
+		host: true,
+		hmr: {
+			path: "/hmr",
+			port: 5174,
+		},
+		watch: { usePolling: true },
+	},
 	css: {
 		preprocessorOptions: {
 			less: {

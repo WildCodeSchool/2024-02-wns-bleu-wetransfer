@@ -1,16 +1,28 @@
 import { FC } from "react";
-import { Input, Form, Button, Checkbox, message } from 'antd';
+import { Input, Form, Button, Checkbox, notification } from 'antd';
 import { useMutation } from "@apollo/client";
 import styled from "@emotion/styled";
 import { SIGN_UP_USER } from "../../../graphql/mutations";
+import { Link } from "react-router-dom";
+
+type NotificationType = 'success' | 'info' | 'warning' | 'error';
 
 const SignUp: FC = () => {
+  const [api, contextHolder] = notification.useNotification();
+
+  const openNotificationWithIcon = (type: NotificationType, message: string, title: string) => {
+    api[type]({
+      message: title,
+      description: message,
+    });
+  };
+
   const [signUpUser, { loading }] = useMutation(SIGN_UP_USER, {
     onCompleted(data) {
-      message.success("Sign up successful!");
+      openNotificationWithIcon('success', 'You have successfully signed up!', 'Success');
     },
     onError(error) {
-      message.error(`${error.message}`);
+      openNotificationWithIcon('error', error.message, 'Error');
     },
   });
 
@@ -26,12 +38,13 @@ const SignUp: FC = () => {
         },
       });
     } catch (e) {
-      message.error(`Sign up failed`);
+      openNotificationWithIcon('error', e.message, 'Error');
     }
   };
 
   return (
     <InputWrapper>
+      {contextHolder}
       <Title>Oh, hello there!</Title>
       <StyledForm name="control-hooks" onFinish={handleSignUp} {...formItemLayout}>
         <Form.Item name="firstname" label="First name" rules={[{ required: true, message: "Please enter your first name" }]} labelCol={{ span: 24 }}>
@@ -61,7 +74,7 @@ const SignUp: FC = () => {
           </StyledButton>
         </Form.Item>
       </StyledForm>
-      <SignInText>Already a member? <SignInLink>Sign in now</SignInLink></SignInText>
+      <SignInText>Already a member? <Link to="/access/login"><SignInLink>Sign in now</SignInLink></Link></SignInText>
     </InputWrapper>
   );
 };
