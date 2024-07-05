@@ -1,11 +1,12 @@
 import { FC } from "react";
 import styled from "@emotion/styled";
 import Signin from "../../assets/Signin.png";
+import SignUp from "../visitor/signUp/SignUp";
 
 const SignupLayout: FC = () => {
 	return (
 		<SignUpLayout>
-			<FormSign>test</FormSign>
+			<FormSign><SignUp/></FormSign>
 			<StyledImage src={Signin} alt="" />
 		</SignUpLayout>
 	);
@@ -21,13 +22,13 @@ const FormSign = styled.div`
 
 const StyledImage = styled.img`
 	flex: 1;
-	width: 50%;
+	width: 100%;
+	margin-left: 0.2rem;
 	height: auto;
-	object-fit: cover;
 `;
 
 const SignUpLayout = styled.div`
-	width: 750px;
+	width: 850px;
 	height: auto;
 	border-radius: 20px;
 	padding-top: 6px;
