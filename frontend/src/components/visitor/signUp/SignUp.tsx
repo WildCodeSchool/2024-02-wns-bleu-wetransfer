@@ -25,7 +25,7 @@ const SignUp: FC = () => {
           lastname: values.lastname,
           email: values.email,
           password: values.password,
-          confirmPassword: values.confirmPassword,
+          confirmPassword: values.confirmPassword
         },
       });
     } catch (e) {

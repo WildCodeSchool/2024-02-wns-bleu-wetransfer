@@ -8,7 +8,7 @@ class UserResolver {
     return await User.find();
   }
 
-  @Mutation(() => User)
+  @Mutation(() => String)
   async signUpUser(
     @Arg("firstname") firstname: string,
     @Arg("lastname") lastname: string,
@@ -23,12 +23,14 @@ class UserResolver {
       console.log("confirmPassword", confirmPassword)
       throw new Error("Password does not match");
     }
-    return await User.create({
+    await User.create({
       firstname,
       lastname,
       email,
       password,
     }).save();
+
+    return "ok"
   }
 }
 
