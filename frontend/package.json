@@ -16,6 +16,7 @@
 		"@emotion/styled": "^11.11.5",
 		"@types/styled-components": "^5.1.34",
 		"antd": "^5.19.0",
+		"axios": "^1.7.2",
 		"dotenv": "^16.4.5",
 		"graphql": "^16.9.0",
 		"react": "^18.3.1",
