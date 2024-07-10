@@ -57,19 +57,18 @@ const SignUp: FC = () => {
           <StyledInput allowClear placeholder="Email address" />
         </Form.Item>
         <Form.Item labelCol={{ span: 24 }} name="password" label="Password" rules={[{ required: true, message: "Please enter your password" }]}>
-          <StyledPasswordInput allowClear placeholder="Password" />
+          <StyledPasswordInput data-testid="password" allowClear placeholder="Password" />
         </Form.Item>
         <Form.Item labelCol={{ span: 24 }} name="confirmPassword" label="Confirm password" rules={[{ required: true, message: "Please confirm your password" }]}>
-          <StyledPasswordInput allowClear placeholder="Confirm password" />
+          <StyledPasswordInput data-testid="confirmPassword" allowClear placeholder="Confirm password" />
         </Form.Item>
         <Form.Item name="conditions" valuePropName="checked" rules={[{ required: true, message: "You must accept the conditions" }]}>
           <StyledCheckbox>
-            <Checkbox />
-            <ConditionsText>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque ornare, velit ullamcorper rhoncus scelerisque</ConditionsText>
+            <Checkbox data-testid="conditions">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque ornare, velit ullamcorper rhoncus scelerisque</Checkbox>
           </StyledCheckbox>
         </Form.Item>
         <Form.Item>
-          <StyledButton type="primary" htmlType="submit" loading={loading}>
+          <StyledButton data-testid="registerButton" type="primary" htmlType="submit" loading={loading}>
             Sign up
           </StyledButton>
         </Form.Item>
