@@ -1,0 +1,45 @@
+services:
+  backend:
+    build: ./backend
+    env_file:
+      - ./backend/.env
+    healthcheck:
+      test: 'curl --fail --request POST --header ''content-type: application/json'' --url ''http://localhost:4000/graphql'' --data ''{"query":"query { __typename }"}'' || exit 1'
+      interval: 1s
+      timeout: 2s
+      retries: 100
+    depends_on:
+      db:
+        condition: service_healthy
+  frontend:
+    build: ./frontend
+    depends_on:
+      backend:
+        condition: service_healthy
+    healthcheck:
+      test: "curl --fail --request GET --url 'http://localhost:5173' || exit 1"
+      interval: 1s
+      timeout: 2s
+      retries: 100
+    ports:
+      - "5173:5173"
+  db:
+    image: postgres
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -d postgres -U postgres"]
+      interval: 1s
+      timeout: 2s
+      retries: 100
+    environment:
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./postgres-data/data:/var/lib/postgresql/data
+  e2e:
+    build: ./e2e
+    volumes:
+      - ./e2e/playwright-report:/app/playwright-report
+      - ./e2e/test-results:/app/test-results
+    depends_on:
+      frontend:
+        condition: service_healthy
