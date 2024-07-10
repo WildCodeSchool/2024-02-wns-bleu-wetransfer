@@ -3,6 +3,10 @@ import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
 import cors from 'cors';
+import dotenv from 'dotenv'
+import {signToken} from "./jwtHelper";
+
+dotenv.config()
 
 // Initialize Express app
 const app = express();
@@ -46,12 +50,35 @@ const storage = multer.diskStorage({
 
 const upload = multer({storage}).array('files', 10); // Accept up to 10 files
 
-// Serve static files from the uploads directory
 app.use('/uploads', express.static(path.join(__dirname, UPLOADS_DIR)));
 
-// Endpoint to handle file uploads
+const validateFile = (file: Express.Multer.File, tempFilePath: string): Promise<boolean> => {
+	return new Promise((resolve, reject) => {
+		const isValidSize = file.size / 1024 / 1024 <= 2 //* 2MB
+		if (!isValidSize) {
+			console.error(`File size is too large: ${file.size}`);
+			return resolve(false);
+		}
+
+		const allowedTypes = ["image/jpeg", "image/png", "application/pdf"]
+		const isTypeValid = allowedTypes.includes(file.mimetype)
+		if (!isTypeValid) {
+			console.error(`File type is not allowed: ${file.mimetype}`);
+			return resolve(false);
+		}
+
+		fs.stat(tempFilePath, (err, stats) => {
+			if (err) {
+				resolve(false)
+			} else {
+				resolve(stats.size > 0)
+			}
+		})
+	})
+}
+
 app.post('/upload', (req, res) => {
-	upload(req, res, (err) => {
+	upload(req, res, async (err) => {
 		if (err) {
 			console.error('Error uploading files:', err);
 			return res.status(500).send('Error uploading files.');
@@ -61,20 +88,28 @@ app.post('/upload', (req, res) => {
 			return res.status(400).send('No files uploaded.');
 		}
 
-		// Perform server-side validation if needed
 		const filesArray = req.files as Express.Multer.File[];
-		filesArray.forEach(file => {
+		const validFiles = [];
+		for (const file of filesArray) {
 			const tempPath = path.join(TEMP_DIR, file.filename);
 			const finalPath = path.join(FINAL_DIR, file.filename);
-			fs.rename(tempPath, finalPath, (err) => {
-				if (err) {
-					console.error('Error moving file:', err);
-					return res.status(500).send('Error processing files.');
-				}
-			});
-		});
 
-		res.status(200).send('Files uploaded and moved successfully.');
+			const isValid = await validateFile(file, tempPath);
+			if (isValid) {
+				fs.renameSync(tempPath, finalPath);
+				validFiles.push({filename: file.filename, originalname: file.originalname, path: finalPath});
+			} else {
+				fs.unlinkSync(tempPath);
+			}
+		}
+
+		if (validFiles.length > 0) {
+			const token = signToken({files: validFiles}, '1h');
+			console.log('tokeeeeeen', token)
+			res.status(200).json({token});
+		} else {
+			res.status(400).send('No valid files uploaded.');
+		}
 	});
 });
 
