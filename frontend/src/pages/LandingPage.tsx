@@ -43,16 +43,28 @@ const LandingPage: FC = () => {
         </UploadDragger>
         <Form>
           <Item name="email">
-            <UploadInput placeholder="Your email" allowClear />
+            <UploadInput
+              data-testid="email"
+              placeholder="Your email"
+              allowClear
+            />
           </Item>
           <Item name="email-to">
-            <UploadInput placeholder="Email to" allowClear />
+            <UploadInput
+              data-testid="emailTo"
+              placeholder="Email to"
+              allowClear
+            />
           </Item>
           <Item name="title">
-            <UploadInput placeholder="Title" allowClear />
+            <UploadInput data-testid="title" placeholder="Title" allowClear />
           </Item>
           <Item name="message">
-            <UploadTextArea placeholder="Message" allowClear />
+            <UploadTextArea
+              data-testid="message"
+              placeholder="Message"
+              allowClear
+            />
           </Item>
           <Item>
             <TransferButton type="primary" size="large" htmlType="submit">
