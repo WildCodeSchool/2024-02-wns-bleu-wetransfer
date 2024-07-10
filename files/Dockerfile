@@ -3,7 +3,7 @@ FROM node:lts-alpine
 RUN apk --no-cache add curl
 
 WORKDIR /app
-RUN mkdir uploads
+RUN mkdir UPLOADS_DIR
 
 COPY tsconfig.json tsconfig.json
 

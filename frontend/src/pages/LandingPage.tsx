@@ -1,110 +1,86 @@
-import {FC, useState} from "react";
-import styled from "@emotion/styled";
-import {Button, Divider, Form, Input, message, Modal, Select, Upload} from "antd";
-import {InboxOutlined, MailOutlined} from "@ant-design/icons";
-import axios from 'axios'
+import React, {useState} from 'react';
+import {Button, Divider, Form, Input, message, Select, Upload} from 'antd';
+import {InboxOutlined, MailOutlined} from '@ant-design/icons';
+import axios from 'axios';
+import styled from '@emotion/styled';
 
 const {Dragger} = Upload;
 const {Item} = Form;
+const {TextArea} = Input;
 
-const LandingPage: FC = () => {
+
+const LandingPage: React.FC = () => {
 	const [fileList, setFileList] = useState([]);
-	const [totalFileSize, setTotalFileSize] = useState(0);
 	const [form] = Form.useForm();
-	const [openSuccessModal, setOpenSuccessModal] = useState(false)
 
-	const formatBytes = (bits) => {
-		if (bits === 0) return 0;
-		const k = 1024;
-		const dm = 2;
-		const i = Math.floor(Math.log(bits) / Math.log(k));
-		const formattedNumber = parseFloat((bits / Math.pow(k, i)).toFixed(dm));
-		return formattedNumber
-	};
-
-	const validateFile = (file: File): boolean => {
+	const handleBeforeUpload = (file) => {
+		// Validate the file type and size before uploading
 		const isSupportedType = ["image/jpeg", "image/png", "application/pdf"].includes(file.type);
 		const isFileSizeValid = file.size / 1024 / 1024 < 2;
 
-		console.log(file)
-
 		if (!isSupportedType) {
 			message.error(`${file.name} is not a supported file type.`);
-			return false;
+			return Upload.LIST_IGNORE;
 		}
 
 		if (!isFileSizeValid) {
 			message.error(`${file.name} is too large. File size must be less than 2MB.`);
-			return false;
+			return Upload.LIST_IGNORE;
 		}
 
-
-		console.log(totalFileSize)
-		if (totalFileSize / 1024 / 1024 > 2) {
-			message.error(`Total file size must be less than 2MB.`);
-			return false;
-		}
-
-		return true;
+		return false; // Prevent automatic upload
 	};
 
-	const handleChange = (info: any) => {
-		let newFileList = [...info.fileList];
-
-		newFileList = newFileList.map((file) => {
-			if (file.response) {
-				file.url = file.response.url;
-			}
-			return file;
+	const handleUpload = async (values) => {
+		console.log(values)
+		const formData = new FormData();
+		fileList.forEach((file) => {
+			formData.append('files', file.originFileObj);
 		});
 
-		const newTotalFileSize = newFileList.reduce((acc, file) => acc + file.size, 0);
-		setTotalFileSize(newTotalFileSize);
+		// Append form data
+		formData.append('senderEmail', values.senderEmail);
+		formData.append('receiversEmails', values.receiversEmails.join(','));
+		formData.append('title', values.title);
+		formData.append('message', values.message);
+
+		try {
+			console.log(formData)
+			const response = await axios.post('http://localhost:3000/upload', formData, {
+				headers: {
+					'Content-Type': 'multipart/form-data',
+				},
+				onUploadProgress: (progressEvent) => {
+					const percent = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+					console.log(percent); // You can update the UI to show the progress
+				},
+			});
+			message.success("Files uploaded successfully");
+			console.log(response.data); // Handle the response data if needed
+		} catch (error) {
+			console.error('Error uploading file:', error);
+			message.error("Error uploading files");
+		}
+	};
+
+	const handleChange = (info) => {
+		// Filter out the files that do not pass the validation
+		const newFileList = info.fileList.filter((file) => file.status !== 'error');
 		setFileList(newFileList);
 	};
 
-	const handleSubmitFilesForm = (values: any) => {
-		console.log(values);
-		axios.post(`http://localhost:3000/upload`, {
-			values
-		}).then((res) => {
-			message.info("Fichiers uploadés avec succès")
-
-		}).catch(err => console.log(err))
-	};
-
-	const customUpload = async ({file, onProgress, onSuccess, onError}) => {
-		const isValid = validateFile(file);
-		if (!isValid) {
-			onError(new Error("File validation failed"));
-			return;
-		}
-
-		const uploadProgress = setInterval(() => {
-			let percent = 0;
-			if (file.status === "uploading") {
-				percent += 10;
-				if (percent < 100) {
-					onProgress({percent});
-				} else {
-					clearInterval(uploadProgress);
-					onSuccess("ok");
-				}
-			}
-		}, 100);
-	};
 
 	return (
 		<LandingPageWrapper>
 			<FormContainer background="#65558F">
 				<UploadTitle>Send file casually</UploadTitle>
 				<StyledDivider/>
-				<Form form={form} name="visitorSendFilesForm" onFinish={handleSubmitFilesForm}>
+				<Form form={form} name="visitorSendFilesForm" onFinish={handleUpload}>
 					<Item name="files" rules={[{required: true, message: "Files missing"}]}>
-						<UploadDragger
+						<Dragger
 							name="file"
-							multiple={true}
-							customRequest={customUpload}
+							multiple
+							beforeUpload={handleBeforeUpload} // Validate files before adding to the list
 							onChange={handleChange}
 							fileList={fileList}
 							style={{background: "rgba(255,255,255,0.26)"}}
@@ -113,8 +89,8 @@ const LandingPage: FC = () => {
 								<InboxOutlined/>
 							</p>
 							<p className="ant-upload-text">Click or drag file to this area to upload</p>
-							<p className="ant-upload-hint">{formatBytes(totalFileSize)} / 2MB</p>
-						</UploadDragger>
+							<p className="ant-upload-hint">Upload max size : 2 MB</p>
+						</Dragger>
 					</Item>
 					<Item name="senderEmail" rules={[{required: true, message: "Please enter your email"}]}>
 						<UploadInput placeholder="Your email" allowClear/>
@@ -148,9 +124,6 @@ const LandingPage: FC = () => {
 				</Form>
 			</FormContainer>
 			<FormContainer background="#ffffff"></FormContainer>
-			<Modal title="Créez un compte" open={openSuccessModal}>
-				<h1>Bonjour</h1>
-			</Modal>
 		</LandingPageWrapper>
 	);
 };
@@ -167,7 +140,7 @@ const LandingPageWrapper = styled.div`
 `;
 
 const FormContainer = styled.div<{ background?: string }>`
-    background: ${({background}) => background ? background : '#7b5c8a'};
+    background: ${({background}) => background ? background : "#7b5c8a"};
     padding: 24px;
     border-radius: 20px;
     text-align: center;
@@ -187,16 +160,11 @@ const StyledDivider = styled(Divider)`
     border-color: white;
 `;
 
-const UploadDragger = styled(Dragger)`
-    margin-bottom: 16px;
-    text-align: center;
-`;
-
 const UploadInput = styled(Input)`
     width: 100%;
 `;
 
-const UploadTextArea = styled(Input.TextArea)`
+const UploadTextArea = styled(TextArea)`
     width: 100%;
 `;
 
