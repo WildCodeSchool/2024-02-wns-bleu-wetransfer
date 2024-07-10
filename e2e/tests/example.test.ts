@@ -1,11 +1,8 @@
-import { expect, test } from 'vitest'
+import { test, expect } from "@playwright/test";
 
-export function sum(a: number, b: number) {
-    return a + b
-  }
+test("Go to home page", async ({ page }) => {
+    await page.goto("http://frontend:5173/")
 
-test('adds 1 + 2 to equal 3', () => {
-  expect(sum(1, 2)).toBe(3)
-})
-
-// run test in frontend/ `npm run test`
+    await page.waitForLoadState("networkidle");
+    await expect(page.getByText("Send file casually")).toBeVisible();
+});
