@@ -16,7 +16,7 @@ export default defineConfig({
 		host: true,
 		hmr: {
 			path: "/hmr",
-			port: 5174,
+			port: 7000,
 		},
 		watch: { usePolling: true },
 	},

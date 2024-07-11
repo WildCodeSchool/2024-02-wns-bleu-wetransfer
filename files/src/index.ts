@@ -14,9 +14,9 @@ const port = 3000;
 
 // Configure CORS
 app.use(cors({
-	origin: 'http://localhost:5173', // Adjust this to match your frontend URL
+	origin: ['http://localhost:7000', 'http://localhost:3000'], // Adjust this to match your frontend URL
 	optionsSuccessStatus: 200,
-	methods: "POST",
+	methods: ["POST", "GET"],
 	preflightContinue: false,
 	allowedHeaders: ['Content-Type'],
 }));
@@ -105,7 +105,6 @@ app.post('/upload', (req, res) => {
 
 		if (validFiles.length > 0) {
 			const token = signToken({files: validFiles}, '1h');
-			console.log('tokeeeeeen', token)
 			res.status(200).json({token});
 		} else {
 			res.status(400).send('No valid files uploaded.');
