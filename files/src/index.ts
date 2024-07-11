@@ -14,9 +14,9 @@ const port = 3000;
 
 // Configure CORS
 app.use(cors({
-	origin: 'http://localhost:5173', // Adjust this to match your frontend URL
+	origin: ['http://localhost:7002', 'http://localhost:3000'], // Adjust this to match your frontend URL
 	optionsSuccessStatus: 200,
-	methods: "POST",
+	methods: ["POST", "GET"],
 	preflightContinue: false,
 	allowedHeaders: ['Content-Type'],
 }));
@@ -49,6 +49,10 @@ const storage = multer.diskStorage({
 });
 
 const upload = multer({storage}).array('files', 10); // Accept up to 10 files
+
+app.get("/", (req, res) => {
+	res.send("Healthcheck Okay");
+});
 
 app.use('/uploads', express.static(path.join(__dirname, UPLOADS_DIR)));
 
@@ -105,7 +109,6 @@ app.post('/upload', (req, res) => {
 
 		if (validFiles.length > 0) {
 			const token = signToken({files: validFiles}, '1h');
-			console.log('tokeeeeeen', token)
 			res.status(200).json({token});
 		} else {
 			res.status(400).send('No valid files uploaded.');

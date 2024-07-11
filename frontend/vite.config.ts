@@ -3,6 +3,7 @@ import react from '@vitejs/plugin-react';
 import envCompatible from "vite-plugin-env-compatible";
 
 export default defineConfig({
+
 	plugins: [
 		react({
 			babel: {
@@ -11,12 +12,11 @@ export default defineConfig({
 		}),
 		envCompatible(),
 	],
-	
 	server: {
 		host: true,
 		hmr: {
 			path: "/hmr",
-			port: 5174,
+			port: 7002,
 		},
 		watch: { usePolling: true },
 	},
