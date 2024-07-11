@@ -1,6 +1,6 @@
 import { test, expect } from "@playwright/test";
 
-test("Go to home page", async ({ page }) => {
+test("Test registering existing user", async ({ page }) => {
     await page.goto("http://frontend:5173/access/register")
     await page.waitForLoadState("networkidle");
 
@@ -11,4 +11,23 @@ test("Go to home page", async ({ page }) => {
     await page.getByTestId('confirmPassword').fill('123456')
     await page.getByTestId('conditions').click()
     await page.getByTestId('registerButton').click()
+
+    await expect(page.locator('.ant-notification-notice-message').first()).toContainText('Error')
+});
+
+test("Test registering new user", async ({ page }) => {
+    await page.goto("http://frontend:5173/access/register")
+    await page.waitForLoadState("networkidle");
+
+    let r = (Math.random() + 1).toString(36).substring(7);
+
+    await page.getByPlaceholder('First name').fill(`${r}test`)
+    await page.getByPlaceholder('Last name').fill(`${r}`)
+    await page.getByPlaceholder('Email address').fill(`${r}test@test.com`)
+    await page.getByTestId('password').fill(`${r}`)
+    await page.getByTestId('confirmPassword').fill(`${r}`)
+    await page.getByTestId('conditions').click()
+    await page.getByTestId('registerButton').click()
+
+    await expect(page.locator('.ant-notification-notice-message').first()).toContainText('Success')
 });
