@@ -11,6 +11,7 @@ export default defineConfig({
 		}),
 		envCompatible(),
 	],
+	
 	server: {
 		host: true,
 		hmr: {
