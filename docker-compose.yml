@@ -52,6 +52,8 @@ services:
             test: "curl --fail --request GET --url 'http://localhost:5173' || exit 1"
             interval: 1s
             timeout: 2s
+        env_file:
+            - ./files/.env
         ports:
             - "3000:3000"
 

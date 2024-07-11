@@ -1,12 +1,12 @@
+import 'dotenv/config'
 import express from 'express';
 import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
 import cors from 'cors';
-import dotenv from 'dotenv'
 import {signToken} from "./jwtHelper";
 
-dotenv.config()
+console.log('process.env', process.env.JWT_SECRET_KEY)
 
 // Initialize Express app
 const app = express();
