@@ -1,7 +1,10 @@
 import { test, expect } from "@playwright/test";
 
+// TODO: remettre cette batterie de test quand le composant de connexion sera fait et mis sur la home page ---> cliquer sur le bouton de sign up en arrivant sur la home page
+
+/*
 test("Test registering existing user", async ({ page }) => {
-    await page.goto("http://frontend:5173/access/register")
+    await page.goto("http://apigateway")
     await page.waitForLoadState("networkidle");
 
     await page.getByPlaceholder('First name').fill('Lucas')
@@ -16,7 +19,7 @@ test("Test registering existing user", async ({ page }) => {
 });
 
 test("Test registering new user", async ({ page }) => {
-    await page.goto("http://frontend:5173/access/register")
+    await page.goto("http://apigateway")
     await page.waitForLoadState("networkidle");
 
     // Generate a random string so the test always work
@@ -31,4 +34,4 @@ test("Test registering new user", async ({ page }) => {
     await page.getByTestId('registerButton').click()
 
     await expect(page.locator('.ant-notification-notice-message').first()).toContainText('Success')
-});
+});*/

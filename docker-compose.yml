@@ -43,6 +43,8 @@ services:
             - "8080:8080"
     files:
         build: ./files
+        volumes:
+            - ./files/src:/app/src
         healthcheck:
             test: "curl --fail --request GET --url 'http://localhost:3000' || exit 1"
             interval: 1s
