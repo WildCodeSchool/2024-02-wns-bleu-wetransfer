@@ -28,7 +28,7 @@ const LandingPage: React.FC = () => {
 			return Upload.LIST_IGNORE;
 		}
 
-		return false; // Prevent automatic upload
+		return false;
 	};
 
 	const handleUpload = async (values) => {
