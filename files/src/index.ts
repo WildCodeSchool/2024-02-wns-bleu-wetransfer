@@ -14,7 +14,7 @@ const port = 3000;
 
 // Configure CORS
 app.use(cors({
-	origin: ['http://localhost:7000', 'http://localhost:3000'], // Adjust this to match your frontend URL
+	origin: ['http://localhost:7002', 'http://localhost:3000'], // Adjust this to match your frontend URL
 	optionsSuccessStatus: 200,
 	methods: ["POST", "GET"],
 	preflightContinue: false,
@@ -49,6 +49,10 @@ const storage = multer.diskStorage({
 });
 
 const upload = multer({storage}).array('files', 10); // Accept up to 10 files
+
+app.get("/", (req, res) => {
+	res.send("Healthcheck Okay");
+});
 
 app.use('/uploads', express.static(path.join(__dirname, UPLOADS_DIR)));
 
