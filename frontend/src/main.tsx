@@ -8,7 +8,7 @@ import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
 import {GlobalStyles} from "./globalStyles.tsx";
 
 const client = new ApolloClient({
-  uri: "http://backend:4000/graphql",
+  uri: "http://localhost:4000/graphql",
   cache: new InMemoryCache(),
 });
 

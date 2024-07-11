@@ -47,19 +47,19 @@ const SignUp: FC = () => {
       {contextHolder}
       <Title>Oh, hello there!</Title>
       <StyledForm name="control-hooks" onFinish={handleSignUp} {...formItemLayout}>
-        <Form.Item name="firstname" label="First name" rules={[{ required: true, message: "Please enter your first name" }]} labelCol={{ span: 24 }}>
+        <Form.Item name="firstname" rules={[{ required: true, message: "Please enter your first name" }]} labelCol={{ span: 24 }}>
           <StyledInput allowClear placeholder="First name" />
         </Form.Item>
-        <Form.Item labelCol={{ span: 24 }} name="lastname" label="Last name" rules={[{ required: true, message: "Please enter your last name" }]}>
+        <Form.Item labelCol={{ span: 24 }} name="lastname" rules={[{ required: true, message: "Please enter your last name" }]}>
           <StyledInput allowClear placeholder="Last name" />
         </Form.Item>
-        <Form.Item labelCol={{ span: 24 }} name="email" label="Email address" rules={[{ required: true, type: 'email', message: "Please enter a valid email" }]}>
+        <Form.Item labelCol={{ span: 24 }} name="email" rules={[{ required: true, type: 'email', message: "Please enter a valid email" }]}>
           <StyledInput allowClear placeholder="Email address" />
         </Form.Item>
-        <Form.Item labelCol={{ span: 24 }} name="password" label="Password" rules={[{ required: true, message: "Please enter your password" }]}>
+        <Form.Item labelCol={{ span: 24 }} name="password" rules={[{ required: true, message: "Please enter your password" }]}>
           <StyledPasswordInput data-testid="password" allowClear placeholder="Password" />
         </Form.Item>
-        <Form.Item labelCol={{ span: 24 }} name="confirmPassword" label="Confirm password" rules={[{ required: true, message: "Please confirm your password" }]}>
+        <Form.Item labelCol={{ span: 24 }} name="confirmPassword" rules={[{ required: true, message: "Please confirm your password" }]}>
           <StyledPasswordInput data-testid="confirmPassword" allowClear placeholder="Confirm password" />
         </Form.Item>
         <Form.Item name="conditions" valuePropName="checked" rules={[{ required: true, message: "You must accept the conditions" }]}>
@@ -107,12 +107,14 @@ const StyledForm = styled(Form)`
 const StyledInput = styled(Input)`
   &.ant-input-affix-wrapper {
     border-radius: 8px;
+    margin: 0.5rem 0;
   }
 `;
 
 const StyledPasswordInput = styled(Input.Password)`
   &.ant-input-password {
     border-radius: 8px;
+    margin: 0.5rem 0;
   }
 `;
 
@@ -136,12 +138,7 @@ const StyledCheckbox = styled.div`
   align-items: flex-start;
   margin-top: 1rem;
   margin-bottom: 1rem;
-`;
-
-const ConditionsText = styled.span`
-  font-size: 0.8rem;
   text-align: justify;
-  margin-left: 0.5rem;
 `;
 
 export default SignUp;

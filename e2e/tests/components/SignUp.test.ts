@@ -19,6 +19,7 @@ test("Test registering new user", async ({ page }) => {
     await page.goto("http://frontend:5173/access/register")
     await page.waitForLoadState("networkidle");
 
+    // Generate a random string so the test always work
     let r = (Math.random() + 1).toString(36).substring(7);
 
     await page.getByPlaceholder('First name').fill(`${r}test`)
