@@ -1,4 +1,3 @@
-import { userEvent } from '@vitest/browser/context'
 import { test, expect, describe } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import { MockedProvider } from "@apollo/client/testing";
