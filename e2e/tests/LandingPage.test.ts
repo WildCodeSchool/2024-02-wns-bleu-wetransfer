@@ -25,14 +25,17 @@ test("Landing page", async ({ page }) => {
   await titleInput.fill("Ton document");
   await messageInput.fill("Hello, voici ton document");
 
-  const filePath = path.resolve(
-    "/Users/maxime/Downloads/MG-fond-noir-jpg-fotor-2024061214914.png"
-  );
-  console.log("Chemin du fichier:", filePath);
+  const filePath = path.dirname("/Users/maxime/Desktop/test.png");
+  console.log("Chemin du fichier", filePath);
 
   if (!fs.existsSync(filePath)) {
+    console.error(`Le fichier n'existe pas: ${filePath}`);
     throw new Error(`Le fichier n'existe pas: ${filePath}`);
+  } else {
+    console.log(`Le fichier existe: ${filePath}`);
   }
+
+  await uploadDragger.setInputFiles(filePath);
 
   await transferButton.click();
 });
