@@ -1,37 +1,46 @@
 import { Field, ObjectType } from "type-graphql";
 import {
-  BaseEntity,
-  Column,
-  CreateDateColumn,
-  Entity,
-  OneToMany,
-  PrimaryGeneratedColumn,
+	BaseEntity,
+	Column,
+	CreateDateColumn,
+	Entity,
+	OneToMany,
+	ManyToOne,
+	PrimaryGeneratedColumn,
 } from "typeorm";
 import { File } from "./file";
+import { Visitor } from "./visitor";
 
 @ObjectType()
 @Entity()
 export class Upload extends BaseEntity {
-  @Field()
-  @PrimaryGeneratedColumn()
-  id: number;
+	@Field()
+	@PrimaryGeneratedColumn("uuid")
+	id: number;
 
-  @Field()
-  @Column()
-  token_value: string;
+	@Field()
+	@Column({ type: "character varying", nullable: false })
+	download_link: string;
 
-  @Field()
-  @Column()
-  is_activated: boolean;
+	@Field()
+	@Column({ type: "boolean", default: false, nullable: false })
+	is_activated: boolean;
 
-  @Field()
-  @CreateDateColumn()
-  created_at: Date;
+	@Field()
+	@CreateDateColumn({ type: "timestamp with time zone" })
+	created_at: Date;
 
-  @Field()
-  @CreateDateColumn()
-  updated_at: Date;
+	@Field(() => [String])
+	@Column("text", { array: true, nullable: false })
+	receivers: string[];
 
-  @OneToMany(() => File, (file) => file.upload)
-  files: File[];
+	@Field()
+	@CreateDateColumn({ type: "timestamp with time zone" })
+	updated_at: Date;
+
+	@OneToMany(() => File, (file) => file.upload)
+	files: File[];
+
+	@ManyToOne(() => Visitor, (visitor) => visitor.uploads)
+	visitor: Visitor;
 }

@@ -10,7 +10,6 @@ import {
   OneToOne,
   PrimaryGeneratedColumn,
 } from "typeorm";
-import { Visitor } from "./visitor";
 import { User } from "./user";
 import { Upload } from "./upload";
 import { Report } from "./report";
@@ -20,43 +19,36 @@ import { UserAccessFile } from "./userAccessFile";
 @Entity()
 export class File extends BaseEntity {
   @Field()
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn('uuid')
   id: number;
 
   @Field()
-  @Column()
+  @Column({type: "character varying", nullable: true})
   name: string;
 
   @Field()
-  @Column()
+  @Column({type: "character varying", nullable: false})
   default_name: string;
 
   @Field()
-  @Column()
+  @Column({type: "character varying", nullable: false})
   path: string;
 
   @Field()
-  @Column()
+  @Column({type: "integer", nullable: false})
   size: number;
 
   @Field()
-  @Column()
-  download_link: string;
-
-  @Field()
-  @Column()
+  @Column({type: "boolean", nullable: true})
   status: string;
 
   @Field()
-  @CreateDateColumn()
+  @CreateDateColumn({type: "timestamp with time zone"})
   created_at: Date;
 
   @Field()
-  @CreateDateColumn()
+  @CreateDateColumn({type: "timestamp with time zone"})
   updated_at: Date;
-
-  @ManyToOne(() => Visitor, (visitor) => visitor.files)
-  visitor: Visitor;
 
   @ManyToOne(() => User, (user) => user.files)
   user: User;
