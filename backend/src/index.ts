@@ -67,10 +67,10 @@ const start = async () => {
 	const app = express();
 	const httpServer = http.createServer(app);
 
-	const corsOptions = {
-		origin: "http://localhost:5173",
-		credentials: true,
-	};
+  const corsOptions = {
+    origin: ['http://localhost:5173', 'http://localhost:7002', 'http://localhost:3000'],
+    credentials: true,
+  };
 
 	app.use(cors(corsOptions));
 
