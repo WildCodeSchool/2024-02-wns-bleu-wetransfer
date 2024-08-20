@@ -1,4 +1,0 @@
-name: clien-tests-workflow
-
-on: pull_request
-
