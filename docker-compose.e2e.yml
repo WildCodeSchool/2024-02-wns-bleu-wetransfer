@@ -2,7 +2,7 @@ services:
   backend:
     build: ./backend
     env_file:
-      - ./backend/.env
+      - ./.env
     healthcheck:
       test: 'curl --fail --request POST --header ''content-type: application/json'' --url ''http://localhost:4000/graphql'' --data ''{"query":"query { __typename }"}'' || exit 1'
       interval: 1s
