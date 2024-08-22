@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "start": "docker compose up --build",
-    "e2e": "docker compose -f docker-compose.e2e.yml up --build --exit-code-from e2e"
+    "e2e": "docker compose -f docker-compose.e2e.yml up --build --exit-code-from e2e",
+    "build_prod_and_start": "docker compose -f docker-compose.build.prod.yml up --build"
   },
   "author": "",
   "license": "ISC",
