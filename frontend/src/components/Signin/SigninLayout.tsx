@@ -10,7 +10,7 @@ import {useNavigate} from "react-router-dom";
 const {Item} = Form
 const SigninLayout: FC = () => {
 	const navigate = useNavigate()
-	const [login, {data, loading, error}] = useMutation(LOGIN_MUTATION, {
+	const [login, {loading, error}] = useMutation(LOGIN_MUTATION, {
 		onCompleted: () => {
 			navigate("/dashboard");
 		},

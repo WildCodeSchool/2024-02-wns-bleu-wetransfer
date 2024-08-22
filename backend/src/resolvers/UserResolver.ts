@@ -74,6 +74,12 @@ class UserResolver {
 			throw new Error("Bad Login");
 		}
 	}
+
+	@Mutation(() => String)
+	async logout(@Ctx() context: any) {
+		context.res.setHeader("Set-Cookie", `token=;Max-Age=0`);
+		return "Logged out";
+	}
 }
 
 export default UserResolver;
