@@ -3,10 +3,28 @@ import {HeaderContainer, WildTransferLogo} from "../visitor/VisitorLayout.tsx";
 import styled from "@emotion/styled";
 import {Avatar, Dropdown, MenuProps} from "antd";
 import {DashboardOutlined, FileDoneOutlined, LogoutOutlined, SettingOutlined} from "@ant-design/icons";
-import {Link, Outlet} from "react-router-dom";
+import {Link, Outlet, useNavigate} from "react-router-dom";
+import {useMutation} from '@apollo/client'
+import {LOGOUT} from "../../graphql/mutations.ts";
 
 
 const UserLayout: FC = () => {
+	const navigate = useNavigate()
+
+	const [logout, {loadding, error}] = useMutation(LOGOUT, {
+		onCompleted: () => {
+			navigate('/')
+		},
+		onError: (err) => {
+			console.error(err)
+		}
+	})
+
+	const handleLogout = (): void => {
+		logout()
+	}
+
+
 	const items: MenuProps['items'] = [
 		{
 			label: <Link to='/dashboard'>Dashboard</Link>,
@@ -26,7 +44,8 @@ const UserLayout: FC = () => {
 		{
 			label: 'Log Out',
 			key: '4',
-			icon: <LogoutOutlined/>
+			icon: <LogoutOutlined/>,
+			onClick: handleLogout
 		},
 	];
 
