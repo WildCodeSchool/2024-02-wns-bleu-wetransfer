@@ -1,6 +1,7 @@
 import {User} from "../entities/user";
 import {Arg, Ctx, Mutation, Query, Resolver} from "type-graphql";
 import argon2 from "argon2";
+import jwt from "jsonwebtoken";
 
 @Resolver(User)
 class UserResolver {

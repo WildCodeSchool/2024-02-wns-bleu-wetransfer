@@ -1,4 +1,4 @@
-import { Field, ObjectType } from "type-graphql";
+import {Field, ObjectType} from "type-graphql";
 import {
   BaseEntity,
   Column,
@@ -9,53 +9,57 @@ import {
   OneToOne,
   PrimaryGeneratedColumn,
 } from "typeorm";
-import { Billing } from "./billing";
-import { File } from "./file";
-import { UserAccessFile } from "./userAccessFile";
+import {Billing} from "./billing";
+import {File} from "./file";
+import {UserAccessFile} from "./userAccessFile";
 
 @ObjectType()
 @Entity()
 export class User extends BaseEntity {
-  @Field()
-  @PrimaryGeneratedColumn()
-  id: number;
+	@Field()
+	@PrimaryGeneratedColumn()
+	id: number;
 
-  @Field()
-  @Column()
-  firstname: string;
+	@Field()
+	@Column()
+	firstname: string;
 
-  @Field()
-  @Column()
-  lastname: string;
+	@Field()
+	@Column()
+	lastname: string;
 
-  @Field()
-  @Column()
-  email: string;
+	@Field()
+	@Column()
+	email: string;
 
-  @Field()
-  @Column()
-  password: string;
+	@Field()
+	@Column()
+	hashedPassword: string;
 
-  @Field()
-  @Column({ nullable: true })
-  profile_picture_name: string;
+	@Field()
+	@Column({nullable: true})
+	profile_picture_name: string;
 
-  @Field()
-  @CreateDateColumn()
-  created_at: Date;
+	@Field()
+	@Column({default: 'user'})
+	role: string
 
-  @Field()
-  @CreateDateColumn()
-  updated_at: Date;
+	@Field()
+	@CreateDateColumn()
+	created_at: Date;
 
-  @OneToOne(() => Billing)
-  @JoinColumn()
-  billing: Billing;
+	@Field()
+	@CreateDateColumn()
+	updated_at: Date;
 
-  @OneToMany(() => File, (file) => file.user)
-  files: File;
+	@OneToOne(() => Billing)
+	@JoinColumn()
+	billing: Billing;
 
-  @OneToOne(() => UserAccessFile)
-  @JoinColumn()
-  user_access_file: UserAccessFile;
+	@OneToMany(() => File, (file) => file.user)
+	files: File;
+
+	@OneToOne(() => UserAccessFile)
+	@JoinColumn()
+	user_access_file: UserAccessFile;
 }
