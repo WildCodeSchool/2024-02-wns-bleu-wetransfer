@@ -26,14 +26,12 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "resolveJsonModule": true,
-    "baseUrl": ".",
-    "strict": true,
-    "forceConsistentCasingInFileNames": true
+    "baseUrl": "."
   },
   "exclude": [
     "node_modules"
   ],
   "include": [
-    "src"
+    "./src/**/*.ts"
   ]
 }

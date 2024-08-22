@@ -1,13 +1,13 @@
 import {Field, ObjectType} from "type-graphql";
 import {
-  BaseEntity,
-  Column,
-  CreateDateColumn,
-  Entity,
-  JoinColumn,
-  OneToMany,
-  OneToOne,
-  PrimaryGeneratedColumn,
+	BaseEntity,
+	Column,
+	CreateDateColumn,
+	Entity,
+	JoinColumn,
+	OneToMany,
+	OneToOne,
+	PrimaryGeneratedColumn,
 } from "typeorm";
 import {Billing} from "./billing";
 import {File} from "./file";
@@ -34,7 +34,7 @@ export class User extends BaseEntity {
 
 	@Field()
 	@Column()
-	hashedPassword: string;
+	password: string;
 
 	@Field()
 	@Column({nullable: true})

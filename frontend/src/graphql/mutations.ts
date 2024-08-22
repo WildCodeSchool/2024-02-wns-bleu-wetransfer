@@ -8,7 +8,7 @@ export const SIGN_UP_USER = gql`
 
 
 export const LOGIN_MUTATION = gql`
-    query Login($email: String!, $password: String!) {
+    mutation Login($email: String!, $password: String!) {
         login(email: $email, password: $password)
     }
 `;

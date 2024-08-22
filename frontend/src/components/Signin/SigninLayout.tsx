@@ -10,7 +10,7 @@ import {useNavigate} from "react-router-dom";
 const {Item} = Form
 const SigninLayout: FC = () => {
 	const navigate = useNavigate()
-	const [login, {loading, error}] = useMutation(LOGIN_MUTATION, {
+	const [login, {data, loading, error}] = useMutation(LOGIN_MUTATION, {
 		onCompleted: () => {
 			navigate("/dashboard");
 		},
@@ -24,7 +24,7 @@ const SigninLayout: FC = () => {
 
 	}
 
-	const handleLogin = (values) => {
+	const handleLogin = (values: { email: any; password: any; }): void => {
 		login({
 			variables: {
 				email: values.email,

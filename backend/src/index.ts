@@ -1,15 +1,15 @@
 import "reflect-metadata";
 import "dotenv/config";
-import { buildSchema } from "type-graphql";
-import { ApolloServer } from "@apollo/server";
-import { expressMiddleware } from '@apollo/server/express4';
-import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer';
+import {buildSchema} from "type-graphql";
+import {ApolloServer} from "@apollo/server";
+import {expressMiddleware} from '@apollo/server/express4';
+import {ApolloServerPluginDrainHttpServer} from '@apollo/server/plugin/drainHttpServer';
 import express from "express";
 import http from "http";
 import cors from "cors";
 import jwt from "jsonwebtoken";
 import setCookieParser from "set-cookie-parser";
-import { dataSource } from "./config/db";
+import {dataSource} from "./config/db";
 import PlanResolver from "./resolvers/PlanResolver";
 import ReportResolver from "./resolvers/ReportResolver";
 import UploadResolver from "./resolvers/UploadResolver";
@@ -25,7 +25,6 @@ export type Context = {
 	role: string;
 };
 
-export default UserResolver;
 
 const start = async () => {
 	await dataSource.initialize();
@@ -67,10 +66,10 @@ const start = async () => {
 	const app = express();
 	const httpServer = http.createServer(app);
 
-  const corsOptions = {
-    origin: ['http://localhost:5173', 'http://localhost:7002', 'http://localhost:3000'],
-    credentials: true,
-  };
+	const corsOptions = {
+		origin: ['http://localhost:5173', 'http://localhost:7002', 'http://localhost:3000'],
+		credentials: true,
+	};
 
 	app.use(cors(corsOptions));
 

@@ -30,7 +30,7 @@ class UserResolver {
 
 		password = await argon2.hash(password);
 
-		const createdUser = await User.create({
+		const createdUser: User = await User.create({
 			firstname,
 			lastname,
 			email,
@@ -42,7 +42,7 @@ class UserResolver {
 		return "You have successfully signed up!"
 	}
 
-	@Query(() => String)
+	@Mutation(() => String)
 	async login(
 		@Arg("email") emailFromClient: string,
 		@Arg("password") passwordFromClient: string,
@@ -55,7 +55,7 @@ class UserResolver {
 			const userFromDB = await User.findOneByOrFail({email: emailFromClient});
 			console.log("UserFromDB", userFromDB);
 			const isPasswordCorrect = await argon2.verify(
-				userFromDB.hashedPassword,
+				userFromDB.password,
 				passwordFromClient
 			);
 			console.log("is password correct", isPasswordCorrect);
