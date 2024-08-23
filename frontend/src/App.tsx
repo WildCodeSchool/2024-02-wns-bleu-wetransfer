@@ -8,6 +8,7 @@ import UserLayout from "./components/user/UserLayout.tsx";
 import VisitorLayout from "./components/visitor/VisitorLayout.tsx";
 import {Container} from "./globalStyles.tsx";
 import PricingPage from "./pages/PricingPage.tsx";
+import BillingPage from "./pages/BillingPage.tsx";
 
 const App = () => {
 
@@ -25,6 +26,7 @@ const App = () => {
 			path: '/dashboard', element: <UserLayout/>, children: [
 				{index: true, element: <Dashboard/>},
 				{path: 'settings', element: <SettingsPage/>},
+				{path: 'billing', element: <BillingPage/>}
 			]
 		}
 	])

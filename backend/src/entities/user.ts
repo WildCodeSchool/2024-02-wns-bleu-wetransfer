@@ -52,8 +52,7 @@ export class User extends BaseEntity {
 	@CreateDateColumn()
 	updated_at: Date;
 
-	@OneToOne(() => Billing)
-	@JoinColumn()
+	@OneToOne(() => Billing, billing => billing.user)
 	billing: Billing;
 
 	@OneToMany(() => File, (file) => file.user)

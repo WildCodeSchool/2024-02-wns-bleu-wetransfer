@@ -2,7 +2,7 @@ import {FC} from "react";
 import {HeaderContainer, WildTransferLogo} from "../visitor/VisitorLayout.tsx";
 import styled from "@emotion/styled";
 import {Avatar, Dropdown, MenuProps} from "antd";
-import {DashboardOutlined, FileDoneOutlined, LogoutOutlined, SettingOutlined} from "@ant-design/icons";
+import {DashboardOutlined, DollarOutlined, LogoutOutlined, SettingOutlined} from "@ant-design/icons";
 import {Link, Outlet, useNavigate} from "react-router-dom";
 import {ApolloError, useMutation} from '@apollo/client'
 import {LOGOUT} from "../../graphql/mutations.ts";
@@ -33,9 +33,9 @@ const UserLayout: FC = () => {
 			icon: <DashboardOutlined/>
 		},
 		{
-			label: <Link to='/dashboard/pricing'>Pricing</Link>,
+			label: <Link to='/dashboard/billing'>Billing</Link>,
 			key: '1',
-			icon: <FileDoneOutlined/>
+			icon: <DollarOutlined/>
 		},
 		{
 			label: <Link to='/dashboard/settings'>Settings</Link>,
@@ -54,7 +54,7 @@ const UserLayout: FC = () => {
 	return (
 		<UserLayoutContainer>
 			<HeaderContainer>
-				<WildTransferLogo>WildTransfer</WildTransferLogo>
+				<WildTransferLogo onClick={() => navigate('/dashboard')}>WildTransfer</WildTransferLogo>
 				<Dropdown trigger="click" menu={{items}} placement="bottomRight">
 					<Avatar style={{backgroundColor: '#fde3cf', color: '#f56a00', cursor: 'pointer'}}>U</Avatar>
 				</Dropdown>
