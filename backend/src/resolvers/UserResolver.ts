@@ -1,7 +1,8 @@
 import {User} from "../entities/user";
-import {Arg, Ctx, Mutation, Query, Resolver} from "type-graphql";
+import {Arg, AuthenticationError, Ctx, Mutation, Query, Resolver} from "type-graphql";
 import argon2 from "argon2";
 import jwt from "jsonwebtoken";
+import {EntityNotFoundError} from "typeorm";
 
 @Resolver(User)
 class UserResolver {
@@ -50,27 +51,38 @@ class UserResolver {
 	) {
 		try {
 			if (process.env.JWT_SECRET_KEY === undefined) {
-				throw new Error("NO JWT SECRET KEY DEFINED");
+				console.log("Server configuration error: No JWT Secret Key");
+				return new Error('Internal Server Error')
 			}
+
 			const userFromDB = await User.findOneByOrFail({email: emailFromClient});
 			console.log("UserFromDB", userFromDB);
+
 			const isPasswordCorrect = await argon2.verify(
 				userFromDB.password,
 				passwordFromClient
 			);
 
-			if (isPasswordCorrect) {
-				const token = jwt.sign(
-					{id: userFromDB.id, email: userFromDB.email, role: userFromDB.role},
-					process.env.JWT_SECRET_KEY
-				);
-				context.res.setHeader("Set-Cookie", `token=${token}; Secure; HttpOnly`);
-				return "Login accepted";
-			} else {
-				return new Error("Email ou mot de passe incorrect");
+			if (!isPasswordCorrect) {
+				throw new AuthenticationError("Wrong credentials");
 			}
+
+			const token = jwt.sign(
+				{id: userFromDB.id, email: userFromDB.email, role: userFromDB.role},
+				process.env.JWT_SECRET_KEY
+			);
+
+			context.res.setHeader("Set-Cookie", `token=${token}; Secure; HttpOnly`);
+			return "Login accepted";
+
 		} catch (err) {
-			throw new Error("Internal Server Error");
+			if (err instanceof EntityNotFoundError || err instanceof AuthenticationError) {
+				console.log("User not found:", err);
+				throw new AuthenticationError("Wrong credentials");
+			}
+
+			console.error("Internal server error during login:", err);
+			throw new Error("Internal server error");
 		}
 	}
 
