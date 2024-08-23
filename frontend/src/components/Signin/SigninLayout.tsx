@@ -1,20 +1,23 @@
 import {FC} from "react";
 import styled from "@emotion/styled";
 import Signin from "../../assets/Signin.png";
-import {Button, Form, Input} from "antd";
+import {Button, Form, Input, notification} from "antd";
 import {colors} from "../../_colors.ts";
-import {useMutation} from "@apollo/client";
+import {ApolloError, useMutation} from "@apollo/client";
 import {LOGIN_MUTATION} from "../../graphql/mutations.ts";
 import {useNavigate} from "react-router-dom";
 
 const {Item} = Form
 const SigninLayout: FC = () => {
+	const [notifApi, contextHolder] = notification.useNotification()
+
 	const navigate = useNavigate()
 	const [login, {loading, error}] = useMutation(LOGIN_MUTATION, {
 		onCompleted: () => {
 			navigate("/dashboard");
 		},
-		onError: (error) => {
+		onError: (error: ApolloError) => {
+			notifApi.error(error)
 			console.error("Login error", error);
 		}
 	});
@@ -35,6 +38,7 @@ const SigninLayout: FC = () => {
 
 	return (
 		<SignInLayout>
+			{contextHolder}
 			<FormContainer>
 				<TitleContainer>
 					<Title>Hello again !</Title>
@@ -54,7 +58,7 @@ const SigninLayout: FC = () => {
 					<Item>
 						<Button style={{
 							width: '100%', borderRadius: 30
-						}} htmlType="submit" type='primary'>Login</Button>
+						}} htmlType="submit" type='primary' disabled={loading}>Login</Button>
 					</Item>
 				</Form>
 				<RegisterTitleContainer>

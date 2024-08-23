@@ -58,7 +58,7 @@ class UserResolver {
 				userFromDB.password,
 				passwordFromClient
 			);
-			console.log("is password correct", isPasswordCorrect);
+
 			if (isPasswordCorrect) {
 				const token = jwt.sign(
 					{id: userFromDB.id, email: userFromDB.email, role: userFromDB.role},
@@ -67,11 +67,10 @@ class UserResolver {
 				context.res.setHeader("Set-Cookie", `token=${token}; Secure; HttpOnly`);
 				return "Login accepted";
 			} else {
-				throw new Error("Bad Login");
+				return new Error("Email ou mot de passe incorrect");
 			}
 		} catch (err) {
-			console.log(err);
-			throw new Error("Bad Login");
+			throw new Error("Internal Server Error");
 		}
 	}
 
