@@ -15,3 +15,11 @@ export const mainTheme: ThemeConfig = {
 		borderRadius: 10,
 	},
 }
+
+export const LightOnDarkTheme: ThemeConfig = {
+	token: {
+		colorText: 'whitesmoke',
+		colorTextSecondary: '#7c7c7c',
+		colorTextTertiary: '#a2a2a2'
+	}
+}

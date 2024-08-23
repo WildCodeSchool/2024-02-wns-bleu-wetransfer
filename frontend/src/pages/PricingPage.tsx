@@ -22,8 +22,9 @@ const PricingPage = () => {
 		<PricingPageWrapper>
 			<PricingTitle>Pricing</PricingTitle>
 			<CardsContainer>
-				{cardsContent.map((plan) => (
+				{cardsContent.map((plan, index) => (
 					<Card
+						key={index}
 						style={{
 							width: 300,
 							border: plan.suggested ? '5px solid rgba(231,166,26,1)' : 'none'
@@ -61,7 +62,7 @@ const CardsContainer = styled.div`
     align-items: center;
 `
 
-const PricingTitle = styled.h3`
+export const PricingTitle = styled.h3`
     font-size: 30px;
     color: white;
 `
