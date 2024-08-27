@@ -41,3 +41,17 @@ jobs:
           push: true
           context: "{{defaultContext}}:frontend"
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/wildtransfer:latest
+      - name: Build and push backend
+        uses: docker/build-push-action@v4
+        with:
+          push: true
+          context: "{{defaultContext}}:backend"
+          file: Dockerfile.prod
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/wildtransfer:latest
+      - name: Build and push files
+        uses: docker/build-push-action@v4
+        with:
+          push: true
+          context: "{{defaultContext}}:files"
+          file: Dockerfile.prod
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/wildtransfer:latest
