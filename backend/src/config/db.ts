@@ -14,7 +14,7 @@ export const dataSource = new DataSource({
 	port: 5432,
 	username: "postgres",
 	password: "postgres",
-	database: "postgres",
+	database: "wild-transfer",
 	synchronize: true,
 	logging: ["error", "query", "schema"],
 	entities: [
