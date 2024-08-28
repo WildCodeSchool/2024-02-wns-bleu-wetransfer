@@ -35,21 +35,17 @@ services:
         volumes:
             - ./init.sql:/docker-entrypoint-initdb.d/init.sql
             - ./postgres-data/data:/var/lib/postgresql/data
-    adminer:
-        image: adminer
-        ports:
-            - "8080:8080"
     files:
         image: lucasboillot/wildtransfer-files
         build:
             dockerfile: Dockerfile.prod
+        env_file:   
+            - .env.production
         healthcheck:
             test: "curl --fail --request GET --url 'http://localhost:3000' || exit 1"
             interval: 1s
             timeout: 2s
             retries: 100
-        env_file:
-            - ./files/.env
     apigateway:
         image: nginx
         volumes:
