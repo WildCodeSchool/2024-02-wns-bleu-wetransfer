@@ -62,4 +62,4 @@ services:
             files:
                 condition: service_healthy
         ports:
-            - "7002:80"
+            - ${GATEWAY_PORT:-8000}:80
