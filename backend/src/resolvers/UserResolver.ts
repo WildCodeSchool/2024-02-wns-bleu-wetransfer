@@ -1,8 +1,23 @@
 import {User} from "../entities/user";
-import {Arg, AuthenticationError, Ctx, Mutation, Query, Resolver} from "type-graphql";
+import {Arg, AuthenticationError, Ctx, Field, Mutation, ObjectType, Query, Resolver} from "type-graphql";
 import argon2 from "argon2";
 import jwt from "jsonwebtoken";
 import {EntityNotFoundError} from "typeorm";
+import {Context} from "../index";
+
+@ObjectType()
+class UserInfo {
+	@Field()
+	isLoggedIn!: boolean;
+	@Field()
+	email!: string;
+	@Field()
+	role!: string;
+	@Field()
+	firstname!: string;
+	@Field()
+	lastname!: string;
+}
 
 @Resolver(User)
 class UserResolver {
@@ -56,7 +71,6 @@ class UserResolver {
 			}
 
 			const userFromDB = await User.findOneByOrFail({email: emailFromClient});
-			console.log("UserFromDB", userFromDB);
 
 			const isPasswordCorrect = await argon2.verify(
 				userFromDB.password,
@@ -90,6 +104,33 @@ class UserResolver {
 	async logout(@Ctx() context: any) {
 		context.res.setHeader("Set-Cookie", `token=;Max-Age=0`);
 		return "Logged out";
+	}
+
+	@Query(() => UserInfo)
+	async getConnectedUser(@Ctx() context: Context): Promise<UserInfo> {
+
+		console.log("getConnectedUser triggered", context)
+
+		const user: User | null = await User.findOneBy({id: context.id});
+
+		console.log("getConnectedUser", user)
+
+		if (user) {
+			return {
+				email: user.email,
+				role: user.role,
+				firstname: user.firstname,
+				lastname: user.lastname,
+				isLoggedIn: true,
+			};
+		}
+		return {
+			email: '',
+			role: '',
+			firstname: '',
+			lastname: '',
+			isLoggedIn: false,
+		}
 	}
 }
 

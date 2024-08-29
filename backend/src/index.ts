@@ -40,6 +40,8 @@ const start = async () => {
 			UserAccessFileResolver,
 			BillingResolver,
 		],
+
+		
 		authChecker: ({context}: { context: Context }, roles) => {
 			console.log("roles for this query/mutation ", roles);
 			// Check user
