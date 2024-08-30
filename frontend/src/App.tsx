@@ -8,6 +8,7 @@ import UserLayout from "./components/user/UserLayout.tsx";
 import VisitorLayout from "./components/visitor/VisitorLayout.tsx";
 import {Container} from "./globalStyles.tsx";
 import PricingPage from "./pages/PricingPage.tsx";
+import BillingPage from "./pages/BillingPage.tsx";
 
 const App = () => {
 
@@ -18,13 +19,14 @@ const App = () => {
 			path: '/access', element: <VisitorLayout/>, children: [
 				{path: 'login', element: <AccessPage/>},
 				{path: 'register', element: <AccessPage/>},
-			]	
+				{path: 'pricing', element: <PricingPage/>},
+			]
 		},
 		{
 			path: '/dashboard', element: <UserLayout/>, children: [
 				{index: true, element: <Dashboard/>},
 				{path: 'settings', element: <SettingsPage/>},
-				{path: 'pricing', element: <PricingPage/>}
+				{path: 'billing', element: <BillingPage/>}
 			]
 		}
 	])

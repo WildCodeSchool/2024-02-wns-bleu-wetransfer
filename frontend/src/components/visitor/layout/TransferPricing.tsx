@@ -2,8 +2,11 @@ import {FC} from "react";
 import styled from "@emotion/styled";
 import {colors} from "../../../_colors.ts";
 import {DollarOutlined, UploadOutlined} from "@ant-design/icons";
+import {useNavigate} from 'react-router-dom'
 
 const TransferPricing: FC = () => {
+	const navigate = useNavigate()
+
 	return (
 		<TransferPricingWrapper>
 			<ButtonContainer>
@@ -19,7 +22,7 @@ const TransferPricing: FC = () => {
 					}}/>
 				<ButtonName>Transfer File</ButtonName>
 			</ButtonContainer>
-			<ButtonContainer>
+			<ButtonContainer onClick={() => navigate('/access/pricing')}>
 				<DollarOutlined style={{fontSize: 22}}/>
 				<ButtonName>Pricing</ButtonName>
 			</ButtonContainer>
