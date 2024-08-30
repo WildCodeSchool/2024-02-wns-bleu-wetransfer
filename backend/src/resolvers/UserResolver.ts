@@ -1,23 +1,10 @@
-import {User} from "../entities/user";
-import {Arg, AuthenticationError, Ctx, Field, Mutation, ObjectType, Query, Resolver} from "type-graphql";
+import {User, UserInfo} from "../entities/user";
+import {Arg, AuthenticationError, Ctx, Mutation, Query, Resolver} from "type-graphql";
 import argon2 from "argon2";
 import jwt from "jsonwebtoken";
 import {EntityNotFoundError} from "typeorm";
 import {Context} from "../index";
-
-@ObjectType()
-class UserInfo {
-	@Field()
-	isLoggedIn!: boolean;
-	@Field()
-	email!: string;
-	@Field()
-	role!: string;
-	@Field()
-	firstname!: string;
-	@Field()
-	lastname!: string;
-}
+import cookie from 'cookie'
 
 @Resolver(User)
 class UserResolver {
@@ -83,10 +70,18 @@ class UserResolver {
 
 			const token = jwt.sign(
 				{id: userFromDB.id, email: userFromDB.email, role: userFromDB.role},
-				process.env.JWT_SECRET_KEY
+				process.env.JWT_SECRET_KEY,
+				{expiresIn: '1h'}
 			);
 
-			context.res.setHeader("Set-Cookie", `token=${token}; Secure; HttpOnly`);
+			const serializedCookie = cookie.serialize("token", token, {
+				httpOnly: true,
+				sameSite: "strict",
+				maxAge: 3600,
+				path: "/",
+			});
+
+			context.res.setHeader("Set-Cookie", serializedCookie);
 			return "Login accepted";
 
 		} catch (err) {
@@ -102,18 +97,14 @@ class UserResolver {
 
 	@Mutation(() => String)
 	async logout(@Ctx() context: any) {
-		context.res.setHeader("Set-Cookie", `token=;Max-Age=0`);
+		context.res.setHeader("Set-Cookie", cookie.serialize("token", ""));
 		return "Logged out";
 	}
 
 	@Query(() => UserInfo)
 	async getConnectedUser(@Ctx() context: Context): Promise<UserInfo> {
 
-		console.log("getConnectedUser triggered", context)
-
 		const user: User | null = await User.findOneBy({id: context.id});
-
-		console.log("getConnectedUser", user)
 
 		if (user) {
 			return {
@@ -125,10 +116,10 @@ class UserResolver {
 			};
 		}
 		return {
-			email: '',
-			role: '',
-			firstname: '',
-			lastname: '',
+			email: "",
+			role: "",
+			firstname: "",
+			lastname: "",
 			isLoggedIn: false,
 		}
 	}

@@ -2,13 +2,11 @@ import "reflect-metadata";
 import "dotenv/config";
 import {buildSchema} from "type-graphql";
 import {ApolloServer} from "@apollo/server";
-import {expressMiddleware} from '@apollo/server/express4';
 import {ApolloServerPluginDrainHttpServer} from '@apollo/server/plugin/drainHttpServer';
 import express from "express";
 import http from "http";
 import cors from "cors";
 import jwt from "jsonwebtoken";
-import setCookieParser from "set-cookie-parser";
 import {dataSource} from "./config/db";
 import PlanResolver from "./resolvers/PlanResolver";
 import ReportResolver from "./resolvers/ReportResolver";
@@ -18,6 +16,8 @@ import UserResolver from "./resolvers/UserResolver";
 import FileResolver from "./resolvers/FileResolver";
 import UserAccessFileResolver from "./resolvers/UserAccessFileResolver";
 import BillingResolver from "./resolvers/BillingResolver";
+import {startStandaloneServer} from "@apollo/server/standalone";
+import cookie from 'cookie'
 
 export type Context = {
 	id: number;
@@ -41,7 +41,7 @@ const start = async () => {
 			BillingResolver,
 		],
 
-		
+
 		authChecker: ({context}: { context: Context }, roles) => {
 			console.log("roles for this query/mutation ", roles);
 			// Check user
@@ -80,38 +80,29 @@ const start = async () => {
 		plugins: [ApolloServerPluginDrainHttpServer({httpServer})],
 	});
 
-	await server.start();
+	const {url} = await startStandaloneServer(server, {
+		listen: {port: 4000},
+		context: async ({req, res}) => {
+			if (process.env.JWT_SECRET_KEY === undefined) {
+				throw new Error("NO JWT SECRET KEY CONFIGURED");
+			}
+			const cookies = cookie.parse(req.headers.cookie ?? "");
 
-	app.use(
-		'/graphql',
-		express.json(),
-		expressMiddleware(server, {
-			context: async ({req, res}) => {
-				if (process.env.JWT_SECRET_KEY === undefined) {
-					throw new Error("NO JWT SECRET KEY CONFIGURED");
+			if (cookies.token) {
+				const payload = jwt.verify(
+					cookies.token,
+					process.env.JWT_SECRET_KEY
+				) as jwt.JwtPayload;
+
+				if (payload) {
+					return {...payload, res: res};
 				}
-				const cookies = setCookieParser.parse(req.headers.cookie ?? "", {
-					map: true,
-				});
+			}
+			return {res: res};
+		},
+	})
 
-				if (cookies.token && cookies.token.value) {
-					const payload = jwt.verify(
-						cookies.token.value,
-						process.env.JWT_SECRET_KEY
-					) as jwt.JwtPayload;
-					if (payload) {
-						return {...payload, res: res};
-					}
-				}
-				return {res: res};
-			},
-		}),
-	);
-
-	await new Promise<void>((resolve) =>
-		httpServer.listen({port: 4000}, resolve)
-	);
-	console.log(`🚀 Server ready at http://localhost:4000/graphql`);
+	console.log(`🚀 Server ready at ${url}`);
 };
 
 start();

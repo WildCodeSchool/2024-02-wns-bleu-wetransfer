@@ -25,7 +25,7 @@ export class Billing extends BaseEntity {
 	@CreateDateColumn()
 	subscription_date: Date;
 
-	@Field()
+	@Field({nullable: true})
 	@Column({nullable: true})
 	end_subscription_date: Date;
 
@@ -45,10 +45,12 @@ export class Billing extends BaseEntity {
 	@CreateDateColumn()
 	updated_at: Date;
 
-	@ManyToOne(() => Plan)
+	@Field(() => Plan)
+	@ManyToOne(() => Plan, plan => plan.billings)
 	@JoinColumn({name: "plan_id", referencedColumnName: "id"})
 	plan: Plan;
 
+	@Field(() => User)
 	@OneToOne(() => User, user => user.billing)
 	@JoinColumn({name: "user_id", referencedColumnName: "id"})
 	user: User;

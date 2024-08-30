@@ -64,6 +64,7 @@ const UserLayout: FC = () => {
 	}
 
 	if (error || !data || !data.getConnectedUser) {
+		console.log(error)
 		return <p>Error loading user data.</p>;
 	}
 
