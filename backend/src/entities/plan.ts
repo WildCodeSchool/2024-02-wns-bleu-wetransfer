@@ -38,6 +38,7 @@ export class Plan extends BaseEntity {
 	@CreateDateColumn({type: "timestamp"})
 	updated_at: Date;
 
-	@OneToMany(() => Billing, (billing) => billing.plan)
+	@Field(() => [Billing])
+	@OneToMany(() => Billing, billing => billing.plan)
 	billings: Billing[];
 }

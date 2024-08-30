@@ -1,30 +1,39 @@
-import {FC} from "react";
+import {createContext, FC} from "react";
 import {HeaderContainer, WildTransferLogo} from "../visitor/VisitorLayout.tsx";
 import styled from "@emotion/styled";
 import {Avatar, Dropdown, MenuProps} from "antd";
 import {DashboardOutlined, DollarOutlined, LogoutOutlined, SettingOutlined} from "@ant-design/icons";
 import {Link, Outlet, useNavigate} from "react-router-dom";
-import {ApolloError, useMutation} from '@apollo/client'
+import {ApolloError, useMutation, useQuery} from '@apollo/client';
 import {LOGOUT} from "../../graphql/mutations.ts";
+import {GET_CONNECTED_USER} from "../../graphql/queries.ts";
 
+// Context setup
+export const UserContext = createContext({
+	isLoggedIn: false,
+	email: "",
+	role: "",
+	firstname: "",
+	lastname: "",
+});
 
 const UserLayout: FC = () => {
-	const navigate = useNavigate()
+	const navigate = useNavigate();
 
-	const [logout, {loading, error}] = useMutation(LOGOUT, {
+	const {data, error, loading, refetch} = useQuery(GET_CONNECTED_USER);
+
+	const [logout] = useMutation(LOGOUT, {
 		onCompleted: () => {
-			navigate('/')
+			navigate('/');
 		},
 		onError: (err: ApolloError) => {
-
-			console.error(err)
+			console.error(err);
 		}
-	})
+	});
 
 	const handleLogout = (): void => {
-		logout()
-	}
-
+		logout();
+	};
 
 	const items: MenuProps['items'] = [
 		{
@@ -50,24 +59,47 @@ const UserLayout: FC = () => {
 		},
 	];
 
+	if (loading) {
+		return <p>Loading...</p>;
+	}
+
+	if (error || !data || !data.getConnectedUser) {
+		console.log(error)
+		return <p>Error loading user data.</p>;
+	}
+
+	console.log(data)
 
 	return (
-		<UserLayoutContainer>
-			<HeaderContainer>
-				<WildTransferLogo onClick={() => navigate('/dashboard')}>WildTransfer</WildTransferLogo>
-				<Dropdown trigger="click" menu={{items}} placement="bottomRight">
-					<Avatar style={{backgroundColor: '#fde3cf', color: '#f56a00', cursor: 'pointer'}}>U</Avatar>
-				</Dropdown>
-			</HeaderContainer>
-			<Outlet/>
-		</UserLayoutContainer>
-	)
-}
-
+		<UserContext.Provider
+			value={{
+				isLoggedIn: data.getConnectedUser.isLoggedIn,
+				email: data.getConnectedUser.email,
+				role: data.getConnectedUser.role,
+				firstname: data.getConnectedUser.firstname,
+				lastname: data.getConnectedUser.lastname,
+			}}
+		>
+			<UserLayoutContainer>
+				<HeaderContainer>
+					<WildTransferLogo onClick={() => navigate('/dashboard')}>WildTransfer</WildTransferLogo>
+					<Dropdown trigger="click" menu={{items}} placement="bottomRight">
+						<Avatar style={{
+							backgroundColor: '#fde3cf',
+							color: '#f56a00',
+							cursor: 'pointer'
+						}}>{data.getConnectedUser.firstname.charAt(0).toUpperCase()}</Avatar>
+					</Dropdown>
+				</HeaderContainer>
+				<Outlet/>
+			</UserLayoutContainer>
+		</UserContext.Provider>
+	);
+};
 
 const UserLayoutContainer = styled.div`
     height: auto;
     width: 100%;
-`
+`;
 
-export default UserLayout
+export default UserLayout;
