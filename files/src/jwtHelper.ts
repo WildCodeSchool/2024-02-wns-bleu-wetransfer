@@ -1,7 +1,10 @@
 import jwt from 'jsonwebtoken'
+import dotenv from "dotenv";
+import path from "path";
+
+dotenv.config({path: path.join(__dirname, '../../.env')})
 
 const SECRET_KEY = process.env.JWT_SECRET_KEY!
-
 
 export const signToken = (payload: object, expiresIn: string | number) => {
 	console.log(SECRET_KEY)
