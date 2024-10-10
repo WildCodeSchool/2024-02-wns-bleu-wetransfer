@@ -13,8 +13,8 @@ export const createUploadToken = (payload: object, expiresIn: string | number) =
 
 export const verifyToken = (token: string) => {
 	try {
-		return jwt.verify(token, SECRET_KEY)
+		return jwt.verify(token, SECRET_KEY);
 	} catch (err) {
-		return null
+		return null;
 	}
-}
+};

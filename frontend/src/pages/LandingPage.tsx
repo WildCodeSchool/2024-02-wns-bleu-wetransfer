@@ -255,6 +255,9 @@ const SuggestionText = styled.p`
 	color: whitesmoke;
 	font-size: 20px;
 	font-weight: 200;
+	@media (max-width: 768px) {
+		font-size: calc(10px + 2px + 0vmin);
+	}
 `;
 
 const SuggestionsWrapper = styled.div`
@@ -268,6 +271,10 @@ const Title = styled.h1`
 	font-size: 70px;
 	color: whitesmoke;
 	font-weight: 500;
+	@media (max-width: 768px) {
+		max-width: 100%;
+		font-size: 3.5rem;
+	}
 `;
 
 const CardsWrapper = styled.div`
@@ -275,6 +282,10 @@ const CardsWrapper = styled.div`
 	justify-content: center;
 	align-items: center;
 	gap: 50px;
+	max-width: 100%;
+	@media (max-width: 768px) {
+		flex-direction: column-reverse;
+	}
 `;
 
 const LandingPageWrapper = styled.div`
@@ -286,7 +297,6 @@ const LandingPageWrapper = styled.div`
 	align-items: center;
 	justify-content: space-around;
 	gap: 20px;
-	padding: 20px;
 `;
 
 const FormContainer = styled.div<{ background?: string }>`
@@ -295,11 +305,23 @@ const FormContainer = styled.div<{ background?: string }>`
 	border-radius: 20px;
 	text-align: center;
 	width: 500px;
+	flex: 1 1 45%;
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
 	height: 580px;
+	box-sizing: border-box;
+	@media (max-width: 768px) {
+		width: 120%;
+		height: 100%;
+	}
+	&:nth-of-type(2) {
+		@media (max-width: 768px) {
+			padding-top: 70px;
+			padding-bottom: 90px;
+		}
+	}
 `;
 
 const UploadTitle = styled.h2`
