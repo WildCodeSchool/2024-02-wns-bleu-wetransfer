@@ -46,7 +46,7 @@ services:
             timeout: 2s
             retries: 100
         env_file:
-            - ./files/.env
+            - .env
         depends_on:
             backend:
                 condition: service_healthy
