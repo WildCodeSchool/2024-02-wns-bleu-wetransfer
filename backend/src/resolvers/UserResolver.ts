@@ -1,8 +1,10 @@
-import {User} from "../entities/user";
+import {User, UserInfo} from "../entities/user";
 import {Arg, AuthenticationError, Ctx, Mutation, Query, Resolver} from "type-graphql";
 import argon2 from "argon2";
 import jwt from "jsonwebtoken";
 import {EntityNotFoundError} from "typeorm";
+import {Context} from "../index";
+import cookie from 'cookie'
 
 @Resolver(User)
 class UserResolver {
@@ -56,7 +58,6 @@ class UserResolver {
 			}
 
 			const userFromDB = await User.findOneByOrFail({email: emailFromClient});
-			console.log("UserFromDB", userFromDB);
 
 			const isPasswordCorrect = await argon2.verify(
 				userFromDB.password,
@@ -69,10 +70,18 @@ class UserResolver {
 
 			const token = jwt.sign(
 				{id: userFromDB.id, email: userFromDB.email, role: userFromDB.role},
-				process.env.JWT_SECRET_KEY
+				process.env.JWT_SECRET_KEY,
+				{expiresIn: '1h'}
 			);
 
-			context.res.setHeader("Set-Cookie", `token=${token}; Secure; HttpOnly`);
+			const serializedCookie = cookie.serialize("token", token, {
+				httpOnly: true,
+				sameSite: "strict",
+				maxAge: 3600,
+				path: "/",
+			});
+
+			context.res.setHeader("Set-Cookie", serializedCookie);
 			return "Login accepted";
 
 		} catch (err) {
@@ -88,8 +97,31 @@ class UserResolver {
 
 	@Mutation(() => String)
 	async logout(@Ctx() context: any) {
-		context.res.setHeader("Set-Cookie", `token=;Max-Age=0`);
+		context.res.setHeader("Set-Cookie", cookie.serialize("token", ""));
 		return "Logged out";
+	}
+
+	@Query(() => UserInfo)
+	async getConnectedUser(@Ctx() context: Context): Promise<UserInfo> {
+
+		const user: User | null = await User.findOneBy({id: context.id});
+
+		if (user) {
+			return {
+				email: user.email,
+				role: user.role,
+				firstname: user.firstname,
+				lastname: user.lastname,
+				isLoggedIn: true,
+			};
+		}
+		return {
+			email: "",
+			role: "",
+			firstname: "",
+			lastname: "",
+			isLoggedIn: false,
+		}
 	}
 }
 

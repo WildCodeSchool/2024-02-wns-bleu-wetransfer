@@ -62,3 +62,22 @@ export class User extends BaseEntity {
 	@JoinColumn()
 	user_access_file: UserAccessFile;
 }
+
+
+@ObjectType()
+export class UserInfo {
+	@Field()
+	isLoggedIn!: boolean;
+
+	@Field()
+	email!: string;
+
+	@Field()
+	role!: string;
+
+	@Field()
+	firstname!: string;
+
+	@Field()
+	lastname!: string;
+}

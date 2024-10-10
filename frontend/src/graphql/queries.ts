@@ -10,3 +10,31 @@ export const GET_ALL_PLANS = gql`
         }
     }
 `;
+
+export const GET_CONNECTED_USER = gql`
+    query GetConnectedUser {
+        getConnectedUser {
+            email,
+            firstname,
+            lastname,
+            role,
+            isLoggedIn,
+        }
+    }
+`;
+
+export const GET_USER_BILLING = gql`
+    query GetUserBilling {
+        getUserBilling {
+            subscription_date
+            end_subscription_date
+            next_payment_date
+            last_payment_date
+            plan {
+                name
+                price
+                description
+            }
+        }
+    }
+`;
