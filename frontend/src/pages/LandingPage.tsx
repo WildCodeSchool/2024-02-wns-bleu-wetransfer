@@ -50,7 +50,7 @@ const LandingPage: React.FC = () => {
 		}
 	};
 
-	const handleUpload = async (values: FormValues) => {
+	const handleUpload = (values: FormValues) => {
 		console.log(values);
 		const formData = new FormData();
 		fileList.forEach((file) => {
@@ -65,31 +65,34 @@ const LandingPage: React.FC = () => {
 		formData.append("title", values.title);
 		formData.append("message", values.message);
 
-		try {
-			console.log(formData);
-			const response = await axios.post(
-				"http://localhost:7002/files/upload",
-				formData,
-				{
-					headers: {
-						"Content-Type": "multipart/form-data",
-					},
-					onUploadProgress: (progressEvent) => {
-						if (progressEvent.total) {
-							const percent = Math.round(
-								(progressEvent.loaded * 100) / progressEvent.total
-							);
-							console.log(percent); // You can update the UI to show the progress
-						}
-					},
-				}
-			);
+		console.log(formData);
+
+		axios.post(
+			"http://localhost:3000/files/upload",
+			formData,
+			{
+				headers: {
+					"Content-Type": "multipart/form-data",
+					"Access-Control-Allow-Origin": "http://localhost:5173"
+				},
+				withCredentials: true,
+				onUploadProgress: (progressEvent) => {
+					if (progressEvent.total) {
+						const percent = Math.round(
+							(progressEvent.loaded * 100) / progressEvent.total
+						);
+						console.log(percent); // You can update the UI to show the progress
+					}
+				},
+			},
+		).then((res) => {
+			console.log(res.data)
+			form.resetFields()
 			message.success("Files uploaded successfully");
-			console.log(response.data); // Handle the response data if needed
-		} catch (error) {
-			console.error("Error uploading file:", error);
+		}).catch((err) => {
+			console.error(err)
 			message.error("Error uploading files");
-		}
+		})
 	};
 
 	const handleChange = (info: UploadChangeParam<UploadFile>) => {

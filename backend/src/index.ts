@@ -20,7 +20,6 @@ import cookie from 'cookie'
 import path from "path";
 import dotenv from 'dotenv'
 
-
 dotenv.config({path: path.join(__dirname, '../../.env')})
 
 
@@ -74,7 +73,7 @@ const start = async () => {
 	const httpServer = http.createServer(app);
 
 	const corsOptions = {
-		origin: ['http://localhost:5173', 'http://localhost:7002', 'http://localhost:3000'],
+		origin: ['http://localhost:5173', 'http://localhost:7002', 'http://localhost:3000', 'http://localhost:3000'],
 		credentials: true,
 	};
 
