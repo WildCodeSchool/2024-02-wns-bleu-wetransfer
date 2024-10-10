@@ -35,6 +35,11 @@ const SignInLayout = styled.div`
 	background: white;
 	justify-content: center;
 	align-items: center;
+	@media (max-width: 768px) {
+		width: 75%;
+		padding-top: 25px;
+		padding-bottom: 50px;
+	}
 `;
 
 export default SigninLayout;
