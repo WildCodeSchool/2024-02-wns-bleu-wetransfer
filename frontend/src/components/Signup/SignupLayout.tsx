@@ -6,7 +6,9 @@ import SignUp from "../visitor/signUp/SignUp";
 const SignupLayout: FC = () => {
 	return (
 		<SignUpLayout>
-			<FormSign><SignUp/></FormSign>
+			<FormSign>
+				<SignUp />
+			</FormSign>
 			<StyledImage src={Signin} alt="" />
 		</SignUpLayout>
 	);
@@ -25,6 +27,9 @@ const StyledImage = styled.img`
 	width: 100%;
 	margin-left: 0.2rem;
 	height: auto;
+	@media (max-width: 768px) {
+		display: none;
+	}
 `;
 
 const SignUpLayout = styled.div`
@@ -36,6 +41,9 @@ const SignUpLayout = styled.div`
 	display: flex;
 	flex-direction: row-reverse;
 	background: white;
+	@media (max-width: 768px) {
+		width: 80%;
+	}
 `;
 
 export default SignupLayout;

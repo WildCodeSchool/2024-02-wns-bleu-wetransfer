@@ -1,16 +1,25 @@
-import React, {useState} from "react";
-import {Button, Divider, Form, Input, message, Select, Upload, UploadFile,} from "antd";
-import {MailOutlined, PlusCircleFilled} from "@ant-design/icons";
+import React, { useState } from "react";
+import {
+	Button,
+	Divider,
+	Form,
+	Input,
+	message,
+	Select,
+	Upload,
+	UploadFile,
+} from "antd";
+import { MailOutlined, PlusCircleFilled } from "@ant-design/icons";
 import axios from "axios";
 import styled from "@emotion/styled";
-import {UploadChangeParam} from "antd/es/upload";
+import { UploadChangeParam } from "antd/es/upload";
 import SignInForm from "../components/Signin/SignInForm.tsx";
-import {useNavigate} from 'react-router-dom'
-import {colors} from "../_colors.ts";
+import { useNavigate } from "react-router-dom";
+import { colors } from "../_colors.ts";
 
-const {Dragger} = Upload;
-const {Item} = Form;
-const {TextArea} = Input;
+const { Dragger } = Upload;
+const { Item } = Form;
+const { TextArea } = Input;
 
 interface FormValues {
 	senderEmail: string;
@@ -22,7 +31,7 @@ interface FormValues {
 const LandingPage: React.FC = () => {
 	const [fileList, setFileList] = useState<UploadFile[]>([]);
 	const [form] = Form.useForm();
-	const navigate = useNavigate()
+	const navigate = useNavigate();
 
 	const handleBeforeUpload = (file: UploadFile) => {
 		// Validate the file type and size before uploading
@@ -77,7 +86,8 @@ const LandingPage: React.FC = () => {
 					onUploadProgress: (progressEvent) => {
 						if (progressEvent.total) {
 							const percent = Math.round(
-								(progressEvent.loaded * 100) / progressEvent.total
+								(progressEvent.loaded * 100) /
+									progressEvent.total
 							);
 							console.log(percent); // You can update the UI to show the progress
 						}
@@ -94,7 +104,9 @@ const LandingPage: React.FC = () => {
 
 	const handleChange = (info: UploadChangeParam<UploadFile>) => {
 		// Filter out the files that do not pass the validation
-		const newFileList = info.fileList.filter((file) => file.status !== "error");
+		const newFileList = info.fileList.filter(
+			(file) => file.status !== "error"
+		);
 		setFileList(newFileList);
 	};
 
@@ -104,11 +116,17 @@ const LandingPage: React.FC = () => {
 			<CardsWrapper>
 				<FormContainer background="#65558F">
 					<UploadTitle>Send files casually</UploadTitle>
-					<StyledDivider/>
-					<Form form={form} name="visitorSendFilesForm" onFinish={handleUpload}>
+					<StyledDivider />
+					<Form
+						form={form}
+						name="visitorSendFilesForm"
+						onFinish={handleUpload}
+					>
 						<Item
 							name="files"
-							rules={[{required: true, message: "Files missing"}]}
+							rules={[
+								{ required: true, message: "Files missing" },
+							]}
 						>
 							<Dragger
 								name="file"
@@ -116,13 +134,23 @@ const LandingPage: React.FC = () => {
 								beforeUpload={handleBeforeUpload}
 								onChange={handleChange}
 								fileList={fileList}
-								style={{background: "rgba(255,255,255,0.26)", height: 60}}
+								style={{
+									background: "rgba(255,255,255,0.26)",
+									height: 60,
+								}}
 							>
-								<PlusCircleFilled style={{fontSize: 20, color: colors.white}}/>
+								<PlusCircleFilled
+									style={{
+										fontSize: 20,
+										color: colors.white,
+									}}
+								/>
 								<p className="ant-upload-text">
 									Click or drag file to this area to upload
 								</p>
-								<p className="ant-upload-hint">Upload max size : 2 MB</p>
+								<p className="ant-upload-hint">
+									Upload max size : 2 MB
+								</p>
 							</Dragger>
 						</Item>
 						<Item
@@ -134,53 +162,74 @@ const LandingPage: React.FC = () => {
 								},
 							]}
 						>
-							<UploadInput placeholder="Your email" allowClear/>
+							<UploadInput placeholder="Your email" allowClear />
 						</Item>
 						<Item
 							name="receiversEmails"
 							rules={[
 								{
 									required: true,
-									message: "Please enter receiver(s) email(s)",
+									message:
+										"Please enter receiver(s) email(s)",
 								},
 							]}
 						>
 							<Select
 								mode="tags"
-								style={{width: "100%"}}
+								style={{ width: "100%" }}
 								tokenSeparators={[","]}
 								placeholder="Receivers emails"
 								defaultActiveFirstOption={false}
-								suffixIcon={<MailOutlined/>}
+								suffixIcon={<MailOutlined />}
 								open={false}
 							/>
 						</Item>
-						<Divider style={{background: "white"}}/>
+						<Divider style={{ background: "white" }} />
 						<Item name="title">
-							<UploadInput placeholder="Title" allowClear/>
+							<UploadInput placeholder="Title" allowClear />
 						</Item>
 						<Item name="message">
-							<UploadTextArea placeholder="Message" allowClear maxLength={100}/>
+							<UploadTextArea
+								placeholder="Message"
+								allowClear
+								maxLength={100}
+							/>
 						</Item>
 						<Item>
-							<TransferButton type="primary" size="large" htmlType="submit">
+							<TransferButton
+								type="primary"
+								size="large"
+								htmlType="submit"
+							>
 								Transfer Files
 							</TransferButton>
 						</Item>
 					</Form>
 				</FormContainer>
 				<FormContainer background="#ffffff">
-					<SignInForm/>
+					<SignInForm />
 				</FormContainer>
 			</CardsWrapper>
 			<SuggestionsWrapper>
-				<SuggestionText>Unlock insane features by register for <strong>free</strong> !</SuggestionText>
-				<Button style={{borderRadius: 15, color: 'whitesmoke', background: 'none'}}
-				        onClick={() => navigate("/access/pricing")}>
+				<SuggestionText>
+					Unlock insane features by register for <strong>free</strong>{" "}
+					!
+				</SuggestionText>
+				<Button
+					style={{
+						borderRadius: 15,
+						color: "whitesmoke",
+						background: "none",
+					}}
+					onClick={() => navigate("/access/pricing")}
+				>
 					See plans
 				</Button>
-				<Button type='primary' style={{borderRadius: 15}}
-				        onClick={() => navigate("/access/register")}>
+				<Button
+					type="primary"
+					style={{ borderRadius: 15 }}
+					onClick={() => navigate("/access/register")}
+				>
 					Sign Up Now !
 				</Button>
 			</SuggestionsWrapper>
@@ -189,77 +238,99 @@ const LandingPage: React.FC = () => {
 };
 
 const SuggestionText = styled.p`
-    color: whitesmoke;
-    font-size: 20px;
-    font-weight: 200;
-`
+	color: whitesmoke;
+	font-size: 20px;
+	font-weight: 200;
+	@media (max-width: 768px) {
+		font-size: calc(10px + 2px + 0vmin);
+	}
+`;
 
 const SuggestionsWrapper = styled.div`
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 10px
-`
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	gap: 10px;
+`;
 
 const Title = styled.h1`
-    font-size: 70px;
-    color: whitesmoke;
-    font-weight: 500;
-`
+	font-size: 70px;
+	color: whitesmoke;
+	font-weight: 500;
+	@media (max-width: 768px) {
+		max-width: 100%;
+		font-size: 3.5rem;
+	}
+`;
 
 const CardsWrapper = styled.div`
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 50px
-`
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	gap: 50px;
+	max-width: 100%;
+	@media (max-width: 768px) {
+		flex-direction: column-reverse;
+	}
+`;
 
 const LandingPageWrapper = styled.div`
-    background: #0a0025;
-    width: 100%;
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-around;
-    gap: 20px;
-    padding: 20px;
+	background: #0a0025;
+	width: 100%;
+	height: 100vh;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: space-around;
+	gap: 20px;
 `;
 
 const FormContainer = styled.div<{ background?: string }>`
-    background: ${({background}) => (background ? background : "#7b5c8a")};
-    padding: 18px;
-    border-radius: 20px;
-    text-align: center;
-    width: 500px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 580px;
+	background: ${({ background }) => (background ? background : "#7b5c8a")};
+	padding: 18px;
+	border-radius: 20px;
+	text-align: center;
+	width: 500px;
+	flex: 1 1 45%;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	height: 580px;
+	box-sizing: border-box;
+	@media (max-width: 768px) {
+		width: 120%;
+		height: 100%;
+	}
+	&:nth-of-type(2) {
+		@media (max-width: 768px) {
+			padding-top: 70px;
+			padding-bottom: 90px;
+		}
+	}
 `;
 
 const UploadTitle = styled.h2`
-    color: white;
+	color: white;
 `;
 
 const StyledDivider = styled(Divider)`
-    border-color: white;
-    margin: 15px;
+	border-color: white;
+	margin: 15px;
 `;
 
 const UploadInput = styled(Input)`
-    width: 100%;
+	width: 100%;
 `;
 
 const UploadTextArea = styled(TextArea)`
-    width: 100%;
+	width: 100%;
 `;
 
 const TransferButton = styled(Button)`
-    width: 100%;
-    margin-top: 16px;
-    background: #0a0025;
+	width: 100%;
+	margin-top: 16px;
+	background: #0a0025;
 `;
 
 export default LandingPage;
