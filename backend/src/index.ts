@@ -22,7 +22,6 @@ import dotenv from 'dotenv'
 
 dotenv.config({path: path.join(__dirname, '../../.env')})
 
-
 export type Context = {
 	id: number;
 	email: string;

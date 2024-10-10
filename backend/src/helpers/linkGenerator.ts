@@ -1,10 +1,9 @@
-import process from "node:process";
 import jwt from "jsonwebtoken";
-import dotenv from 'dotenv'
+import * as process from 'process'
+import dotenv from "dotenv";
+import path from "path";
 
-dotenv.config({path: '../../../.env'})
-
-console.log(process.env.JWT_SECRET_KEY)
+dotenv.config({path: path.join(__dirname, '../../../.env')})
 
 export const createDownloadToken = (payload: any, expiresIn: string): string => {
 	const secretKey = process.env.JWT_SECRET_KEY
