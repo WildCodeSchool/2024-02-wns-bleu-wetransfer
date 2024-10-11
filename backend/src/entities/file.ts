@@ -28,19 +28,19 @@ export class File extends BaseEntity {
 	id: number;
 
 	@Field()
-	@Column({type: "character varying", length: 265, nullable: false})
+	@Column({type: "character varying", nullable: true})
 	file_uid: string
 
 	@Field()
-	@Column({type: "character varying", length: 65, nullable: true})
+	@Column({type: "character varying", nullable: true})
 	name: string;
 
 	@Field()
-	@Column({type: "character varying", length: 65, nullable: false})
+	@Column({type: "character varying", nullable: true})
 	default_name: string;
 
 	@Field()
-	@Column({type: "character varying", nullable: false})
+	@Column({type: "character varying", nullable: true})
 	path: string;
 
 	@Field()
@@ -48,11 +48,11 @@ export class File extends BaseEntity {
 	size: number;
 
 	@Field()
-	@Column({type: "enum", enum: StatusOption, nullable: false, default: StatusOption.status1})
+	@Column({type: "enum", enum: StatusOption, nullable: true, default: StatusOption.status1})
 	status: StatusOption;
 
 	@Field()
-	@Column({type: "character varying", nullable: false})
+	@Column({type: "character varying", nullable: true})
 	type: string;
 
 	@Field()

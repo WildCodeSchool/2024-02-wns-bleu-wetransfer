@@ -6,20 +6,12 @@ const app = express();
 const port = 3000;
 
 
-app.options("*", cors({
+app.use(cors({
 	origin: ["http://localhost:7002", "http://localhost:3000", "http://localhost:5173"],
-	optionsSuccessStatus: 200,
-	methods: ["POST", "GET", "DELETE", "PUT"],
-	credentials: true
+	credentials: true,
+	methods: ["POST", "GET", "DELETE", "PUT", "OPTIONS"],
+	allowedHeaders: ["Origin", "X-Requested-With", "Content-Type", "Accept", "Authorization"]
 }));
-
-app.use((req, res, next) => {
-	res.header("Access-Control-Allow-Origin", "http://localhost:5173");
-	res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-	res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
-	res.header("Access-Control-Allow-Credentials", "true");
-	next();
-});
 
 
 app.get("/", (req, res) => {

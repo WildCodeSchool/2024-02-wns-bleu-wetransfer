@@ -17,7 +17,7 @@ export const createDownloadToken = (payload: any, expiresIn: string): string => 
 }
 
 export const generateDownloadLink = (token: string) => {
-	const downloadPath = `/file/download?token=${token}`
+	const downloadPath = `/access/download?token=${token}`
 	const domain = process.env.FRONTEND_URL
 
 	return domain + downloadPath

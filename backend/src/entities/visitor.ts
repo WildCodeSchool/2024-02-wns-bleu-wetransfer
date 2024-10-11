@@ -19,7 +19,7 @@ export class Visitor extends BaseEntity {
 	email_is_verified: boolean;
 
 	@Field()
-	@Column({type: "integer", length: 6, nullable: false})
+	@Column({type: "integer", nullable: false, default: 123456})
 	code: number;
 
 	@Field()

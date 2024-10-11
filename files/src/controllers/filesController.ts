@@ -2,13 +2,13 @@ import fs from "fs";
 import path from "path";
 import multer from "multer";
 import {validateFile} from "../validators/fileValidators";
-import {api} from "../../api";
 import {ADD_ONE_UPLOAD} from "../graphql/mutations";
 import {Request} from "express";
+import axios from "axios";
 
-const UPLOADS_DIR = "uploads/";
-const TEMP_DIR = "uploads/temp/";
-const FINAL_DIR = "uploads/final/";
+const UPLOADS_DIR = path.join(__dirname, "../uploads");
+const TEMP_DIR = path.resolve(UPLOADS_DIR, "temp");
+const FINAL_DIR = path.resolve(UPLOADS_DIR, "final");
 
 if (!fs.existsSync(UPLOADS_DIR)) {
 	fs.mkdirSync(UPLOADS_DIR, {recursive: true});
@@ -22,7 +22,7 @@ if (!fs.existsSync(FINAL_DIR)) {
 	fs.mkdirSync(FINAL_DIR, {recursive: true});
 }
 
-const storage = multer.diskStorage({
+export const storage = multer.diskStorage({
 	destination: (req, file, cb) => {
 		cb(null, TEMP_DIR);
 	},
@@ -32,7 +32,6 @@ const storage = multer.diskStorage({
 });
 
 const upload = multer({storage}).array("files", 10);
-
 
 export const addNewUpload = async (req: Request, res: any) => {
 
@@ -68,18 +67,24 @@ export const addNewUpload = async (req: Request, res: any) => {
 		}
 
 		if (validFiles.length > 0) {
-			api.post('/', {
+			axios.post('http://backend:4000/graphql', {
 				query: ADD_ONE_UPLOAD,
 				variables: {
 					...req.body,
-					fileData: filesArray[0],
-					fileStoragePath: "path",
-				}
-			}).then((data) => {
-				console.log(data)
-				res.status(200).json(data)
-			}).catch((err) => {
-				console.error("GraphQL mutation error:", err);
+					fileData: JSON.stringify(filesArray[0]),
+					filePath: "path",
+				},
+			}, {
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				withCredentials: true
+			}).then((response: any) => {
+				console.log("DATAAA", response.data)
+				res.status(200).json(response.data)
+
+			}).catch((err: any) => {
+				console.error(err);
 				res.status(500).send("Error during file upload mutation.");
 			})
 

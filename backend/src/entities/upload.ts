@@ -22,11 +22,11 @@ export class Upload extends BaseEntity {
 	id: number;
 
 	@Field()
-	@Column({type: "character varying", length: 65, nullable: false})
+	@Column({type: "character varying", nullable: false})
 	title: string
 
 	@Field()
-	@Column({type: "text", length: 265, nullable: true})
+	@Column({type: "text", nullable: true})
 	message: string
 
 	@Field()

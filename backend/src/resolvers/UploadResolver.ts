@@ -18,23 +18,25 @@ class UploadResolver {
 		@Arg("message", () => String) message: string,
 		@Arg("title", () => String) title: string,
 		@Arg("fileData", () => String) fileData: any,
-		@Arg("file_path", () => String) filePath: string,
+		@Arg("filePath", () => String) filePath: string,
 	): Promise<string> {
 		try {
 			let visitor = await Visitor.findOneBy({email: senderEmail});
 
 			if (!visitor) {
 				visitor = await Visitor.create({
-					email: senderEmail
+					email: senderEmail,
 				}).save();
 			}
 
-			const {name, size, type, uid} = fileData;
+			const {filename, size, mimetype, uid} = fileData;
+
+			console.log("fileData", fileData)
 
 			const newFile = await File.create({
-				name,
+				name: filename,
 				size,
-				type,
+				type: mimetype,
 				file_uid: uid,
 				path: filePath
 			}).save();
@@ -56,9 +58,11 @@ class UploadResolver {
 					}, '1h');
 
 
-					const dowloadLink: string = generateDownloadLink(downloadToken);
+					const downloadLink: string = generateDownloadLink(downloadToken);
 
-					return dowloadLink;
+					console.log(downloadLink)
+
+					return downloadLink;
 				}
 			}
 			throw new Error("Failed to create upload");

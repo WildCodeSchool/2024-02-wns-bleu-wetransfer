@@ -1,19 +1,18 @@
 export const ADD_ONE_UPLOAD = `
-  mutation CreateOneUpload(
-    $fileStoragePath: String!, 
-    $senderEmail: String!, 
-    $title: String!, 
-    $message: String!, 
-    $receiversEmails: [String]!, 
-    $fileData: Float!
-  ) {
-    createUpload(
-      file_path: $fileStoragePath, 
-      senderEmail: $senderEmail, 
-      title: $title, 
-      message: $message, 
-      receiversEmails: $receiversEmails, 
-      fileData: $fileData
-    )
-  }
+mutation CreateOneUpload(
+$filePath: String!, 
+$fileData: String!, 
+$title: String!, 
+$message: String!, 
+$senderEmail: String!, 
+$receiversEmails: [String!]!) 
+{
+  createUpload(
+  filePath: $filePath, 
+  fileData: $fileData, 
+  title: $title, 
+  message: $message, 
+  senderEmail: $senderEmail, 
+  receiversEmails: $receiversEmails)
+}
 `;
