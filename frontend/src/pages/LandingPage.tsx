@@ -7,6 +7,7 @@ import {UploadChangeParam} from "antd/es/upload";
 import SignInForm from "../components/Signin/SignInForm.tsx";
 import {useNavigate} from 'react-router-dom'
 import {colors} from "../_colors.ts";
+import FileUploadFinishedModal from "../components/visitor/FileUploadFinishedModal.tsx";
 
 const {Dragger} = Upload;
 const {Item} = Form;
@@ -23,6 +24,9 @@ const LandingPage: React.FC = () => {
 	const [fileList, setFileList] = useState<UploadFile[]>([]);
 	const [form] = Form.useForm();
 	const navigate = useNavigate()
+	const [openModal, setOpenModal] = useState<boolean>(false)
+	const [downloadLink, setDownloadLink] = useState<string>('')
+	const [isLoading, setIsLoading] = useState<boolean>(false)
 
 	const handleBeforeUpload = (file: UploadFile) => {
 		// Validate the file type and size before uploading
@@ -50,7 +54,8 @@ const LandingPage: React.FC = () => {
 		}
 	};
 
-	const handleUpload = async (values: FormValues) => {
+	const handleUpload = (values: FormValues) => {
+		setIsLoading(true)
 		console.log(values);
 		const formData = new FormData();
 		fileList.forEach((file) => {
@@ -65,35 +70,40 @@ const LandingPage: React.FC = () => {
 		formData.append("title", values.title);
 		formData.append("message", values.message);
 
-		try {
-			console.log(formData);
-			const response = await axios.post(
-				"http://localhost:7002/files/upload",
-				formData,
-				{
-					headers: {
-						"Content-Type": "multipart/form-data",
-					},
-					onUploadProgress: (progressEvent) => {
-						if (progressEvent.total) {
-							const percent = Math.round(
-								(progressEvent.loaded * 100) / progressEvent.total
-							);
-							console.log(percent); // You can update the UI to show the progress
-						}
-					},
-				}
-			);
+		console.log(formData);
+
+		axios.post(
+			"http://localhost:7002/files/upload",
+			formData,
+			{
+				headers: {
+					"Content-Type": "multipart/form-data",
+				},
+				withCredentials: true,
+				onUploadProgress: (progressEvent) => {
+					if (progressEvent.total) {
+						const percent = Math.round(
+							(progressEvent.loaded * 100) / progressEvent.total
+						);
+						console.log(percent);
+					}
+				},
+			},
+		).then((res) => {
+			console.log(res.data.data.createUpload)
+			form.resetFields()
+			setDownloadLink(res.data.data.createUpload)
+			setOpenModal(true)
 			message.success("Files uploaded successfully");
-			console.log(response.data); // Handle the response data if needed
-		} catch (error) {
-			console.error("Error uploading file:", error);
+			setIsLoading(false)
+		}).catch((err) => {
+			setIsLoading(false)
+			console.error(err)
 			message.error("Error uploading files");
-		}
+		})
 	};
 
 	const handleChange = (info: UploadChangeParam<UploadFile>) => {
-		// Filter out the files that do not pass the validation
 		const newFileList = info.fileList.filter((file) => file.status !== "error");
 		setFileList(newFileList);
 	};
@@ -163,7 +173,7 @@ const LandingPage: React.FC = () => {
 							<UploadTextArea placeholder="Message" allowClear maxLength={100}/>
 						</Item>
 						<Item>
-							<TransferButton type="primary" size="large" htmlType="submit">
+							<TransferButton type="primary" size="large" htmlType="submit" loading={isLoading}>
 								Transfer Files
 							</TransferButton>
 						</Item>
@@ -184,6 +194,7 @@ const LandingPage: React.FC = () => {
 					Sign Up Now !
 				</Button>
 			</SuggestionsWrapper>
+			<FileUploadFinishedModal open={openModal} onCancel={() => setOpenModal(false)} downloadLink={downloadLink}/>
 		</LandingPageWrapper>
 	);
 };

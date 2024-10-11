@@ -1,6 +1,7 @@
 import {Field, ObjectType} from "type-graphql";
 import {BaseEntity, Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn,} from "typeorm";
 import {File} from "./file";
+import {Upload} from "./upload";
 
 @ObjectType()
 @Entity()
@@ -10,15 +11,15 @@ export class Visitor extends BaseEntity {
 	id: number;
 
 	@Field()
-	@Column()
+	@Column({type: "character varying", nullable: false})
 	email: string;
 
 	@Field()
-	@Column({default: false})
+	@Column({type: 'boolean', nullable: false, default: false})
 	email_is_verified: boolean;
 
 	@Field()
-	@Column()
+	@Column({type: "integer", nullable: false, default: 123456})
 	code: number;
 
 	@Field()
@@ -31,4 +32,7 @@ export class Visitor extends BaseEntity {
 
 	@OneToMany(() => File, (file) => file.visitor)
 	files: File[];
+
+	@OneToMany(() => Upload, upload => upload.visitor)
+	uploads: Upload[]
 }

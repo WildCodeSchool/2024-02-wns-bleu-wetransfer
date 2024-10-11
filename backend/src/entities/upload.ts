@@ -1,37 +1,56 @@
-import { Field, ObjectType } from "type-graphql";
+import {Field, ObjectType} from "type-graphql";
 import {
-  BaseEntity,
-  Column,
-  CreateDateColumn,
-  Entity,
-  OneToMany,
-  PrimaryGeneratedColumn,
+	BaseEntity,
+	Column,
+	CreateDateColumn,
+	Entity,
+	ManyToOne,
+	OneToMany,
+	PrimaryGeneratedColumn,
+	UpdateDateColumn,
 } from "typeorm";
-import { File } from "./file";
+import {File} from "./file";
+import {Visitor} from "./visitor";
+import {User} from "./user";
+
 
 @ObjectType()
 @Entity()
 export class Upload extends BaseEntity {
-  @Field()
-  @PrimaryGeneratedColumn()
-  id: number;
+	@Field()
+	@PrimaryGeneratedColumn()
+	id: number;
 
-  @Field()
-  @Column()
-  token_value: string;
+	@Field()
+	@Column({type: "character varying", nullable: false})
+	title: string
 
-  @Field()
-  @Column()
-  is_activated: boolean;
+	@Field()
+	@Column({type: "text", nullable: true})
+	message: string
 
-  @Field()
-  @CreateDateColumn()
-  created_at: Date;
+	@Field()
+	@Column({type: 'boolean', nullable: false, default: false})
+	is_activated: boolean;
 
-  @Field()
-  @CreateDateColumn()
-  updated_at: Date;
+	@Field(() => [String])
+	@Column({type: "text", array: true, nullable: false})
+	receivers: string[]
 
-  @OneToMany(() => File, (file) => file.upload)
-  files: File[];
+	@Field()
+	@CreateDateColumn()
+	created_at: Date;
+
+	@Field()
+	@UpdateDateColumn()
+	updated_at: Date;
+
+	@ManyToOne(() => Visitor, visitor => visitor.uploads)
+	visitor: Visitor
+
+	@ManyToOne(() => User, user => user.uploads)
+	user: User
+
+	@OneToMany(() => File, (file) => file.upload)
+	files: File[];
 }

@@ -10,8 +10,8 @@ import {
 	PrimaryGeneratedColumn,
 } from "typeorm";
 import {Billing} from "./billing";
-import {File} from "./file";
 import {UserAccessFile} from "./userAccessFile";
+import {Upload} from "./upload";
 
 @ObjectType()
 @Entity()
@@ -55,12 +55,12 @@ export class User extends BaseEntity {
 	@OneToOne(() => Billing, billing => billing.user)
 	billing: Billing;
 
-	@OneToMany(() => File, (file) => file.user)
-	files: File;
-
 	@OneToOne(() => UserAccessFile)
 	@JoinColumn()
 	user_access_file: UserAccessFile;
+
+	@OneToMany(() => Upload, upload => upload.user)
+	uploads: Upload[]
 }
 
 

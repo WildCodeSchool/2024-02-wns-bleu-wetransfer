@@ -20,9 +20,7 @@ import cookie from 'cookie'
 import path from "path";
 import dotenv from 'dotenv'
 
-
 dotenv.config({path: path.join(__dirname, '../../.env')})
-
 
 export type Context = {
 	id: number;
@@ -73,12 +71,13 @@ const start = async () => {
 	const app = express();
 	const httpServer = http.createServer(app);
 
-	const corsOptions = {
-		origin: ['http://localhost:5173', 'http://localhost:7002', 'http://localhost:3000'],
-		credentials: true,
-	};
 
-	app.use(cors(corsOptions));
+	app.use(cors({
+		origin: ["http://localhost:7002", "http://localhost:3000", "http://localhost:5173"],
+		credentials: true,
+		methods: ["POST", "GET", "DELETE", "PUT", "OPTIONS"],
+		allowedHeaders: ["Origin", "X-Requested-With", "Content-Type", "Accept", "Authorization"]
+	}));
 
 	const server = new ApolloServer({
 		schema,
