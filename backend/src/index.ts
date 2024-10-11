@@ -1,5 +1,4 @@
 import "reflect-metadata";
-import "dotenv/config";
 import {buildSchema} from "type-graphql";
 import {ApolloServer} from "@apollo/server";
 import {ApolloServerPluginDrainHttpServer} from '@apollo/server/plugin/drainHttpServer';
@@ -18,6 +17,12 @@ import UserAccessFileResolver from "./resolvers/UserAccessFileResolver";
 import BillingResolver from "./resolvers/BillingResolver";
 import {startStandaloneServer} from "@apollo/server/standalone";
 import cookie from 'cookie'
+import path from "path";
+import dotenv from 'dotenv'
+
+
+dotenv.config({path: path.join(__dirname, '../../.env')})
+
 
 export type Context = {
 	id: number;

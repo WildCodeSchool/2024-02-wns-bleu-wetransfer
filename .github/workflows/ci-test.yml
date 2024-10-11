@@ -17,6 +17,6 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v2
       - name: Copy production env file
-        run: echo "${{ secrets.PRODUCTION_ENV_FILE }}" > .env.production
+        run: echo "${{ secrets.PRODUCTION_ENV_FILE }}" > .env
       - name: Goto e2e and run tests
         run: docker compose -f docker-compose.e2e.yml up --build --exit-code-from e2e
