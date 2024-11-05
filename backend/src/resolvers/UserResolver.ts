@@ -1,4 +1,5 @@
 import {User, UserInfo} from "../entities/user";
+import {visitorUtils} from "./VisitorResolver";
 import {Arg, AuthenticationError, Ctx, Mutation, Query, Resolver} from "type-graphql";
 import argon2 from "argon2";
 import jwt from "jsonwebtoken";
@@ -25,22 +26,31 @@ class UserResolver {
 			throw new Error("Passwords does not match");
 		}
 
+		password = await argon2.hash(password);
+
 		const findUser = await User.findOne({where: {email}});
 
 		if (findUser) {
 			throw new Error("You cannot sign up with this email");
 		}
 
-		password = await argon2.hash(password);
+		const visitor = await visitorUtils.getVisitorByEmail(email);
 
-		const createdUser: User = await User.create({
-			firstname,
-			lastname,
-			email,
-			password,
-		}).save();
+		if (visitor) {
+			convertVisitorIntoUser(visitor, firstname, lastname, email, password);
+			return "You have successfully signed up!"
+		}
 
-		console.log("user created:", createdUser)
+		try {
+			await User.create({
+				firstname,
+				lastname,
+				email,
+				password,
+			}).save();
+		} catch (err) {
+			throw new Error("Internal server error during sign up");
+		}
 
 		return "You have successfully signed up!"
 	}
@@ -53,7 +63,6 @@ class UserResolver {
 	) {
 		try {
 			if (process.env.JWT_SECRET_KEY === undefined) {
-				console.log("Server configuration error: No JWT Secret Key");
 				return new Error('Internal Server Error')
 			}
 
@@ -86,7 +95,6 @@ class UserResolver {
 
 		} catch (err) {
 			if (err instanceof EntityNotFoundError || err instanceof AuthenticationError) {
-				console.log("User not found:", err);
 				throw new AuthenticationError("Wrong credentials");
 			}
 
@@ -123,6 +131,28 @@ class UserResolver {
 			isLoggedIn: false,
 		}
 	}
+}
+
+const convertVisitorIntoUser = async (visitor: any, firstname: string, lastname: string, email: string, password: string) => {
+	const createdUser: User = User.create({
+		firstname,
+		lastname,
+		email,
+		password,
+	})
+
+	try {
+		const visitorUploads = await visitorUtils.getUploads(visitor.id);
+
+		if (visitorUploads && visitorUploads.uploads.length > 0) {
+			createdUser.uploads = visitorUploads.uploads;	
+		}
+
+		await createdUser.save();
+		await visitorUtils.deleteVisitor(visitor, createdUser);
+	} catch (err) {
+		throw new Error("Internal server error during Visitor to User conversion");
+	} 
 }
 
 export default UserResolver;
