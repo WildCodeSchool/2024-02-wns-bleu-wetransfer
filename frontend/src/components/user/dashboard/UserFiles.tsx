@@ -1,12 +1,28 @@
 import React from "react";
 import styled from "@emotion/styled";
-// import { Space, Table, Tag } from 'antd';
-// import type { TableProps } from 'antd';
+import { GET_USER_FILES } from "../../../graphql/queries";
+import { useQuery } from "@apollo/client";
 
 const UserFiles: React.FC = () => {
+    const { data, loading, error } = useQuery(GET_USER_FILES, {
+        variables: {
+            userId: "3",
+        },
+    });
+
+    console.log(data);
+
     return (
         <ContentWrapper>
-            {/* <Table columns={columns} dataSource={data} /> */}
+            <h1>Files</h1>
+            {loading && <p>Loading...</p>}
+            {data &&
+                data.getUserFiles.map((file: any) => (
+                    <div key={file.id}>
+                        <h3>{file.name}</h3>
+                        <p>{file.size} mo</p>
+                    </div>
+                ))}
         </ContentWrapper>
 	);
 };
