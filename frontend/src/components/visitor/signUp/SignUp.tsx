@@ -4,11 +4,13 @@ import { useMutation } from "@apollo/client";
 import styled from "@emotion/styled";
 import { SIGN_UP_USER } from "../../../graphql/mutations";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 type NotificationType = 'success' | 'info' | 'warning' | 'error';
 
 const SignUp: FC = () => {
   const [api, contextHolder] = notification.useNotification();
+  const navigate = useNavigate();
 
   const openNotificationWithIcon = (type: NotificationType, message: string, title: string) => {
     api[type]({
@@ -20,6 +22,8 @@ const SignUp: FC = () => {
   const [signUpUser, { loading }] = useMutation(SIGN_UP_USER, {
     onCompleted(data) {
       openNotificationWithIcon('success', 'You have successfully signed up!', 'Success');
+      console.log("sign up success")
+      navigate("/access/login");
     },
     onError(error) {
       openNotificationWithIcon('error', error.message, 'Error');
