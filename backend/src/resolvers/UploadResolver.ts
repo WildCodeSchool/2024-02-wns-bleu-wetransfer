@@ -29,7 +29,7 @@ class UploadResolver {
 				}).save();
 			}
 
-			const {filename, size, mimetype, uid} = fileData;
+			const {filename, size, mimetype, uid} = JSON.parse(fileData);
 
 			console.log("fileData", fileData)
 

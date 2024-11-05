@@ -36,6 +36,7 @@ const upload = multer({storage}).array("files", 10);
 export const addNewUpload = async (req: Request, res: any) => {
 
 	upload(req, res, async (err) => {
+		console.log("REQ BODY", req.body)
 		if (err) {
 			console.error("Error uploading files:", err);
 			return res.status(500).send("Error uploading files.");

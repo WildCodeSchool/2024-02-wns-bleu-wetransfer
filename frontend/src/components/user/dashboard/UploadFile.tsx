@@ -97,6 +97,7 @@ const ContentWrapper = styled.div`
 	box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 	padding: 20px;
 	border-radius: 8px;
+    margin-bottom: 3rem;
 `;
 
 const StyledDragger = styled(Dragger)`
