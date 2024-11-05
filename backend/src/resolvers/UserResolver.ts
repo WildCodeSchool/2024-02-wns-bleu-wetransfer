@@ -6,6 +6,7 @@ import jwt from "jsonwebtoken";
 import {EntityNotFoundError} from "typeorm";
 import {Context} from "../index";
 import cookie from 'cookie'
+import { File } from "../entities/file";
 
 @Resolver(User)
 class UserResolver {
@@ -131,6 +132,28 @@ class UserResolver {
 			isLoggedIn: false,
 		}
 	}
+
+	@Query(() => [File])
+	async getUserFiles(@Arg("userId") userId: string) {
+		const user = await User.findOne({
+			where: { id: Number(userId) },
+			relations: ['uploads', 'uploads.files'],
+		});
+
+		if (!user) {
+			throw new Error("User not found");
+		}
+
+		const allFiles = user.uploads.reduce((acc, upload) => {
+			if (upload.files) {
+				acc = acc.concat(upload.files);
+			}
+			return acc;
+		}, [] as File[]);
+
+		return allFiles;
+	}
+
 }
 
 const convertVisitorIntoUser = async (visitor: any, firstname: string, lastname: string, email: string, password: string) => {

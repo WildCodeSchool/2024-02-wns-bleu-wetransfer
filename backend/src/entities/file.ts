@@ -10,7 +10,6 @@ import {
 	OneToOne,
 	PrimaryGeneratedColumn,
 } from "typeorm";
-import {Visitor} from "./visitor";
 import {Upload} from "./upload";
 import {Report} from "./report";
 import {UserAccessFile} from "./userAccessFile";
@@ -62,9 +61,6 @@ export class File extends BaseEntity {
 	@Field()
 	@CreateDateColumn()
 	updated_at: Date;
-
-	@ManyToOne(() => Visitor, (visitor) => visitor.files)
-	visitor: Visitor;
 
 	@ManyToOne(() => Upload, (upload) => upload.files)
 	@JoinColumn({name: 'upload_id'})

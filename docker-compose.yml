@@ -13,8 +13,6 @@ services:
         depends_on:
             db:
                 condition: service_healthy
-        ports:
-            - "4000:4000"
     frontend:
         build: ./frontend
         volumes:
@@ -29,9 +27,6 @@ services:
             interval: 1s
             timeout: 2s
             retries: 100
-        ports:
-            - "5173:5173"
-            - "5174:5174"
     db:
         image: postgres
         healthcheck:
@@ -58,8 +53,6 @@ services:
             - .env
         volumes:
             - ./files/src:/app/src
-        ports:
-            - "3000:3000"
     apigateway:
         image: nginx
         volumes:
