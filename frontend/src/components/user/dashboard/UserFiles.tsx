@@ -1,12 +1,12 @@
 import React from "react";
 import styled from "@emotion/styled";
-import { Space, Table, Tag } from 'antd';
-import type { TableProps } from 'antd';
+// import { Space, Table, Tag } from 'antd';
+// import type { TableProps } from 'antd';
 
 const UserFiles: React.FC = () => {
     return (
         <ContentWrapper>
-            <Table columns={columns} dataSource={data} />
+            {/* <Table columns={columns} dataSource={data} /> */}
         </ContentWrapper>
 	);
 };
