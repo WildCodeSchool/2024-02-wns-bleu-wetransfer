@@ -5,7 +5,6 @@ import {Upload} from "../entities/upload";
 import {File} from "../entities/file";
 import {User} from "../entities/user";
 import {Report} from "../entities/report";
-import {UserAccessFile} from "../entities/userAccessFile";
 import {DataSource} from "typeorm";
 
 export const dataSource = new DataSource({
@@ -25,6 +24,5 @@ export const dataSource = new DataSource({
 		File,
 		User,
 		Report,
-		UserAccessFile,
 	],
 });

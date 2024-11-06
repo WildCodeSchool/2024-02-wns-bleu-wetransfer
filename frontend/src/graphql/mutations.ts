@@ -13,6 +13,12 @@ export const LOGIN_MUTATION = gql`
     }
 `;
 
+export const ADD_FILES_ACCESS_USERS = gql`
+    mutation AddFilesAccessUsers($filesId: [Float!]!, $usersToShareTo: [String!]!) {
+        addFilesAccessUsers(filesId: $filesId, usersToShareTo: $usersToShareTo)
+    }
+`;
+
 export const LOGOUT = gql`
     mutation Logout {
         logout

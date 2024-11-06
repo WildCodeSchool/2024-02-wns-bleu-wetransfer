@@ -13,7 +13,6 @@ import UploadResolver from "./resolvers/UploadResolver";
 import VisitorResolver from "./resolvers/VisitorResolver";
 import UserResolver from "./resolvers/UserResolver";
 import FileResolver from "./resolvers/FileResolver";
-import UserAccessFileResolver from "./resolvers/UserAccessFileResolver";
 import BillingResolver from "./resolvers/BillingResolver";
 import {startStandaloneServer} from "@apollo/server/standalone";
 import cookie from 'cookie'
@@ -40,7 +39,6 @@ const start = async () => {
 			UploadResolver,
 			VisitorResolver,
 			FileResolver,
-			UserAccessFileResolver,
 			BillingResolver,
 		],
 

@@ -56,15 +56,14 @@ export const GET_USER_FILES = gql`
 
 export const GET_USER_SHARED_FILES = gql`
     query Query($userId: Float!) {
-        getUserSharedFiles(userId: $userId) {
-            created_at
-            id
-            path
-            updated_at
-            type
-            status
-            size
-            name
-        },
+       getUserAccessSharedFiles(userId: $userId) {
+			    id
+			    name
+			    default_name
+			    path
+			    size
+			    status
+			    type
+			  }
     }
 `;

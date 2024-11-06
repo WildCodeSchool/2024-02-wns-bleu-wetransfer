@@ -4,7 +4,6 @@ import {
 	Column,
 	CreateDateColumn,
 	Entity,
-	JoinTable,
 	ManyToMany,
 	OneToMany,
 	OneToOne,
@@ -12,6 +11,7 @@ import {
 } from "typeorm";
 import {Billing} from "./billing";
 import {Upload} from "./upload";
+import {File} from "./file";
 
 @ObjectType()
 @Entity()
@@ -55,9 +55,8 @@ export class User extends BaseEntity {
 	@OneToOne(() => Billing, billing => billing.user)
 	billing: Billing;
 
-	@ManyToMany(() => File, file => file.users)
-	@JoinTable()
-	files: File[];
+	@ManyToMany(() => File, file => file.users_with_access)
+	accessed_files: File[];
 
 	@OneToMany(() => Upload, upload => upload.user)
 	uploads: Upload[]

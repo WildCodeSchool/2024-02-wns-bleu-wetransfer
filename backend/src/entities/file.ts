@@ -5,6 +5,7 @@ import {
 	CreateDateColumn,
 	Entity,
 	JoinColumn,
+	JoinTable,
 	ManyToMany,
 	ManyToOne,
 	OneToMany,
@@ -69,8 +70,9 @@ export class File extends BaseEntity {
 	@OneToMany(() => Report, (report) => report.file)
 	reports: Report[];
 
-	@ManyToMany(() => User, user => user.files)
-	users: User[];
+	@ManyToMany(() => User, user => user.accessed_files, {cascade: true})
+	@JoinTable()
+	users_with_access: User[]
 }
 
 @InputType()

@@ -1,10 +1,9 @@
 import React from "react";
-import {Table, Tabs} from "antd";
+import {Tabs} from "antd";
 import styled from "@emotion/styled";
 import UserOwnFilesTable from "./upload files/UserOwnFilesTable.tsx";
 import SharedFilesTable from "./upload files/SharedFilesTable.tsx";
 
-const {Column} = Table
 
 const UserFiles: React.FC = () => {
 
@@ -17,12 +16,12 @@ const UserFiles: React.FC = () => {
 					{
 						key: 'myfiles',
 						label: "My Files",
-						children: <UserOwnFilesTable dataSource={data?.getUserFiles}/>
+						children: <UserOwnFilesTable/>
 					},
 					{
 						key: 'shared',
 						label: "Shared with me",
-						children: <SharedFilesTable dataSource={data?.getUserFiles}/>
+						children: <SharedFilesTable/>
 					}
 				]}
 			/>

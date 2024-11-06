@@ -1,61 +1,105 @@
-import { File } from "../entities/file";
-import { Query, Resolver } from "type-graphql";
-import { Arg, Mutation } from "type-graphql";
+import {File} from "../entities/file";
+import {Arg, Mutation, Query, Resolver} from "type-graphql";
 import axios from "axios";
+import {User} from "../entities/user";
+import {In} from "typeorm";
+import {dataSource} from "../config/db";
 
 @Resolver(File)
 class FileResolver {
-  @Query(() => [File])
-  async getAllFile() {
-    return await File.find();
-  }
+	@Query(() => [File])
+	async getAllFile() {
+		return await File.find();
+	}
 
-  @Mutation(() => Boolean)
-  async deleteFile(@Arg("id") id: number) {
-    try {
-      const file = await File.findOneByOrFail({ id });
+	@Query(() => [File])
+	async getUserAccessSharedFiles(@Arg('userId') userId: number) {
 
-      if (!file) {
-        throw new Error("File not found");
-      }
+		return await File.createQueryBuilder("file")
+			.leftJoin("file.users_with_access", "user")
+			.where("user.id = :userId", {userId})
+			.getMany()
+	}
 
-      const response = await axios.delete(
-        `http://files:3000/files/delete?filename=${file.default_name}`
-      );
+	@Mutation(() => Boolean)
+	async deleteFile(@Arg("id") id: number) {
+		try {
+			const file = await File.findOneByOrFail({id});
 
-      if (response.status !== 200) {
-        throw new Error("Internal server error during file deletion 1");
-      }
+			if (!file) {
+				throw new Error("File not found");
+			}
 
-      await File.delete({ id });
+			const response = await axios.delete(
+				`http://files:3000/files/delete?filename=${file.default_name}`
+			);
 
-      return true;
-    } catch (err) {
-      throw new Error("Internal server error during file deletion 2");
-    }
-  }
+			if (response.status !== 200) {
+				throw new Error("Internal server error during file deletion 1");
+			}
 
-  @Mutation(() => Boolean)
-  async editFileName(
-    @Arg("id") id: number,
-    @Arg("newName") newName: string
-  ) {
-    try {
-      const file = await File.findOneByOrFail({ id });
+			await File.delete({id});
 
-      if (!file) {
-        throw new Error("File not found");
-      }
+			return true;
+		} catch (err) {
+			throw new Error("Internal server error during file deletion 2");
+		}
+	}
 
-      file.name = newName;
+	@Mutation(() => Boolean)
+	async editFileName(
+		@Arg("id") id: number,
+		@Arg("newName") newName: string
+	) {
+		try {
+			const file = await File.findOneByOrFail({id});
 
-      await file.save();
+			if (!file) {
+				throw new Error("File not found");
+			}
 
-      return true;
-    } catch (err) {
-      throw new Error("Internal server error during file name edit");
-    }
-  }
+			file.name = newName;
+
+			await file.save();
+
+			return true;
+		} catch (err) {
+			throw new Error("Internal server error during file name edit");
+		}
+	}
+
+	@Mutation(() => Boolean)
+	async addFilesAccessUsers(
+		@Arg("filesId", () => [Number]) filesId: number[],
+		@Arg("usersToShareTo", () => [String]) usersToShareTo: string[]
+	) {
+		return await dataSource.transaction(async (transactionalEntityManager) => {
+			try {
+				const users = await transactionalEntityManager.findBy(User, {email: In(usersToShareTo)});
+				const files = await transactionalEntityManager.findBy(File, {id: In(filesId)});
+
+				console.log(users)
+				console.log(files)
+
+				if (users.length !== usersToShareTo.length) {
+					throw new Error("Some users could not be found.");
+				}
+				if (files.length !== filesId.length) {
+					throw new Error("Some files could not be found.");
+				}
+
+				for (const file of files) {
+					file.users_with_access = [...file.users_with_access, ...users];
+				}
+
+				await transactionalEntityManager.save(files);
+
+				return true;
+			} catch (error) {
+				throw new Error(`Internal server error during access grant to users: ${error.message}`);
+			}
+		});
+	}
 }
 
 export default FileResolver;
