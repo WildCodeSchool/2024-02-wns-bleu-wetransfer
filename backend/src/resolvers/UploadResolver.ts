@@ -1,8 +1,9 @@
-import {Upload} from "../entities/upload";
-import {Arg, Mutation, Query, Resolver} from "type-graphql";
-import {Visitor} from "../entities/visitor";
-import {File} from "../entities/file";
-import {createDownloadToken, generateDownloadLink} from "../helpers/linkGenerator";
+import { Upload } from "../entities/upload";
+import { Arg, Mutation, Query, Resolver } from "type-graphql";
+import { Visitor } from "../entities/visitor";
+import { User } from "../entities/user";
+import { File } from "../entities/file";
+import { createDownloadToken, generateDownloadLink } from "../helpers/linkGenerator";
 
 @Resolver(Upload)
 class UploadResolver {
@@ -17,60 +18,67 @@ class UploadResolver {
 		@Arg("senderEmail", () => String) senderEmail: string,
 		@Arg("message", () => String) message: string,
 		@Arg("title", () => String) title: string,
-		@Arg("fileData", () => String) fileData: any,
-		@Arg("filePath", () => String) filePath: string,
+		@Arg("fileData", () => String) fileData: string
 	): Promise<string> {
 		try {
-			let visitor = await Visitor.findOneBy({email: senderEmail});
+			const user = await userOrVisitor(senderEmail);
 
-			if (!visitor) {
-				visitor = await Visitor.create({
-					email: senderEmail,
+			const uploadFiles: File[] = [];
+			const parsedFiles = JSON.parse(fileData);
+
+			for (const file of parsedFiles) {
+				const newFile = await File.create({
+				name: file.original_name,
+				size: file.size,
+				default_name: file.default_name,
+				type: file.mimetype,
+				path: file.path,
+				file_uid: file.uuid,
 				}).save();
+
+				uploadFiles.push(newFile);
 			}
 
-			const {filename, size, mimetype, uid} = JSON.parse(fileData);
-
-			console.log("fileData", fileData)
-
-			const newFile = await File.create({
-				name: filename,
-				size,
-				type: mimetype,
-				file_uid: uid,
-				path: filePath
+			const newUpload = await Upload.create({
+				receivers,
+				message,
+				title,
+				user,
+				files: uploadFiles,
 			}).save();
 
-			if (newFile) {
-				const newUpload = await Upload.create({
+			if (newUpload) {
+				const downloadToken = createDownloadToken(
+				{
+					uploadId: newUpload.id,
 					receivers,
-					message,
-					title,
-					visitor,
-					files: [newFile],
-				}).save();
+					senderEmail: user.email,
+				},
+				"1h"
+				);
 
-				if (newUpload) {
-					const downloadToken = createDownloadToken({
-						uploadId: newUpload.id,
-						receivers,
-						senderEmail: visitor.email
-					}, '1h');
+				const downloadLink: string = generateDownloadLink(downloadToken);
 
-
-					const downloadLink: string = generateDownloadLink(downloadToken);
-
-					console.log(downloadLink)
-
-					return downloadLink;
-				}
+				return downloadLink;
 			}
+
 			throw new Error("Failed to create upload");
 		} catch (err) {
-			console.error("Internal server error during Upload Creation:", err);
 			throw new Error("Internal server error");
 		}
 	}
 }
+
+const userOrVisitor = async (email: string): Promise<User | Visitor> => {
+    let user: User | null = await User.findOneBy({ email });
+    if (user) return user;
+
+    let visitor: Visitor | null = await Visitor.findOneBy({ email });
+    if (!visitor) {
+        visitor = await Visitor.create({ email }).save();
+    }
+
+    return visitor;
+};
 
 export default UploadResolver;
