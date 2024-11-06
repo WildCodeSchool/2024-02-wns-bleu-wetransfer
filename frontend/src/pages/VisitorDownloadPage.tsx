@@ -1,8 +1,23 @@
 import styled from "@emotion/styled";
-import { Button, Card, Table } from "antd";
+import { Button, Card, Table, notification } from "antd";
 import { DownloadOutlined } from "@ant-design/icons";
+import { useSearchParams } from "react-router-dom";
+import { ApolloError, useMutation } from "@apollo/client";
+import { GET_FILES_FROM_UPLOAD } from "../graphql/mutations";
 
 const VisitorDownloadPage = () => {
+  const [notifApi, contextHolder] = notification.useNotification();
+  const [searchParams] = useSearchParams();
+
+  console.log(searchParams.get("token"));
+
+  const [token, { loading, error }] = useMutation(GET_FILES_FROM_UPLOAD, {
+    onError: (error: ApolloError) => {
+      notifApi.error(error);
+      console.error("Error while getting file", error);
+    },
+  });
+
   const files = [
     {
       key: "1",
