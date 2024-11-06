@@ -1,80 +1,84 @@
 import { Upload } from "../entities/upload";
 import { Arg, Mutation, Query, Resolver } from "type-graphql";
 import { Visitor } from "../entities/visitor";
+import { User } from "../entities/user";
 import { File } from "../entities/file";
 import { createDownloadToken, generateDownloadLink } from "../helpers/linkGenerator";
 
 @Resolver(Upload)
 class UploadResolver {
-  @Query(() => [Upload])
-  async getAllUpload() {
-    return await Upload.find();
-  }
+	@Query(() => [Upload])
+	async getAllUpload() {
+		return await Upload.find();
+	}
 
-  @Mutation(() => String)
-  async createUpload(
-    @Arg("receiversEmails", () => [String]) receivers: string[],
-    @Arg("senderEmail", () => String) senderEmail: string,
-    @Arg("message", () => String) message: string,
-    @Arg("title", () => String) title: string,
-    @Arg("fileData", () => String) fileData: string
-  ): Promise<string> {
-    try {
-      let visitor = await Visitor.findOneBy({ email: senderEmail });
+	@Mutation(() => String)
+	async createUpload(
+		@Arg("receiversEmails", () => [String]) receivers: string[],
+		@Arg("senderEmail", () => String) senderEmail: string,
+		@Arg("message", () => String) message: string,
+		@Arg("title", () => String) title: string,
+		@Arg("fileData", () => String) fileData: string
+	): Promise<string> {
+		try {
+			const user = await userOrVisitor(senderEmail);
 
-      if (!visitor) {
-        visitor = await Visitor.create({ email: senderEmail }).save();
-      }
+			const uploadFiles: File[] = [];
+			const parsedFiles = JSON.parse(fileData);
 
-      const uploadFiles: File[] = [];
-      const parsedFiles = JSON.parse(fileData);
+			for (const file of parsedFiles) {
+				const newFile = await File.create({
+				name: file.original_name,
+				size: file.size,
+				default_name: file.default_name,
+				type: file.mimetype,
+				path: file.path,
+				file_uid: file.uuid,
+				}).save();
 
-      for (const file of parsedFiles) {
-        const newFile = await File.create({
-          name: file.original_name,
-          size: file.size,
-          default_name: file.default_name,
-          type: file.mimetype,
-          path: file.path,
-          file_uid: file.uuid,
-        }).save();
+				uploadFiles.push(newFile);
+			}
 
-        uploadFiles.push(newFile);
-      }
+			const newUpload = await Upload.create({
+				receivers,
+				message,
+				title,
+				user,
+				files: uploadFiles,
+			}).save();
 
-      console.log("Uploaded files:", uploadFiles);
+			if (newUpload) {
+				const downloadToken = createDownloadToken(
+				{
+					uploadId: newUpload.id,
+					receivers,
+					senderEmail: user.email,
+				},
+				"1h"
+				);
 
-      const newUpload = await Upload.create({
-        receivers,
-        message,
-        title,
-        visitor,
-        files: uploadFiles,
-      }).save();
+				const downloadLink: string = generateDownloadLink(downloadToken);
 
-      if (newUpload) {
-        const downloadToken = createDownloadToken(
-          {
-            uploadId: newUpload.id,
-            receivers,
-            senderEmail: visitor.email,
-          },
-          "1h"
-        );
+				return downloadLink;
+			}
 
-        const downloadLink: string = generateDownloadLink(downloadToken);
-
-        console.log("downloadlink=====>", downloadLink);
-
-        return downloadLink;
-      }
-
-      throw new Error("Failed to create upload");
-    } catch (err) {
-      console.error("Internal server error during Upload Creation:", err);
-      throw new Error("Internal server error");
-    }
-  }
+			throw new Error("Failed to create upload");
+		} catch (err) {
+			throw new Error("Internal server error");
+		}
+	}
 }
+
+const userOrVisitor = async (email: string): Promise<User | Visitor> => {
+    let user: User | null = await User.findOneBy({ email });
+    if (user) return user;
+
+    let visitor: Visitor | null = await Visitor.findOneBy({ email });
+    if (!visitor) {
+        visitor = await Visitor.create({ email }).save();
+    }
+
+    return visitor;
+};
 
 export default UploadResolver;
