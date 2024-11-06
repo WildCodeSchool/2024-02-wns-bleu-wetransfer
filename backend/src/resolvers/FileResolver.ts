@@ -2,7 +2,10 @@ import { File } from "../entities/file";
 import { Query, Resolver } from "type-graphql";
 import { Arg, Mutation } from "type-graphql";
 import axios from "axios";
+<<<<<<< HEAD
 import { StatusOption } from "../entities/file";
+=======
+>>>>>>> 40bb63afac30b0d639e5387d20c9826bd17617b8
 
 @Resolver(File)
 class FileResolver {
