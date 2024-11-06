@@ -107,6 +107,7 @@ export const addNewUpload = async (req: Request, res: any) => {
         }
     });
 };
+ 
 
 export const deleteFile = async (req: Request, res: any) => {
 	const filename = req.query.filename
@@ -121,6 +122,7 @@ export const deleteFile = async (req: Request, res: any) => {
 		return res.status(404).send(`File not found.`);
 	}
 
+	// fs.unlinkSync deletes the file
 	fs.unlinkSync(filePath);
 
 	return res.status(200).send("File deleted.");

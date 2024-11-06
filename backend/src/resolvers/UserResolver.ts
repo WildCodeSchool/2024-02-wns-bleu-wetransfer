@@ -134,9 +134,9 @@ class UserResolver {
 	}
 
 	@Query(() => [File])
-	async getUserFiles(@Arg("userId") userId: string) {
+	async getUserFiles(@Arg("userId") userId: number) {
 		const user = await User.findOne({
-			where: { id: Number(userId) },
+			where: { id: userId },
 			relations: ['uploads', 'uploads.files'],
 		});
 
@@ -151,7 +151,7 @@ class UserResolver {
 			return acc;
 		}, [] as File[]);
 
-		return allFiles;
+		return allFiles ? allFiles : [];
 	}
 
 }
