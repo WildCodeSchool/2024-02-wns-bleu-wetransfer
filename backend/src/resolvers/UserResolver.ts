@@ -6,7 +6,7 @@ import jwt from "jsonwebtoken";
 import {EntityNotFoundError} from "typeorm";
 import {Context} from "../index";
 import cookie from 'cookie'
-import {File} from "../entities/file";
+import { File } from "../entities/file";
 
 @Resolver(User)
 class UserResolver {
@@ -136,7 +136,7 @@ class UserResolver {
 	@Query(() => [File])
 	async getUserFiles(@Arg("userId") userId: number) {
 		const user = await User.findOne({
-			where: {id: userId},
+			where: { id: userId },
 			relations: ['uploads', 'uploads.files'],
 		});
 
@@ -151,29 +151,9 @@ class UserResolver {
 			return acc;
 		}, [] as File[]);
 
-		return allFiles || [];
+		return allFiles ? allFiles : [];
 	}
 
-	@Query(() => [File])
-	async getUserSharedFiles(@Arg("userId") userId: number) {
-		const user = await User.findOne({
-			where: {id: userId},
-			relations: ['uploads', 'uploads.files'],
-		});
-
-		if (!user) {
-			throw new Error("User not found");
-		}
-
-		const allFiles = user.uploads.reduce((acc, upload) => {
-			if (upload.files) {
-				acc = acc.concat(upload.files);
-			}
-			return acc;
-		}, [] as File[]);
-
-		return allFiles || [];
-	}
 }
 
 const convertVisitorIntoUser = async (visitor: any, firstname: string, lastname: string, email: string, password: string) => {
@@ -188,14 +168,14 @@ const convertVisitorIntoUser = async (visitor: any, firstname: string, lastname:
 		const visitorUploads = await visitorUtils.getUploads(visitor.id);
 
 		if (visitorUploads && visitorUploads.uploads.length > 0) {
-			createdUser.uploads = visitorUploads.uploads;
+			createdUser.uploads = visitorUploads.uploads;	
 		}
 
 		await createdUser.save();
 		await visitorUtils.deleteVisitor(visitor, createdUser);
 	} catch (err) {
 		throw new Error("Internal server error during Visitor to User conversion");
-	}
+	} 
 }
 
 export default UserResolver;

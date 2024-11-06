@@ -94,3 +94,22 @@ export const addNewUpload = async (req: Request, res: any) => {
 		}
 	});
 }
+
+export const deleteFile = async (req: Request, res: any) => {
+	const filename = req.query.filename
+
+	if (!filename) {
+		return res.status(400).send("No filename provided.");
+	}
+
+	const filePath = path.join(FINAL_DIR, filename as string);
+
+	if (!fs.existsSync(filePath)) {
+		return res.status(404).send(`File not found.`);
+	}
+
+	// fs.unlinkSync deletes the file
+	fs.unlinkSync(filePath);
+
+	return res.status(200).send("File deleted.");
+}
