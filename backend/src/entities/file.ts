@@ -5,14 +5,14 @@ import {
 	CreateDateColumn,
 	Entity,
 	JoinColumn,
+	ManyToMany,
 	ManyToOne,
 	OneToMany,
-	OneToOne,
 	PrimaryGeneratedColumn,
 } from "typeorm";
 import {Upload} from "./upload";
 import {Report} from "./report";
-import {UserAccessFile} from "./userAccessFile";
+import {User} from "./user";
 
 enum StatusOption {
 	status1 = "status1",
@@ -69,9 +69,8 @@ export class File extends BaseEntity {
 	@OneToMany(() => Report, (report) => report.file)
 	reports: Report[];
 
-	@OneToOne(() => UserAccessFile)
-	@JoinColumn()
-	user_access_file: UserAccessFile;
+	@ManyToMany(() => User, user => user.files)
+	users: User[];
 }
 
 @InputType()

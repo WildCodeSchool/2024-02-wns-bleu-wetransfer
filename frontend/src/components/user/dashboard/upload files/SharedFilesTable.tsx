@@ -1,0 +1,38 @@
+import React, {FC} from "react";
+import {Button, Table} from "antd";
+import {DownloadOutlined} from "@ant-design/icons";
+import {UserOwnFilesTableProps} from "./UserOwnFilesTable.tsx";
+import {colors} from "../../../../_colors.ts";
+import {useQuery} from "@apollo/client";
+import {GET_USER_SHARED_FILES} from "../../../../graphql/queries.ts";
+
+const {Column} = Table
+
+const SharedFilesTable: FC<UserOwnFilesTableProps> = () => {
+
+	const {data, loading, error} = useQuery(GET_USER_SHARED_FILES, {
+		variables: {
+			userId: 3,
+		},
+	});
+	console.log(data?.getUserFiles)
+
+	return (
+		<Table dataSource={dataSource} loading={!dataSource} style={{width: '100%'}} rowSelection title={() => (
+			<Button type='primary' icon={<DownloadOutlined/>}>Download selected files</Button>
+		)}>
+			<Column key='name' title='Name' dataIndex='name'/>
+			<Column key='extension' title='Extension' dataIndex='type'/>
+			<Column key='size' title='Size' dataIndex='size'/>
+			<Column key='actions' title='Quick Actions' width={200} render={() => (
+				<>
+					<Button type='text' style={{color: colors.lightPurple}}>Preview</Button>
+					<Button type='text' style={{color: 'red'}}>Remove</Button>
+				</>
+			)}/>
+		</Table>
+	)
+}
+
+
+export default SharedFilesTable

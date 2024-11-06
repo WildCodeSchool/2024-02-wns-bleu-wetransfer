@@ -40,7 +40,7 @@ export const GET_USER_BILLING = gql`
 `;
 
 export const GET_USER_FILES = gql`
-    query Query($userId: String!) {
+    query Query($userId: Float!) {
         getUserFiles(userId: $userId) {
             created_at
             id
@@ -50,6 +50,21 @@ export const GET_USER_FILES = gql`
             status
             size
             name
-        }
+        },
+    }
+`;
+
+export const GET_USER_SHARED_FILES = gql`
+    query Query($userId: Float!) {
+        getUserSharedFiles(userId: $userId) {
+            created_at
+            id
+            path
+            updated_at
+            type
+            status
+            size
+            name
+        },
     }
 `;
