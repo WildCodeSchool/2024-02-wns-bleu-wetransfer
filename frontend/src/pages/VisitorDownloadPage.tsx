@@ -4,19 +4,47 @@ import { DownloadOutlined } from "@ant-design/icons";
 import { useSearchParams } from "react-router-dom";
 import { ApolloError, useMutation } from "@apollo/client";
 import { GET_FILES_FROM_UPLOAD } from "../graphql/mutations";
+import { useEffect } from "react";
 
 const VisitorDownloadPage = () => {
   const [notifApi, contextHolder] = notification.useNotification();
   const [searchParams] = useSearchParams();
 
-  console.log(searchParams.get("token"));
+  // console.log(searchParams.get("token"));
 
-  const [token, { loading, error }] = useMutation(GET_FILES_FROM_UPLOAD, {
-    onError: (error: ApolloError) => {
-      notifApi.error(error);
-      console.error("Error while getting file", error);
-    },
-  });
+  // const [token, { loading, error }] = useMutation(GET_FILES_FROM_UPLOAD, {
+  //   onError: (error: ApolloError) => {
+  //     notifApi.error(error);
+  //     console.error("Error while getting file", error);
+  //   },
+  // });
+
+  const token = searchParams.get("token"); // Récupérer le token depuis l'URL
+
+  const [getFiles, { loading, error, data }] = useMutation(
+    GET_FILES_FROM_UPLOAD,
+    {
+      onError: (error: ApolloError) => {
+        notifApi.error({
+          message: "Error while getting file",
+          description: error.message,
+        });
+        console.error("Error while getting file", error);
+      },
+    }
+  );
+
+  // Appeler la mutation pour récupérer les fichiers dès que le composant est monté
+  useEffect(() => {
+    if (token) {
+      getFiles({ variables: { token } });
+    } else {
+      notifApi.error({
+        message: "Token manquant",
+        description: "Le token n'est pas présent dans l'URL.",
+      });
+    }
+  }, [token, getFiles, notifApi]);
 
   const files = [
     {

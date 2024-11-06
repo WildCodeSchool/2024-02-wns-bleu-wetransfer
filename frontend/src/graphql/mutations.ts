@@ -32,6 +32,11 @@ export const LOGOUT = gql`
 
 export const GET_FILES_FROM_UPLOAD = gql`
   mutation GetFilesFromUpload($token: String!) {
-    getFilesFromUpload(token: $token)
+    getFilesFromUpload(token: $token) {
+      name
+      size
+      type
+      path
+    }
   }
 `;
