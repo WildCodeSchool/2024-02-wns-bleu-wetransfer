@@ -272,7 +272,7 @@ const Title = styled.h1`
 	color: whitesmoke;
 	font-weight: 500;
 	@media (max-width: 768px) {
-		max-width: 100%;
+		max-width: 80%;
 		font-size: 3.5rem;
 	}
 `;
