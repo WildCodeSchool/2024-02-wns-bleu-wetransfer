@@ -63,7 +63,6 @@ export class File extends BaseEntity {
 	updated_at: Date;
 
 	@ManyToOne(() => Upload, (upload) => upload.files)
-	@JoinColumn({name: 'upload_id'})
 	upload: Upload;
 
 	@OneToMany(() => Report, (report) => report.file)

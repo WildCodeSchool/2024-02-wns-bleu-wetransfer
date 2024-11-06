@@ -12,6 +12,26 @@ class UploadResolver {
 		return await Upload.find();
 	}
 
+	@Query(() => [Upload])
+	async getUploadsByUserId(@Arg("userId") userId: number) {
+		const user = await User.findOneByOrFail({ id: userId });
+
+		if (!user) {
+			throw new Error("User not found");
+		}
+
+		try {
+			const result = await Upload.find({
+				where: { user: { id: userId } },
+				relations: ["files"],
+			});		
+
+			return result;
+		} catch (err) {
+			throw new Error("Internal server error");
+		}
+	}
+
 	@Mutation(() => String)
 	async createUpload(
 		@Arg("receiversEmails", () => [String]) receivers: string[],
