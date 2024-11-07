@@ -15,9 +15,9 @@ import {Upload} from "./upload";
 import {Report} from "./report";
 import {User} from "./user";
 
-enum StatusOption {
-	status1 = "status1",
-	status2 = "status2"
+export enum StatusOption {
+	status1 = "public",
+	status2 = "private"
 }
 
 @ObjectType()
@@ -48,8 +48,8 @@ export class File extends BaseEntity {
 	size: number;
 
 	@Field()
-	@Column({type: "enum", enum: StatusOption, nullable: true, default: StatusOption.status1})
-	status: StatusOption;
+	@Column({nullable: true, default: StatusOption.status1})
+	privacy_status: StatusOption;
 
 	@Field()
 	@Column({type: "character varying", nullable: true})
@@ -64,7 +64,6 @@ export class File extends BaseEntity {
 	updated_at: Date;
 
 	@ManyToOne(() => Upload, (upload) => upload.files)
-	@JoinColumn({name: 'upload_id'})
 	upload: Upload;
 
 	@OneToMany(() => Report, (report) => report.file)
