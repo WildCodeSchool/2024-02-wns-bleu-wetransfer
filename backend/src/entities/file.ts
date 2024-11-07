@@ -71,7 +71,17 @@ export class File extends BaseEntity {
 	reports: Report[];
 
 	@ManyToMany(() => User, user => user.accessed_files, {cascade: true})
-	@JoinTable()
+	@JoinTable({
+		name: 'user_access_file',
+		joinColumn: {
+			name: "file_id",
+			referencedColumnName: 'id'
+		},
+		inverseJoinColumn: {
+			name: 'user_id',
+			referencedColumnName: 'id'
+		}
+	})
 	users_with_access: User[]
 }
 

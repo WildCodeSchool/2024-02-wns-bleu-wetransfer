@@ -2,7 +2,6 @@ import {File} from "../entities/file";
 import {Arg, Mutation, Query, Resolver} from "type-graphql";
 import axios from "axios";
 import {User} from "../entities/user";
-import {In} from "typeorm";
 import {dataSource} from "../config/db";
 
 @Resolver(File)
@@ -75,12 +74,18 @@ class FileResolver {
 	) {
 		return await dataSource.transaction(async (transactionalEntityManager) => {
 			try {
-				const users = await transactionalEntityManager.findBy(User, {email: In(usersToShareTo)});
-				const files = await transactionalEntityManager.findBy(File, {id: In(filesId)});
 
-				console.log(users)
-				console.log(files)
+				const users = await transactionalEntityManager
+					.createQueryBuilder(User, "user")
+					.where("user.email IN (:...emails)", {emails: usersToShareTo})
+					.getMany();
 
+				const files = await transactionalEntityManager
+					.createQueryBuilder(File, "file")
+					.leftJoinAndSelect('file.users_with_access', 'users')
+					.where("file.id IN (:...ids)", {ids: filesId})
+					.getMany();
+				
 				if (users.length !== usersToShareTo.length) {
 					throw new Error("Some users could not be found.");
 				}
