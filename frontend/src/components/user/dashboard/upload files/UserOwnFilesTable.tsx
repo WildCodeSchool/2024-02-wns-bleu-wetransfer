@@ -15,11 +15,9 @@ const UserOwnFilesTable: FC = () => {
 	const [openShareModal, setOpenShareModal] = useState<boolean>(false)
 	const [shareSuccess, setShareSuccess] = useState<boolean>(false)
 
-	const {data, loading, error} = useQuery(GET_USER_FILES, {
-		variables: {
-			userId: 3,
-		},
-	});
+	const {data, loading, error} = useQuery(GET_USER_FILES);
+	
+	console.log(error)
 
 	const [addFilesAccessUsers, {addFilesloading}] = useMutation(ADD_FILES_ACCESS_USERS, {
 		onCompleted(data) {
@@ -41,6 +39,8 @@ const UserOwnFilesTable: FC = () => {
 			}
 		})
 	}
+
+	console.log(data?.getUserFiles)
 
 	return (
 		<>

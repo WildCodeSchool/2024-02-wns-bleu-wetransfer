@@ -1,9 +1,8 @@
-import {File} from "../entities/file";
+import {File, StatusOption} from "../entities/file";
 import {Arg, Mutation, Query, Resolver} from "type-graphql";
 import axios from "axios";
 import {User} from "../entities/user";
 import {dataSource} from "../config/db";
-import { StatusOption } from "../entities/file";
 
 @Resolver(File)
 class FileResolver {
@@ -23,10 +22,10 @@ class FileResolver {
 
 	}
 
-  @Mutation(() => Boolean)
-  async deleteFile(@Arg("id") id: number) {
-    try {
-      const file = await File.findOneByOrFail({ id });
+	@Mutation(() => Boolean)
+	async deleteFile(@Arg("id") id: number) {
+		try {
+			const file = await File.findOneByOrFail({id});
 
 			if (!file) {
 				throw new Error("File not found");
@@ -64,11 +63,11 @@ class FileResolver {
 
 			await file.save();
 
-      return true;
-    } catch (err) {
-      throw new Error("Internal server error during file name edit");
-    }
-  }
+			return true;
+		} catch (err) {
+			throw new Error("Internal server error during file name edit");
+		}
+	}
 
 	@Mutation(() => Boolean)
 	async addFilesAccessUsers(
@@ -115,7 +114,7 @@ class FileResolver {
 		@Arg("status") status: string
 	) {
 		try {
-			const file = await File.findOneByOrFail({ id });
+			const file = await File.findOneByOrFail({id});
 
 			if (!file) {
 				throw new Error("File not found");

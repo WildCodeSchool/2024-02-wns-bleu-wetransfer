@@ -40,12 +40,11 @@ export const GET_USER_BILLING = gql`
 `;
 
 export const GET_USER_FILES = gql`
-    query Query($userId: Float!) {
-        getUserFiles(userId: $userId) {
+    query GetUserFiles {
+        getUserFiles {
             created_at
             id
             path
-            updated_at
             type
             status
             size
