@@ -1,5 +1,5 @@
 import { File } from "../entities/file";
-import { Query, Resolver } from "type-graphql";
+import { Authorized, Query, Resolver } from "type-graphql";
 import { Arg, Mutation } from "type-graphql";
 import axios from "axios";
 import { StatusOption } from "../entities/file";
@@ -11,6 +11,7 @@ class FileResolver {
     return await File.find();
   }
 
+  @Authorized()
   @Mutation(() => Boolean)
   async deleteFile(@Arg("id") id: number) {
     try {
@@ -36,6 +37,7 @@ class FileResolver {
     }
   }
 
+  @Authorized()
   @Mutation(() => Boolean)
   async editFileName(
     @Arg("id") id: number,
@@ -58,6 +60,7 @@ class FileResolver {
     }
   }
 
+  @Authorized()
   @Mutation(() => String)
   async changePrivacyStatus(
     @Arg("id") id: number,

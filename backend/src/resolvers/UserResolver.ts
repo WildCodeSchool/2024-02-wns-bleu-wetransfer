@@ -1,6 +1,6 @@
 import {User, UserInfo} from "../entities/user";
 import {visitorUtils} from "./VisitorResolver";
-import {Arg, AuthenticationError, Ctx, Mutation, Query, Resolver} from "type-graphql";
+import {Arg, AuthenticationError, Authorized, Ctx, Mutation, Query, Resolver} from "type-graphql";
 import argon2 from "argon2";
 import jwt from "jsonwebtoken";
 import {EntityNotFoundError} from "typeorm";
@@ -133,6 +133,7 @@ class UserResolver {
 		}
 	}
 
+	@Authorized()
 	@Query(() => [File])
 	async getUserFiles(@Arg("userId") userId: number) {
 		const user = await User.findOne({

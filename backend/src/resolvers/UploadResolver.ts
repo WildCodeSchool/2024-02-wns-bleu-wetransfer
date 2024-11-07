@@ -1,5 +1,5 @@
 import { Upload } from "../entities/upload";
-import { Arg, Mutation, Query, Resolver } from "type-graphql";
+import { Arg, Authorized, Mutation, Query, Resolver } from "type-graphql";
 import { Visitor } from "../entities/visitor";
 import { User } from "../entities/user";
 import { File } from "../entities/file";
@@ -32,6 +32,7 @@ class UploadResolver {
 		}
 	}
 
+	@Authorized()
 	@Mutation(() => String)
 	async changeUploadActivatedStatus(@Arg("uploadId") uploadId: number) {
 		const upload = await Upload.findOneByOrFail({ id: uploadId });
