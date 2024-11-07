@@ -48,7 +48,7 @@ const UserOwnFilesTable: FC = () => {
 			       loading={loading}
 			       style={{width: '100%'}}
 			       rowSelection={{
-				       onSelect: (_record, _selected, selectedRows: OwnTableDatasource[], nativeEvent) => setSelectedFiles(selectedRows),
+				       onSelect: (_record, _selected, selectedRows: OwnTableDatasource[]) => setSelectedFiles(selectedRows),
 				       hideSelectAll: true
 			       }}
 			       title={() => (

@@ -18,6 +18,7 @@ class FileResolver {
 			.leftJoin("file.users_with_access", "user")
 			.where("user.id = :userId", {userId})
 			.getMany()
+
 	}
 
 	@Mutation(() => Boolean)
@@ -85,7 +86,7 @@ class FileResolver {
 					.leftJoinAndSelect('file.users_with_access', 'users')
 					.where("file.id IN (:...ids)", {ids: filesId})
 					.getMany();
-				
+
 				if (users.length !== usersToShareTo.length) {
 					throw new Error("Some users could not be found.");
 				}

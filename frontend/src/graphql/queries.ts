@@ -59,7 +59,6 @@ export const GET_USER_SHARED_FILES = gql`
        getUserAccessSharedFiles(userId: $userId) {
 			    id
 			    name
-			    default_name
 			    path
 			    size
 			    status

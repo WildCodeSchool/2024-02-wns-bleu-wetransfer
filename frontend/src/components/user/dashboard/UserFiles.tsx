@@ -8,28 +8,31 @@ import SharedFilesTable from "./upload files/SharedFilesTable.tsx";
 const UserFiles: React.FC = () => {
 
 	return (
-		<TablesContainer>
-			<Tabs
-				type='card'
-				centered
-				items={[
-					{
-						key: 'myfiles',
-						label: "My Files",
-						children: <UserOwnFilesTable/>
-					},
-					{
-						key: 'shared',
-						label: "Shared with me",
-						children: <SharedFilesTable/>
-					}
-				]}
-			/>
-		</TablesContainer>
+		<>
+			<TablesContainer>
+				<Tabs
+					type='card'
+					centered
+					items={[
+						{
+							key: 'myfiles',
+							label: "My Files",
+							children: <UserOwnFilesTable/>
+						},
+						{
+							key: 'shared',
+							label: "My Uploads",
+							// children:
+						}
+					]}
+				/>
+			</TablesContainer>
+			<SharedFilesTable/>
+		</>
 	);
 };
 
-const TablesContainer = styled.div`
+export const TablesContainer = styled.div`
     background: white;
     border-radius: 6px;
     width: 100%;
