@@ -109,6 +109,54 @@ class UploadResolver {
       throw new Error("Internal server error");
     }
   }
+
+  @Mutation(() => [File])
+  async getFilesFromUpload(
+    @Arg("token", () => String) token: string
+  ): Promise<File[]> {
+    // Décoder le token pour récupérer upload id
+    // Initie fonction pour chercher les files en relation avec cet upload
+    // Envoyer les files
+
+    try {
+      if (!process.env.JWT_SECRET_KEY) {
+        throw new Error(
+          "JWT_SECRET_KEY is not defined in environment variables"
+        );
+      }
+
+      const payload = jwt.verify(
+        token,
+        process.env.JWT_SECRET_KEY as string
+      ) as jwt.JwtPayload;
+
+      const uploadId = payload.uploadId;
+      if (!uploadId) {
+        throw new Error("Invalid token: uploadId not found");
+      }
+      console.log(uploadId);
+
+      const upload = await Upload.findOne({
+        where: { id: uploadId },
+        relations: ["files"],
+      });
+
+      if (!upload || !upload.files) {
+        throw new Error("No files found for this upload");
+      }
+      console.log(uploadId);
+
+      return upload.files;
+    } catch (err: unknown) {
+      console.error("Error retrieving files from upload:", err);
+
+      if (err instanceof Error) {
+        throw new Error("Invalid or expired token: " + err.message);
+      }
+
+      throw new Error("An unknown error occurred");
+    }
+  }
 }
 
 const userOrVisitor = async (email: string): Promise<User | Visitor> => {

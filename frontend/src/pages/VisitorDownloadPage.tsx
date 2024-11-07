@@ -4,23 +4,23 @@ import { DownloadOutlined } from "@ant-design/icons";
 import { useSearchParams } from "react-router-dom";
 import { ApolloError, useMutation } from "@apollo/client";
 import { GET_FILES_FROM_UPLOAD } from "../graphql/mutations";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+
+interface FileData {
+  key: string;
+  name: string;
+  size: string;
+  sent: string;
+  action: string;
+  senderEmail: string;
+}
 
 const VisitorDownloadPage = () => {
   const [notifApi, contextHolder] = notification.useNotification();
   const [searchParams] = useSearchParams();
+  const [files, setFiles] = useState<FileData[]>([]);
 
-  // console.log(searchParams.get("token"));
-
-  // const [token, { loading, error }] = useMutation(GET_FILES_FROM_UPLOAD, {
-  //   onError: (error: ApolloError) => {
-  //     notifApi.error(error);
-  //     console.error("Error while getting file", error);
-  //   },
-  // });
-
-  const token = searchParams.get("token"); // Récupérer le token depuis l'URL
-
+  const token = searchParams.get("token");
   const [getFiles, { loading, error, data }] = useMutation(
     GET_FILES_FROM_UPLOAD,
     {
@@ -34,10 +34,20 @@ const VisitorDownloadPage = () => {
     }
   );
 
-  // Appeler la mutation pour récupérer les fichiers dès que le composant est monté
   useEffect(() => {
     if (token) {
-      getFiles({ variables: { token } });
+      getFiles({ variables: { token } }).then((response) => {
+        const fetchedFiles = response.data.getFilesFromUpload.map(
+          (file: File, index: number) => ({
+            key: index.toString(),
+            name: file.name,
+            size: file.size,
+            sent: "Just now",
+            action: "Preview",
+          })
+        );
+        setFiles(fetchedFiles);
+      });
     } else {
       notifApi.error({
         message: "Token manquant",
@@ -46,19 +56,9 @@ const VisitorDownloadPage = () => {
     }
   }, [token, getFiles, notifApi]);
 
-  const files = [
-    {
-      key: "1",
-      name: "mon-super-fichier.txt",
-      size: "10mo",
-      sent: "2 hours ago",
-      action: "Preview",
-    },
-  ];
-
   const columns = [
     {
-      title: "",
+      title: "Name",
       dataIndex: "name",
       key: "name",
       render: (text: string) => (
@@ -68,17 +68,17 @@ const VisitorDownloadPage = () => {
       ),
     },
     {
-      title: "",
+      title: "Size (Octets)",
       dataIndex: "size",
       key: "size",
     },
     {
-      title: "",
-      dataIndex: "sent",
-      key: "sent",
+      title: "Sender Email",
+      dataIndex: "senderEmail",
+      key: "senderEmail",
     },
     {
-      title: "",
+      title: "Action",
       dataIndex: "action",
       key: "action",
       render: (text: string) => <PreviewLink>{text}</PreviewLink>,
@@ -93,7 +93,7 @@ const VisitorDownloadPage = () => {
           <TitleContainer>
             <TextContainer>
               <h3>Hello there!</h3>
-              <p>It seems that you've received a file from Matthieu!</p>
+              <p>It seems that you've received files!</p>
             </TextContainer>
             <ExpirationText>This link expires in 3 days</ExpirationText>
           </TitleContainer>
@@ -103,7 +103,7 @@ const VisitorDownloadPage = () => {
           columns={columns}
           dataSource={files}
           pagination={false}
-          showHeader={false}
+          showHeader={true}
           bordered={false}
           style={{ marginBottom: "20px" }}
         />
