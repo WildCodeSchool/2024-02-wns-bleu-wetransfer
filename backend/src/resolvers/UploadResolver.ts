@@ -26,9 +26,25 @@ class UploadResolver {
 				relations: ["files"],
 			});
 
-			console.log(result);
-
 			return result;
+		} catch (err) {
+			throw new Error("Internal server error");
+		}
+	}
+
+	@Mutation(() => String)
+	async changeUploadActivatedStatus(@Arg("uploadId") uploadId: number) {
+		const upload = await Upload.findOneByOrFail({ id: uploadId });
+
+		if (!upload) {
+			throw new Error("Upload not found");
+		}
+
+		upload.is_activated = !upload.is_activated;
+
+		try {
+			await upload.save();
+			return `Upload ${upload.is_activated ? "activated" : "deactivated"}`;
 		} catch (err) {
 			throw new Error("Internal server error");
 		}

@@ -30,7 +30,7 @@ export class Upload extends BaseEntity {
 	message: string
 
 	@Field()
-	@Column({type: 'boolean', nullable: false, default: false})
+	@Column({type: 'boolean', nullable: false, default: true})
 	is_activated: boolean;
 
 	@Field(() => [String])
