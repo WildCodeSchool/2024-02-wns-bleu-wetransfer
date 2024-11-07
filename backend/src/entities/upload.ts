@@ -51,6 +51,7 @@ export class Upload extends BaseEntity {
 	@ManyToOne(() => User, user => user.uploads)
 	user: User
 
+	@Field(() => [File])
 	@OneToMany(() => File, (file) => file.upload)
 	files: File[];
 }
