@@ -38,3 +38,18 @@ export const GET_USER_BILLING = gql`
         }
     }
 `;
+
+export const GET_USER_FILES = gql`
+    query Query($userId: String!) {
+        getUserFiles(userId: $userId) {
+            created_at
+            id
+            path
+            updated_at
+            type
+            status
+            size
+            name
+        }
+    }
+`;

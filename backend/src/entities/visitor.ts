@@ -1,6 +1,5 @@
 import {Field, ObjectType} from "type-graphql";
 import {BaseEntity, Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn,} from "typeorm";
-import {File} from "./file";
 import {Upload} from "./upload";
 
 @ObjectType()
@@ -29,9 +28,6 @@ export class Visitor extends BaseEntity {
 	@Field()
 	@CreateDateColumn()
 	updated_at: Date;
-
-	@OneToMany(() => File, (file) => file.visitor)
-	files: File[];
 
 	@OneToMany(() => Upload, upload => upload.visitor)
 	uploads: Upload[]
