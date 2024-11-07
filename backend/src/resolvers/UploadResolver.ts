@@ -12,6 +12,44 @@ class UploadResolver {
 		return await Upload.find();
 	}
 
+	@Query(() => [Upload])
+	async getUploadsByUserId(@Arg("userId") userId: number) {
+		const user = await User.findOneByOrFail({ id: userId });
+
+		if (!user) {
+			throw new Error("User not found");
+		}
+
+		try {
+			const result = await Upload.find({
+				where: { user: { id: userId } },
+				relations: ["files"],
+			});
+
+			return result;
+		} catch (err) {
+			throw new Error("Internal server error");
+		}
+	}
+
+	@Mutation(() => String)
+	async changeUploadActivatedStatus(@Arg("uploadId") uploadId: number) {
+		const upload = await Upload.findOneByOrFail({ id: uploadId });
+
+		if (!upload) {
+			throw new Error("Upload not found");
+		}
+
+		upload.is_activated = !upload.is_activated;
+
+		try {
+			await upload.save();
+			return `Upload ${upload.is_activated ? "activated" : "deactivated"}`;
+		} catch (err) {
+			throw new Error("Internal server error");
+		}
+	}
+
 	@Mutation(() => String)
 	async createUpload(
 		@Arg("receiversEmails", () => [String]) receivers: string[],
@@ -28,12 +66,12 @@ class UploadResolver {
 
 			for (const file of parsedFiles) {
 				const newFile = await File.create({
-				name: file.original_name,
-				size: file.size,
-				default_name: file.default_name,
-				type: file.mimetype,
-				path: file.path,
-				file_uid: file.uuid,
+					name: file.original_name,
+					size: file.size,
+					default_name: file.default_name,
+					type: file.mimetype,
+					path: file.path,
+					file_uid: file.uuid,
 				}).save();
 
 				uploadFiles.push(newFile);
@@ -49,12 +87,12 @@ class UploadResolver {
 
 			if (newUpload) {
 				const downloadToken = createDownloadToken(
-				{
-					uploadId: newUpload.id,
-					receivers,
-					senderEmail: user.email,
-				},
-				"1h"
+					{
+						uploadId: newUpload.id,
+						receivers,
+						senderEmail: user.email,
+					},
+					"1h"
 				);
 
 				const downloadLink: string = generateDownloadLink(downloadToken);
@@ -70,15 +108,15 @@ class UploadResolver {
 }
 
 const userOrVisitor = async (email: string): Promise<User | Visitor> => {
-    let user: User | null = await User.findOneBy({ email });
-    if (user) return user;
+	let user: User | null = await User.findOneBy({ email });
+	if (user) return user;
 
-    let visitor: Visitor | null = await Visitor.findOneBy({ email });
-    if (!visitor) {
-        visitor = await Visitor.create({ email }).save();
-    }
+	let visitor: Visitor | null = await Visitor.findOneBy({ email });
+	if (!visitor) {
+		visitor = await Visitor.create({ email }).save();
+	}
 
-    return visitor;
+	return visitor;
 };
 
 export default UploadResolver;
