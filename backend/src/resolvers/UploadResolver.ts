@@ -61,6 +61,10 @@ class UploadResolver {
 		try {
 			const user = await userOrVisitor(senderEmail);
 
+			if (!user) {
+				throw new Error("User not found");
+			}
+
 			const uploadFiles: File[] = [];
 			const parsedFiles = JSON.parse(fileData);
 
@@ -77,13 +81,17 @@ class UploadResolver {
 				uploadFiles.push(newFile);
 			}
 
-			const newUpload = await Upload.create({
+			const newUpload = Upload.create({
 				receivers,
 				message,
 				title,
-				user,
 				files: uploadFiles,
-			}).save();
+			})
+
+			if (user instanceof User) newUpload.user = user;
+			if (user instanceof Visitor) newUpload.visitor = user;
+
+			await newUpload.save();
 
 			if (newUpload) {
 				const downloadToken = createDownloadToken(
