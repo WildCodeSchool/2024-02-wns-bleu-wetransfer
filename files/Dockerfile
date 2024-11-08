@@ -1,4 +1,4 @@
-FROM node:lts-alpine
+FROM node:lts-alpine3.18
 
 RUN apk --no-cache add curl
 
@@ -8,7 +8,7 @@ RUN mkdir UPLOADS_DIR
 COPY tsconfig.json tsconfig.json
 
 COPY package.json package.json
-RUN npm i
+RUN npm install loglevel --verbose
 
 COPY src src
 
