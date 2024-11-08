@@ -1,11 +1,9 @@
-import { File } from "../entities/file";
-import { Query, Resolver } from "type-graphql";
-import { Arg, Mutation } from "type-graphql";
+import {File, StatusOption} from "../entities/file";
+import {Arg, Ctx, Mutation, Query, Resolver} from "type-graphql";
 import axios from "axios";
 import {User} from "../entities/user";
 import {dataSource} from "../config/db";
-import { StatusOption } from "../entities/file";
-
+import {Context} from "../index";
 
 @Resolver(File)
 class FileResolver {
@@ -16,11 +14,11 @@ class FileResolver {
 
 
 	@Query(() => [File])
-	async getUserAccessSharedFiles(@Arg('userId') userId: number) {
+	async getUserAccessSharedFiles(@Ctx() context: Context) {
 
 		return await File.createQueryBuilder("file")
 			.leftJoin("file.users_with_access", "user")
-			.where("user.id = :userId", {userId})
+			.where("user.id = :userId", {userId: context.id})
 			.getMany()
 
 	}

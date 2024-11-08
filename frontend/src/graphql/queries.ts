@@ -12,15 +12,15 @@ export const GET_ALL_PLANS = gql`
 `;
 
 export const GET_CONNECTED_USER = gql`
-    query GetConnectedUser {
-        getConnectedUser {
-            email,
-            firstname,
-            lastname,
-            role,
-            isLoggedIn,
-        }
-    }
+ query GetConnectedUser {
+  getConnectedUser {
+    isLoggedIn
+    email
+    role
+    firstname
+    lastname
+  }
+}
 `;
 
 export const GET_USER_BILLING = gql`
@@ -46,7 +46,7 @@ export const GET_USER_FILES = gql`
             id
             path
             type
-            status
+            privacy_status
             size
             name
         },
@@ -54,13 +54,13 @@ export const GET_USER_FILES = gql`
 `;
 
 export const GET_USER_SHARED_FILES = gql`
-    query Query($userId: Float!) {
-       getUserAccessSharedFiles(userId: $userId) {
+    query  {
+       getUserAccessSharedFiles {
 			    id
 			    name
 			    path
 			    size
-			    status
+			    privacy_status
 			    type
 			  }
     }

@@ -90,16 +90,17 @@ const start = async () => {
 			const cookies = cookie.parse(req.headers.cookie ?? "");
 
 			if (cookies.token) {
-				const payload = jwt.verify(
-					cookies.token,
-					process.env.JWT_SECRET_KEY
-				) as jwt.JwtPayload;
+				try {
+					const payload = jwt.verify(cookies.token, process.env.JWT_SECRET_KEY) as jwt.JwtPayload;
 
-				if (payload) {
-					return {...payload, res: res};
+					if (payload) {
+						return {...payload, res};
+					}
+				} catch (err) {
+					console.error("Invalid token:", err.message);
 				}
 			}
-			return {res: res};
+			return {res};
 		},
 	})
 

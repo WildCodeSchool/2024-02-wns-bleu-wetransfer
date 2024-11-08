@@ -11,11 +11,7 @@ const {Column} = Table
 const SharedFilesTable: FC = () => {
 	const [selectedFiles, setSelectedFiles] = useState<OwnTableDatasource[] | []>([])
 
-	const {data, loading, error} = useQuery(GET_USER_SHARED_FILES, {
-		variables: {
-			userId: 1,
-		},
-	});
+	const {data, loading, error} = useQuery(GET_USER_SHARED_FILES);
 
 	const handleRowSelection = (e): void => {
 		console.log(e)

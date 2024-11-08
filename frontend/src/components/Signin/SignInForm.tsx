@@ -1,24 +1,23 @@
-import React, { useContext } from "react";
+import React from "react";
 import {colors} from "../../_colors.ts";
 import {Button, Form, Input, notification} from 'antd'
 import {LOGIN_MUTATION} from "../../graphql/mutations.ts";
 import {useNavigate} from 'react-router-dom'
 import {ApolloError, useMutation} from "@apollo/client";
 import styled from "@emotion/styled";
-import { UserContext } from "../user/UserLayout.tsx";
+import {useUserContext} from "../../context/UserContext.tsx";
 
 const {Item} = Form
 
 const SignInForm: React.FC = () => {
 	const [notifApi, contextHolder] = notification.useNotification()
 	const navigate = useNavigate()
-	const userInfo = useContext(UserContext);
-	console.log("user info", userInfo)
+	const {setUser} = useUserContext()
+
+
 	const [login, {loading, error}] = useMutation(LOGIN_MUTATION, {
-		onCompleted: () => {
-			userInfo.refetch()
-			// console.log("Login successful", userInfo);
-			// console.log("login", login)
+		onCompleted: (data) => {
+			setUser(data.login)
 			navigate("/dashboard");
 		},
 		onError: (error: ApolloError) => {
