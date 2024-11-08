@@ -36,6 +36,7 @@ export const GET_FILES_FROM_UPLOAD = gql`
 			name
 			size
 			created_at
+			default_name
 			type
 			path
 		}

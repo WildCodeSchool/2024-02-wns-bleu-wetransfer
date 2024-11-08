@@ -6,6 +6,7 @@ import {ADD_ONE_UPLOAD} from "../graphql/mutations";
 import {Request} from "express";
 import axios from "axios";
 import {v4 as uuidv4} from "uuid";
+import archiver from "archiver";
 
 const UPLOADS_DIR = path.join(__dirname, "../uploads");
 const TEMP_DIR = path.resolve(UPLOADS_DIR, "temp");
@@ -127,3 +128,41 @@ export const deleteFile = async (req: Request, res: any) => {
 
 	return res.status(200).send("File deleted.");
 }
+
+export const downloadFiles = async (req: Request, res: any) => {
+    const FILES_DIR = path.join(__dirname, "../uploads/final");
+    const files = req.body.files as string[];
+
+    if (!files || files.length === 0) {
+        return res.status(400).send("No files provided.");
+    }
+
+    res.setHeader("Content-Type", "application/zip");
+    res.attachment("files.zip");
+
+    const archive = archiver("zip", { zlib: { level: 9 } });
+
+    archive.on("error", (err) => {
+        res.status(500).send("Error creating ZIP archive.");
+    });
+
+    archive.pipe(res);
+
+    for (const file of files) {
+        const filePath = path.join(FILES_DIR, file);
+        if (fs.existsSync(filePath)) {
+            archive.file(filePath, { name: file });
+        } else {
+            console.warn(`File not found: ${file}`);
+        }
+    }
+
+    try {
+        await archive.finalize();
+    } catch (err) {
+        res.status(500).send("Error finalizing ZIP archive.");
+    }
+};
+
+
+

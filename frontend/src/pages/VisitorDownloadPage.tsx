@@ -5,6 +5,7 @@ import { useSearchParams } from "react-router-dom";
 import { ApolloError, useMutation } from "@apollo/client";
 import { GET_FILES_FROM_UPLOAD } from "../graphql/mutations";
 import { useEffect, useState } from "react";
+import axios from 'axios'
 
 interface FileData {
 	key: string;
@@ -12,6 +13,7 @@ interface FileData {
 	size: string;
 	sent: string;
 	action: string;
+	default_name: string;
 	created_at: string;
 	url: string;
 }
@@ -39,11 +41,12 @@ const VisitorDownloadPage = () => {
 		if (token) {
 			getFiles({ variables: { token } }).then((response) => {
 				const fetchedFiles = response.data.getFilesFromUpload.map(
-					(file: File, index: number) => ({
+					(file: FileData, index: number) => ({
 						key: index.toString(),
 						name: file.name,
 						size: file.size,
 						created_at: file.created_at,
+						default_name: file.default_name,
 						sent: "Just now",
 						action: "Preview",
 						url: `http://localhost:7002/access/download?token=${token}&fileId=${file.id}`,
@@ -60,15 +63,41 @@ const VisitorDownloadPage = () => {
 	}, [token, getFiles, notifApi]);
 
 	const formatDate = (date: string) => {
-		const options: Intl.DateTimeFormatOptions = {
-			year: "numeric",
-			month: "long",
-			day: "numeric",
-			hour: "2-digit",
-			minute: "2-digit",
-		};
-		return new Date(date).toLocaleDateString(undefined, options);
+		const now = new Date();
+		const targetDate = new Date(date);
+		const diffMs = now.getTime() - targetDate.getTime();
+	
+		if (diffMs < 0) {
+			return "Sent just now";
+		}
+	
+		const diffSeconds = Math.floor(diffMs / 1000);
+		const diffMinutes = Math.floor(diffSeconds / 60);
+		const diffHours = Math.floor(diffMinutes / 60);
+		const diffDays = Math.floor(diffHours / 24);
+	
+		let result = "Sent ";
+		
+		if (diffDays > 0) {
+			result += `${diffDays} day${diffDays > 1 ? "s" : ""}`;
+			if (diffHours % 24 > 0) {
+				result += ` and ${diffHours % 24} hour${(diffHours % 24) > 1 ? "s" : ""}`;
+			}
+		} else if (diffHours > 0) {
+			result += `${diffHours} hour${diffHours > 1 ? "s" : ""}`;
+			if (diffMinutes % 60 > 0) {
+				result += ` and ${diffMinutes % 60} minute${(diffMinutes % 60) > 1 ? "s" : ""}`;
+			}
+		} else if (diffMinutes > 0) {
+			result += `${diffMinutes} minute${diffMinutes > 1 ? "s" : ""}`;
+		} else {
+			result += "just now";
+			return result;
+		}
+	
+		return result + " ago";
 	};
+	
 
 	const formatSizeInMB = (sizeInBytes: string) => {
 		const size = parseInt(sizeInBytes, 10);
@@ -76,13 +105,25 @@ const VisitorDownloadPage = () => {
 		return (size / (1024 * 1024)).toFixed(2) + " MB";
 	};
 
-	const downloadAllFiles = () => {
-		files.forEach((file) => {
+	const downloadAllFiles = async () => {
+		try {
+			const response = await axios.post(
+				"http://localhost:7002/files/download",
+				{ files: files.map((file) => file.default_name) },
+				{ responseType: "blob" } 
+			);
+	
+			const blob = new Blob([response.data], { type: "application/zip" });
+	
 			const link = document.createElement("a");
-			link.href = file.url;
-			link.download = file.name;
+			link.href = URL.createObjectURL(blob);
+			link.download = "files.zip";
 			link.click();
-		});
+	
+			URL.revokeObjectURL(link.href);
+		} catch (e) {
+			console.error("Error downloading files:", e);
+		}
 	};
 
 	const columns = [
