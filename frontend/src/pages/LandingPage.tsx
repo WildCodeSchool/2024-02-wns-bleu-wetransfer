@@ -92,6 +92,7 @@ const LandingPage: React.FC = () => {
 		).then((res) => {
 			console.log(res.data.data.createUpload)
 			form.resetFields()
+			fileList.length = 0
 			setDownloadLink(res.data.data.createUpload)
 			setOpenModal(true)
 			message.success("Files uploaded successfully");
