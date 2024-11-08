@@ -10,7 +10,7 @@ import {useUserContext} from "../../context/UserContext.tsx";
 
 const UserLayout: FC = () => {
 	const navigate = useNavigate();
-	const {setUser} = useUserContext()
+	const {setUser, firstname} = useUserContext()
 
 	const [logout] = useMutation(LOGOUT, {
 		onCompleted: () => {
@@ -57,17 +57,6 @@ const UserLayout: FC = () => {
 		},
 	];
 
-	// if (loading) {
-	// 	return <p>Loading...</p>;
-	// }
-	//
-	// if (error || !data || !data.getConnectedUser) {
-	// 	console.log(error)
-	// 	return <p>Error loading user data.</p>;
-	// }
-	//
-	// console.log(data)
-
 	return (
 		<UserLayoutContainer>
 			<HeaderContainer>
@@ -77,7 +66,7 @@ const UserLayout: FC = () => {
 						backgroundColor: '#fde3cf',
 						color: '#f56a00',
 						cursor: 'pointer'
-					}}>WWW</Avatar>
+					}}>{firstname.charAt(0).toUpperCase()}</Avatar>
 				</Dropdown>
 			</HeaderContainer>
 			<Outlet/>

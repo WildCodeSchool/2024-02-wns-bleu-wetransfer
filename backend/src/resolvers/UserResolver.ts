@@ -149,7 +149,7 @@ class UserResolver {
 		}
 
 		const user = await User.findOne({
-			where: {id: 3},
+			where: {id: context.id},
 			relations: ['uploads', 'uploads.files'],
 		});
 

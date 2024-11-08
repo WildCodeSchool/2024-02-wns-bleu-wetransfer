@@ -16,11 +16,12 @@ const UserOwnFilesTable: FC = () => {
 	const [shareSuccess, setShareSuccess] = useState<boolean>(false)
 
 	const {data, loading, error} = useQuery(GET_USER_FILES);
-	
+
 	console.log(error)
 
 	const [addFilesAccessUsers, {addFilesloading}] = useMutation(ADD_FILES_ACCESS_USERS, {
 		onCompleted(data) {
+			console.log(data)
 			setShareSuccess(true)
 		}, onError(err) {
 			message.error(err.toString(), 3)

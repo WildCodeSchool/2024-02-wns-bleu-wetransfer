@@ -9,15 +9,7 @@ interface UserContextType {
 	setUser: (userData: Partial<UserContextType>) => void;
 }
 
-const UserContext = createContext<UserContextType>({
-	isLoggedIn: false,
-	email: '',
-	setUser: (userData) => {
-	},
-	role: '',
-	firstname: '',
-	lastname: ''
-});
+const UserContext = createContext<UserContextType | undefined>(undefined);
 
 export const UserProvider: FC<{ children: ReactNode }> = ({children}) => {
 	const [user, setUser] = useState<UserContextType>({
