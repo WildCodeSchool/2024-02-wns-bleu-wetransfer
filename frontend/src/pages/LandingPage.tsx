@@ -95,20 +95,20 @@ const LandingPage: React.FC = () => {
 						console.log(percent);
 					}
 				},
-			})
-			.then((res) => {
-				console.log(res);
-				form.resetFields();
-				setDownloadLink(res.data.data.createUpload);
-				setOpenModal(true);
-				message.success("Files uploaded successfully");
-				setIsLoading(false);
-			})
-			.catch((err) => {
-				setIsLoading(false);
-				console.error(err);
-				message.error("Error uploading files");
-			});
+			},
+		).then((res) => {
+			console.log(res.data.data.createUpload)
+			form.resetFields()
+			fileList.length = 0
+			setDownloadLink(res.data.data.createUpload)
+			setOpenModal(true)
+			message.success("Files uploaded successfully");
+			setIsLoading(false)
+		}).catch((err) => {
+			setIsLoading(false)
+			console.error(err)
+			message.error("Error uploading files");
+		})
 	};
 
 	const handleChange = (info: UploadChangeParam<UploadFile>) => {
