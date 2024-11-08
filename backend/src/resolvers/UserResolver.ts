@@ -1,6 +1,6 @@
 import {User, UserInfo} from "../entities/user";
 import {visitorUtils} from "./VisitorResolver";
-import {Arg, AuthenticationError, Ctx, Mutation, Query, Resolver} from "type-graphql";
+import {Arg, AuthenticationError, Authorized, Ctx, Mutation, Query, Resolver} from "type-graphql";
 import argon2 from "argon2";
 import jwt from "jsonwebtoken";
 import {EntityNotFoundError} from "typeorm";
@@ -112,8 +112,10 @@ class UserResolver {
 
 	@Query(() => UserInfo)
 	async getConnectedUser(@Ctx() context: Context): Promise<UserInfo> {
-
+		console.log("=>>>>>>>>>>>> CHECKING CONNECTED USER")
 		const user: User | null = await User.findOneBy({id: context.id});
+		console.log("===========> user", user);
+		console.log("===========> context", context);
 
 		if (user) {
 			return {
@@ -133,6 +135,7 @@ class UserResolver {
 		}
 	}
 
+	@Authorized()
 	@Query(() => [File])
 	async getUserFiles(@Ctx() context: any) {
 

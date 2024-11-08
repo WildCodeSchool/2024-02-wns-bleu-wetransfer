@@ -1,8 +1,11 @@
-import {File, StatusOption} from "../entities/file";
-import {Arg, Mutation, Query, Resolver} from "type-graphql";
+import { File } from "../entities/file";
+import { Query, Resolver } from "type-graphql";
+import { Arg, Mutation } from "type-graphql";
 import axios from "axios";
 import {User} from "../entities/user";
 import {dataSource} from "../config/db";
+import { StatusOption } from "../entities/file";
+
 
 @Resolver(File)
 class FileResolver {
