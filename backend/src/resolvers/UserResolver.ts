@@ -112,8 +112,10 @@ class UserResolver {
 
 	@Query(() => UserInfo)
 	async getConnectedUser(@Ctx() context: Context): Promise<UserInfo> {
-
+		console.log("=>>>>>>>>>>>> CHECKING CONNECTED USER")
 		const user: User | null = await User.findOneBy({id: context.id});
+		console.log("===========> user", user);
+		console.log("===========> context", context);
 
 		if (user) {
 			return {
