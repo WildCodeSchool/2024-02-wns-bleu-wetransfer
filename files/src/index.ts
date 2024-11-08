@@ -12,6 +12,7 @@ app.use(cors({
 	allowedHeaders: ["Origin", "X-Requested-With", "Content-Type", "Accept", "Authorization"]
 }));
 
+app.use(express.json());
 
 app.get("/", (req, res) => {
 	res.send("Healthcheck Okay");

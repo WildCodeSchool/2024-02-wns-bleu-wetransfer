@@ -3,7 +3,11 @@ import { Arg, Mutation, Query, Resolver } from "type-graphql";
 import { Visitor } from "../entities/visitor";
 import { User } from "../entities/user";
 import { File } from "../entities/file";
-import { createDownloadToken, generateDownloadLink } from "../helpers/linkGenerator";
+import {
+	createDownloadToken,
+	generateDownloadLink,
+} from "../helpers/linkGenerator";
+import jwt from "jsonwebtoken";
 
 @Resolver(Upload)
 class UploadResolver {
@@ -44,7 +48,9 @@ class UploadResolver {
 
 		try {
 			await upload.save();
-			return `Upload ${upload.is_activated ? "activated" : "deactivated"}`;
+			return `Upload ${
+				upload.is_activated ? "activated" : "deactivated"
+			}`;
 		} catch (err) {
 			throw new Error("Internal server error");
 		}
@@ -103,7 +109,8 @@ class UploadResolver {
 					"1h"
 				);
 
-				const downloadLink: string = generateDownloadLink(downloadToken);
+				const downloadLink: string =
+					generateDownloadLink(downloadToken);
 
 				return downloadLink;
 			}
@@ -111,6 +118,54 @@ class UploadResolver {
 			throw new Error("Failed to create upload");
 		} catch (err) {
 			throw new Error("Internal server error");
+		}
+	}
+
+	@Mutation(() => [File])
+	async getFilesFromUpload(
+		@Arg("token", () => String) token: string
+	): Promise<File[]> {
+		// Décoder le token pour récupérer upload id
+		// Initie fonction pour chercher les files en relation avec cet upload
+		// Envoyer les files
+
+		try {
+			if (!process.env.JWT_SECRET_KEY) {
+				throw new Error(
+					"JWT_SECRET_KEY is not defined in environment variables"
+				);
+			}
+
+			const payload = jwt.verify(
+				token,
+				process.env.JWT_SECRET_KEY as string
+			) as jwt.JwtPayload;
+
+			const uploadId = payload.uploadId;
+			if (!uploadId) {
+				throw new Error("Invalid token: uploadId not found");
+			}
+			console.log(uploadId);
+
+			const upload = await Upload.findOne({
+				where: { id: uploadId },
+				relations: ["files"],
+			});
+
+			if (!upload || !upload.files) {
+				throw new Error("No files found for this upload");
+			}
+			console.log(uploadId);
+
+			return upload.files;
+		} catch (err: unknown) {
+			console.error("Error retrieving files from upload:", err);
+
+			if (err instanceof Error) {
+				throw new Error("Invalid or expired token: " + err.message);
+			}
+
+			throw new Error("An unknown error occurred");
 		}
 	}
 }
