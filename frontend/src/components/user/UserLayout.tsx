@@ -6,21 +6,12 @@ import {DashboardOutlined, DollarOutlined, LogoutOutlined, SettingOutlined} from
 import {Link, Outlet, useNavigate} from "react-router-dom";
 import {ApolloError, useMutation} from '@apollo/client';
 import {LOGOUT} from "../../graphql/mutations.ts";
-import {useUserContext} from "../../context/UserContext.tsx";
 
 const UserLayout: FC = () => {
 	const navigate = useNavigate();
-	const {setUser, firstname} = useUserContext()
 
 	const [logout] = useMutation(LOGOUT, {
 		onCompleted: () => {
-			setUser({
-				isLoggedIn: false,
-				role: '',
-				firstname: '',
-				lastname: '',
-				email: '',
-			})
 			navigate('/');
 		},
 		onError: (err: ApolloError) => {
@@ -66,7 +57,7 @@ const UserLayout: FC = () => {
 						backgroundColor: '#fde3cf',
 						color: '#f56a00',
 						cursor: 'pointer'
-					}}>{firstname.charAt(0).toUpperCase()}</Avatar>
+					}}>U</Avatar>
 				</Dropdown>
 			</HeaderContainer>
 			<Outlet/>

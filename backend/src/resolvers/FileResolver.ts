@@ -16,6 +16,8 @@ class FileResolver {
 	@Query(() => [File])
 	async getUserAccessSharedFiles(@Ctx() context: Context) {
 
+		console.log(context.id)
+
 		return await File.createQueryBuilder("file")
 			.leftJoin("file.users_with_access", "user")
 			.where("user.id = :userId", {userId: context.id})

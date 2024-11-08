@@ -56,7 +56,7 @@ class UserResolver {
 		return "You have successfully signed up!"
 	}
 
-	@Mutation(() => UserInfo)
+	@Mutation(() => String)
 	async login(
 		@Arg("email") emailFromClient: string,
 		@Arg("password") passwordFromClient: string,
@@ -93,13 +93,7 @@ class UserResolver {
 
 			context.res.setHeader("Set-Cookie", serializedCookie);
 
-			return {
-				email: userFromDB.email,
-				role: userFromDB.role,
-				firstname: userFromDB.firstname,
-				lastname: userFromDB.lastname,
-				isLoggedIn: true,
-			};
+			return "User logged in";
 
 		} catch (err) {
 			if (err instanceof EntityNotFoundError || err instanceof AuthenticationError) {
@@ -147,6 +141,8 @@ class UserResolver {
 		if (!context || !context.id) {
 			throw new Error("User not authenticated");
 		}
+
+		console.log(context.id)
 
 		const user = await User.findOne({
 			where: {id: context.id},

@@ -10,7 +10,6 @@ import PricingPage from "./pages/PricingPage.tsx";
 import BillingPage from "./pages/BillingPage.tsx";
 import VisitorDownloadPage from "./pages/VisitorDownloadPage.tsx";
 import {FC} from "react";
-import {UserProvider, useUserContext} from "./context/UserContext.tsx";
 
 interface ProtectedRouteProps {
 	isLoggedIn: boolean;
@@ -28,14 +27,13 @@ const ProtectedRoute = ({isLoggedIn, children}: ProtectedRouteProps) => {
 
 const App: FC = () => {
 	return (
-		<UserProvider>
-			<MainLayout/>
-		</UserProvider>
+		// <UserProvider>
+		<MainLayout/>
+		// </UserProvider>
 	);
 };
 
 const MainLayout: FC = () => {
-	const {isLoggedIn} = useUserContext()
 
 	const router = createBrowserRouter([
 		{path: "/", element: <LandingPage/>},
@@ -56,7 +54,7 @@ const MainLayout: FC = () => {
 			children: [
 				{
 					index: true,
-					element: <ProtectedRoute isLoggedIn={isLoggedIn}><Dashboard/></ProtectedRoute>
+					element: <ProtectedRoute isLoggedIn={true}><Dashboard/></ProtectedRoute>
 				},
 				{path: "settings", element: <SettingsPage/>},
 				{path: "billing", element: <BillingPage/>},

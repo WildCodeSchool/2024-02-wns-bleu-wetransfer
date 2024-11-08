@@ -5,19 +5,16 @@ import {LOGIN_MUTATION} from "../../graphql/mutations.ts";
 import {useNavigate} from 'react-router-dom'
 import {ApolloError, useMutation} from "@apollo/client";
 import styled from "@emotion/styled";
-import {useUserContext} from "../../context/UserContext.tsx";
 
 const {Item} = Form
 
 const SignInForm: React.FC = () => {
 	const [notifApi, contextHolder] = notification.useNotification()
 	const navigate = useNavigate()
-	const {setUser} = useUserContext()
 
 
 	const [login, {loading, error}] = useMutation(LOGIN_MUTATION, {
 		onCompleted: (data) => {
-			setUser(data.login)
 			navigate("/dashboard");
 		},
 		onError: (error: ApolloError) => {

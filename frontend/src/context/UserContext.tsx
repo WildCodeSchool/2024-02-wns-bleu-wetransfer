@@ -1,4 +1,4 @@
-import React, {createContext, FC, ReactNode, useContext, useEffect, useState} from 'react';
+import React, {createContext, FC, ReactNode, useContext, useState} from 'react';
 
 interface UserContextType {
 	isLoggedIn: boolean;
@@ -20,10 +20,6 @@ export const UserProvider: FC<{ children: ReactNode }> = ({children}) => {
 		lastname: '',
 		setUser: (userData) => setUser((prev) => ({...prev, ...userData})),
 	});
-
-	useEffect(() => {
-		console.log(user)
-	}, [user]);
 
 	return <UserContext.Provider value={user}>{children}</UserContext.Provider>;
 };
