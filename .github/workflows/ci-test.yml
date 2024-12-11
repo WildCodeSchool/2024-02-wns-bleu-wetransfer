@@ -16,6 +16,8 @@ jobs:
     steps:
       - name: Check out code
         uses: actions/checkout@v2
+      - name: Copy production env file
+        run: echo "${{ secrets.PRODUCTION_ENV_FILE }}" > .env
       - name: Goto backend and run tests
         run: cd backend && npm i && npm test
 
