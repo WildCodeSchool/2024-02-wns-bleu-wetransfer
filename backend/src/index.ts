@@ -115,6 +115,7 @@ const start = async () => {
 		},
 	});
 
+	await new UserResolver().initUserE2E();
 	console.log(`🚀 Server ready at ${url}`);
 };
 

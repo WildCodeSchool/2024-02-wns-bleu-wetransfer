@@ -15,6 +15,19 @@ class UserResolver {
 		return await User.find();
 	}
 
+	async initUserE2E() {
+		try {
+			await User.create({
+				firstname: "Lucas",
+				lastname: "Boillot",
+				email: "test@test.com",
+				password: "123456",
+			}).save();
+		} catch (err) {
+			console.error("Error during user creation", err);
+		}
+	}
+
 	@Mutation(() => String)
 	async signUpUser(
 		@Arg("firstname") firstname: string,
