@@ -1,12 +1,12 @@
 import {User, UserInfo} from "../entities/user";
 import {visitorUtils} from "./VisitorResolver";
-import {Arg, AuthenticationError, Ctx, Mutation, Query, Resolver} from "type-graphql";
+import {Arg, AuthenticationError, Authorized, Ctx, Mutation, Query, Resolver} from "type-graphql";
 import argon2 from "argon2";
 import jwt from "jsonwebtoken";
 import {EntityNotFoundError} from "typeorm";
 import {Context} from "../index";
 import cookie from 'cookie'
-import { File } from "../entities/file";
+import {File} from "../entities/file";
 
 @Resolver(User)
 class UserResolver {
@@ -92,7 +92,8 @@ class UserResolver {
 			});
 
 			context.res.setHeader("Set-Cookie", serializedCookie);
-			return "Login accepted";
+
+			return "User logged in";
 
 		} catch (err) {
 			if (err instanceof EntityNotFoundError || err instanceof AuthenticationError) {
@@ -133,10 +134,18 @@ class UserResolver {
 		}
 	}
 
+	@Authorized()
 	@Query(() => [File])
-	async getUserFiles(@Arg("userId") userId: number) {
+	async getUserFiles(@Ctx() context: any) {
+
+		if (!context || !context.id) {
+			throw new Error("User not authenticated");
+		}
+
+		console.log(context.id)
+
 		const user = await User.findOne({
-			where: { id: userId },
+			where: {id: context.id},
 			relations: ['uploads', 'uploads.files'],
 		});
 
@@ -151,9 +160,8 @@ class UserResolver {
 			return acc;
 		}, [] as File[]);
 
-		return allFiles ? allFiles : [];
+		return allFiles || [];
 	}
-
 }
 
 const convertVisitorIntoUser = async (visitor: any, firstname: string, lastname: string, email: string, password: string) => {
@@ -168,14 +176,14 @@ const convertVisitorIntoUser = async (visitor: any, firstname: string, lastname:
 		const visitorUploads = await visitorUtils.getUploads(visitor.id);
 
 		if (visitorUploads && visitorUploads.uploads.length > 0) {
-			createdUser.uploads = visitorUploads.uploads;	
+			createdUser.uploads = visitorUploads.uploads;
 		}
 
 		await createdUser.save();
 		await visitorUtils.deleteVisitor(visitor, createdUser);
 	} catch (err) {
 		throw new Error("Internal server error during Visitor to User conversion");
-	} 
+	}
 }
 
 export default UserResolver;

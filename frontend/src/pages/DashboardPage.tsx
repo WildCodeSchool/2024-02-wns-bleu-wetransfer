@@ -6,19 +6,29 @@ import UserFiles from "../components/user/dashboard/UserFiles";
 const Dashboard: React.FC = () => {
 	return (
 		<DashboardWrapper>
-			<UploadFile />
-			<UserFiles />
+			<DashboardLayout>
+				<UploadFile/>
+				<UserFiles/>
+			</DashboardLayout>
 		</DashboardWrapper>
 	);
 };
 
+const DashboardLayout = styled.div`
+    width: 100%;
+    max-width: 1000px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: start;
+    gap: 40px;
+`
+
 const DashboardWrapper = styled.div`
-	width: 100%;
-	height: 100vh;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	justify-content: center;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: start;
 `;
 
 export default Dashboard;

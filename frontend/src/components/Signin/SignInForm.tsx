@@ -12,8 +12,9 @@ const SignInForm: React.FC = () => {
 	const [notifApi, contextHolder] = notification.useNotification()
 	const navigate = useNavigate()
 
+
 	const [login, {loading, error}] = useMutation(LOGIN_MUTATION, {
-		onCompleted: () => {
+		onCompleted: (data) => {
 			navigate("/dashboard");
 		},
 		onError: (error: ApolloError) => {

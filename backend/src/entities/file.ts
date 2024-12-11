@@ -4,15 +4,15 @@ import {
 	Column,
 	CreateDateColumn,
 	Entity,
-	JoinColumn,
+	JoinTable,
+	ManyToMany,
 	ManyToOne,
 	OneToMany,
-	OneToOne,
 	PrimaryGeneratedColumn,
 } from "typeorm";
 import {Upload} from "./upload";
 import {Report} from "./report";
-import {UserAccessFile} from "./userAccessFile";
+import {User} from "./user";
 
 export enum StatusOption {
 	status1 = "public",
@@ -68,9 +68,19 @@ export class File extends BaseEntity {
 	@OneToMany(() => Report, (report) => report.file)
 	reports: Report[];
 
-	@OneToOne(() => UserAccessFile)
-	@JoinColumn()
-	user_access_file: UserAccessFile;
+	@ManyToMany(() => User, user => user.accessed_files, {cascade: true})
+	@JoinTable({
+		name: 'user_access_file',
+		joinColumn: {
+			name: "file_id",
+			referencedColumnName: 'id'
+		},
+		inverseJoinColumn: {
+			name: 'user_id',
+			referencedColumnName: 'id'
+		}
+	})
+	users_with_access: User[]
 }
 
 @InputType()
