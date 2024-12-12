@@ -5,6 +5,7 @@ import { LOGIN_MUTATION } from "../../graphql/mutations.ts";
 import { useNavigate } from "react-router-dom";
 import { ApolloError, useMutation } from "@apollo/client";
 import styled from "@emotion/styled";
+import { Link } from "react-router-dom";
 
 const { Item } = Form;
 
@@ -81,8 +82,10 @@ const SignInForm: React.FC = () => {
 			</Form>
 			<RegisterTitleContainer>
 				<SubTitle>Not a member ?</SubTitle>
-				<RegisterTitle onClick={() => navigate("access/register")}>
-					Register now !
+				<RegisterTitle>
+					<Link to="/access/register">
+						<SignInLink>Register now</SignInLink>
+					</Link>
 				</RegisterTitle>
 			</RegisterTitleContainer>
 		</FormContainer>
@@ -97,6 +100,10 @@ const RegisterTitleContainer = styled.div`
 	@media screen and (max-width: 768px) {
 		flex-direction: column;
 	}
+`;
+
+const SignInLink = styled.a`
+	color: #4a90e2;
 `;
 
 const Title = styled.h2`
