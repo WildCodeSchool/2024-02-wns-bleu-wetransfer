@@ -1,1 +1,1 @@
-CREATE DATABASE "wild-transfer";
+CREATE DATABASE "wild-transfer"
