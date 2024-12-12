@@ -288,7 +288,7 @@ const CardsWrapper = styled.div`
 	gap: 50px;
 	max-width: 100%;
 	@media (max-width: 768px) {
-		flex-direction: column-reverse;
+		flex-direction: column;
 		margin: 0 30px;
 	}
 `;
@@ -296,7 +296,7 @@ const CardsWrapper = styled.div`
 const LandingPageWrapper = styled.div`
 	background: #0a0025;
 	width: 100%;
-	height: 100vh;
+	height: 80vh;
 	display: flex;
 	flex-direction: column;
 	align-items: center;

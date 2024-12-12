@@ -9,7 +9,7 @@ const TransferPricing: FC = () => {
 
 	return (
 		<TransferPricingWrapper>
-			<ButtonContainer>
+			<ButtonContainer onClick={() => navigate('/')}>
 				<UploadOutlined
 					style={{
 						fontSize: 22,
