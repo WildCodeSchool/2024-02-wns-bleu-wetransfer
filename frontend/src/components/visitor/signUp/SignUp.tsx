@@ -30,6 +30,7 @@ const SignUp: FC = () => {
 				"You have successfully signed up!",
 				"Success"
 			);
+			navigate("/access/login");
 		},
 		onError(error) {
 			openNotificationWithIcon("error", error.message, "Error");

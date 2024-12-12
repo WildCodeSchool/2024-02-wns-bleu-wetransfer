@@ -24,6 +24,10 @@ const VisitorHeaderWrapper = styled.div`
 		flex-direction: column-reverse;
 		gap: 10px;
 	}
+
+	@media screen and (max-width: 465px) {
+		margin-top: 30px;
+	}
 `
 
 export default VisitorHeader
