@@ -1,13 +1,11 @@
-import { Upload } from "../entities/upload";
-import { Arg, Authorized, Mutation, Query, Resolver } from "type-graphql";
-import { Visitor } from "../entities/visitor";
-import { User } from "../entities/user";
-import { File } from "../entities/file";
-import {
-	createDownloadToken,
-	generateDownloadLink,
-} from "../helpers/linkGenerator";
+import {Upload} from "../entities/upload";
+import {Arg, Authorized, Ctx, Mutation, Query, Resolver} from "type-graphql";
+import {Visitor} from "../entities/visitor";
+import {User} from "../entities/user";
+import {File} from "../entities/file";
+import {createDownloadToken, generateDownloadLink,} from "../helpers/linkGenerator";
 import jwt from "jsonwebtoken";
+import {Context} from "../index";
 
 @Resolver(Upload)
 class UploadResolver {
@@ -17,20 +15,13 @@ class UploadResolver {
 	}
 
 	@Query(() => [Upload])
-	async getUploadsByUserId(@Arg("userId") userId: number) {
-		const user = await User.findOneByOrFail({ id: userId });
-
-		if (!user) {
-			throw new Error("User not found");
-		}
-
+	async getUploadsByUserId(@Ctx() context: Context) {
 		try {
-			const result = await Upload.find({
-				where: { user: { id: userId } },
+			//@ts-ignore
+			return await Upload.find({
+				where: {user: {id: context.id}},
 				relations: ["files"],
 			});
-
-			return result;
 		} catch (err) {
 			throw new Error("Internal server error");
 		}
@@ -39,7 +30,7 @@ class UploadResolver {
 	@Authorized()
 	@Mutation(() => String)
 	async changeUploadActivatedStatus(@Arg("uploadId") uploadId: number) {
-		const upload = await Upload.findOneByOrFail({ id: uploadId });
+		const upload = await Upload.findOneByOrFail({id: uploadId});
 
 		if (!upload) {
 			throw new Error("Upload not found");
@@ -149,7 +140,7 @@ class UploadResolver {
 			console.log(uploadId);
 
 			const upload = await Upload.findOne({
-				where: { id: uploadId },
+				where: {id: uploadId},
 				relations: ["files"],
 			});
 
@@ -172,12 +163,12 @@ class UploadResolver {
 }
 
 const userOrVisitor = async (email: string): Promise<User | Visitor> => {
-	let user: User | null = await User.findOneBy({ email });
+	let user: User | null = await User.findOneBy({email});
 	if (user) return user;
 
-	let visitor: Visitor | null = await Visitor.findOneBy({ email });
+	let visitor: Visitor | null = await Visitor.findOneBy({email});
 	if (!visitor) {
-		visitor = await Visitor.create({ email }).save();
+		visitor = await Visitor.create({email}).save();
 	}
 
 	return visitor;
