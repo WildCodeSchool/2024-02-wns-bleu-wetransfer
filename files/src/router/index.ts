@@ -8,7 +8,7 @@ import {
 
 const router = express.Router();
 
-router.get("/get-one/:fileDefaultName", getOneFile);
+router.post("/get-one", getOneFile);
 router.post("/upload", addNewUpload);
 router.post("/download", downloadFiles);
 

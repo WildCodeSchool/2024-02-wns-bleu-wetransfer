@@ -100,18 +100,20 @@ const VisitorDownloadPage = () => {
 		return result + " ago";
 	};
 
-	const handlePreviewFile = async (fileDefaultName: string) => {
-		try {
-			const response = await axios.get(
-				`http://localhost:7002/files/get-one?fileDefaultName=${fileDefaultName}`,
+	const handlePreviewFile = async (fileDefaultName) => {
+		await axios
+			.post(
+				`http://localhost:7002/files/get-one`,
+				{ fileDefaultName },
 				{ responseType: "blob" }
-			);
+			)
+			.then((res) => {
+				console.log(res.data);
 
-			const fileUrl = URL.createObjectURL(response.data);
-			setFilePreview(fileUrl);
-		} catch (err) {
-			console.error("Error fetching file for preview:", err);
-		}
+				const fileUrl = URL.createObjectURL(res.data);
+				setFilePreview(fileUrl);
+			})
+			.catch((err) => console.error(err));
 	};
 
 	const formatSizeInMB = (sizeInBytes: string) => {
