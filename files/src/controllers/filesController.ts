@@ -1,11 +1,11 @@
 import fs from "fs";
 import path from "path";
 import multer from "multer";
-import {validateFile} from "../validators/fileValidators";
-import {ADD_ONE_UPLOAD} from "../graphql/mutations";
-import {Request} from "express";
+import { validateFile } from "../validators/fileValidators";
+import { ADD_ONE_UPLOAD } from "../graphql/mutations";
+import { Request } from "express";
 import axios from "axios";
-import {v4 as uuidv4} from "uuid";
+import { v4 as uuidv4 } from "uuid";
 import archiver from "archiver";
 
 const UPLOADS_DIR = path.join(__dirname, "../uploads");
@@ -13,15 +13,15 @@ const TEMP_DIR = path.resolve(UPLOADS_DIR, "temp");
 const FINAL_DIR = path.resolve(UPLOADS_DIR, "final");
 
 if (!fs.existsSync(UPLOADS_DIR)) {
-	fs.mkdirSync(UPLOADS_DIR, {recursive: true});
+	fs.mkdirSync(UPLOADS_DIR, { recursive: true });
 }
 
 if (!fs.existsSync(TEMP_DIR)) {
-	fs.mkdirSync(TEMP_DIR, {recursive: true});
+	fs.mkdirSync(TEMP_DIR, { recursive: true });
 }
 
 if (!fs.existsSync(FINAL_DIR)) {
-	fs.mkdirSync(FINAL_DIR, {recursive: true});
+	fs.mkdirSync(FINAL_DIR, { recursive: true });
 }
 
 export const storage = multer.diskStorage({
@@ -31,7 +31,7 @@ export const storage = multer.diskStorage({
 	filename: (req, file, cb) => {
 		const fileUuid = uuidv4();
 		const fileExtension = path.extname(file.originalname);
-		const newFilename = `${fileUuid}${fileExtension}`;
+		const newFilename = ${fileUuid}${fileExtension};
 
 		(file as any).original_name = file.originalname;
 
@@ -39,7 +39,7 @@ export const storage = multer.diskStorage({
 	},
 });
 
-const upload = multer({storage}).array("files", 10);
+const upload = multer({ storage }).array("files", 10);
 
 // This function works but it's WAY too long, we will need to refactor it someday
 export const addNewUpload = async (req: Request, res: any) => {
@@ -58,7 +58,7 @@ export const addNewUpload = async (req: Request, res: any) => {
 		for (const file of filesArray) {
 			const fileUuid = uuidv4();
 			const fileExtension = path.extname(file.originalname);
-			const fileFinalName = `${fileUuid}${fileExtension}`;
+			const fileFinalName = ${fileUuid}${fileExtension};
 			const tempPath = file.path;
 			const finalPath = path.join(FINAL_DIR, fileFinalName);
 
@@ -66,7 +66,8 @@ export const addNewUpload = async (req: Request, res: any) => {
 			if (isValid) {
 				fs.renameSync(tempPath, finalPath);
 				validFiles.push({
-					original_name: (file as any).original_name || file.originalname,
+					original_name:
+						(file as any).original_name || file.originalname,
 					default_name: fileFinalName,
 					path: finalPath,
 					size: file.size,
@@ -79,25 +80,29 @@ export const addNewUpload = async (req: Request, res: any) => {
 		}
 
 		if (validFiles.length > 0) {
-			axios.post("http://backend:4000/graphql", {
-				query: ADD_ONE_UPLOAD,
-				variables: {
-					senderEmail: req.body.senderEmail,
-					receiversEmails: Array.isArray(req.body.receiversEmails)
-						? req.body.receiversEmails
-						: [req.body.receiversEmails],
-					title: req.body.title || "Default Title",
-					message: req.body.message || "Default Message",
-					fileData: JSON.stringify(validFiles),
-				},
-			})
+			axios
+				.post("http://backend:4000/graphql", {
+					query: ADD_ONE_UPLOAD,
+					variables: {
+						senderEmail: req.body.senderEmail,
+						receiversEmails: Array.isArray(req.body.receiversEmails)
+							? req.body.receiversEmails
+							: [req.body.receiversEmails],
+						title: req.body.title || "Default Title",
+						message: req.body.message || "Default Message",
+						fileData: JSON.stringify(validFiles),
+					},
+				})
 				.then((response) => {
 					console.log("DATA:", response.data);
 					res.status(200).json(response.data);
 				})
 				.catch((err) => {
 					if (err.response && err.response.data) {
-						console.error("GraphQL Errors:", err.response.data.errors);
+						console.error(
+							"GraphQL Errors:",
+							err.response.data.errors
+						);
 					} else {
 						console.error("Unexpected Error:", err);
 					}
@@ -109,9 +114,8 @@ export const addNewUpload = async (req: Request, res: any) => {
 	});
 };
 
-
 export const deleteFile = async (req: Request, res: any) => {
-	const filename = req.query.filename
+	const filename = req.query.filename;
 
 	if (!filename) {
 		return res.status(400).send("No filename provided.");
@@ -120,14 +124,14 @@ export const deleteFile = async (req: Request, res: any) => {
 	const filePath = path.join(FINAL_DIR, filename as string);
 
 	if (!fs.existsSync(filePath)) {
-		return res.status(404).send(`File not found.`);
+		return res.status(404).send(File not found.);
 	}
 
 	// fs.unlinkSync deletes the file
 	fs.unlinkSync(filePath);
 
 	return res.status(200).send("File deleted.");
-}
+};
 
 export const downloadFiles = async (req: Request, res: any) => {
 	const FILES_DIR = path.join(__dirname, "../uploads/final");
@@ -140,7 +144,7 @@ export const downloadFiles = async (req: Request, res: any) => {
 	res.setHeader("Content-Type", "application/zip");
 	res.attachment("files.zip");
 
-	const archive = archiver("zip", {zlib: {level: 9}});
+	const archive = archiver("zip", { zlib: { level: 9 } });
 
 	archive.on("error", (err) => {
 		res.status(500).send("Error creating ZIP archive.");
@@ -151,9 +155,9 @@ export const downloadFiles = async (req: Request, res: any) => {
 	for (const file of files) {
 		const filePath = path.join(FILES_DIR, file);
 		if (fs.existsSync(filePath)) {
-			archive.file(filePath, {name: file});
+			archive.file(filePath, { name: file });
 		} else {
-			console.warn(`File not found: ${file}`);
+			console.warn(File not found: ${file});
 		}
 	}
 
@@ -166,9 +170,9 @@ export const downloadFiles = async (req: Request, res: any) => {
 
 export const getOneFile = (req: Request, res: any) => {
 	try {
-		const {fileDefaultName} = req.body;
+		const { fileDefaultName } = req.body;
 
-		console.log(fileDefaultName)
+		console.log(fileDefaultName);
 
 		if (!fileDefaultName) {
 			return res.status(400).send("File path is required.");
@@ -176,7 +180,7 @@ export const getOneFile = (req: Request, res: any) => {
 
 		const fullPath = path.join(FINAL_DIR, fileDefaultName);
 
-		console.log(fullPath)
+		console.log(fullPath);
 
 		if (!fs.existsSync(fullPath)) {
 			return res.status(404).send("File not found.");
@@ -185,7 +189,7 @@ export const getOneFile = (req: Request, res: any) => {
 		res.setHeader("Content-Type", "application/octet-stream");
 		res.setHeader(
 			"Content-Disposition",
-			`inline; filename="${path.basename(fullPath)}"`
+			inline; filename="${path.basename(fullPath)}"
 		);
 
 		const fileStream = fs.createReadStream(fullPath);
@@ -200,7 +204,3 @@ export const getOneFile = (req: Request, res: any) => {
 		res.status(500).send("Error fetching file for preview.");
 	}
 };
-
-
-
-
