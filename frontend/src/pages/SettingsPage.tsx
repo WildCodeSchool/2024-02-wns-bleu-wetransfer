@@ -8,7 +8,7 @@ const SettingsPage: FC = () => {
 }
 
 const SettingsPageWrapper = styled.div`
-    height: 100vh;
+    height: 80vh;
     width: 100%;
     background: red;
 `
