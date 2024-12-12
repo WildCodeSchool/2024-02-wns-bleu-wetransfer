@@ -66,34 +66,15 @@ const CardTitle = styled.h3`
 `;
 
 const CardsContainer = styled.div`
-	width: 80%;
+	width: 100%;
 	height: 500px;
 	display: flex;
-	justify-content: space-evenly;
 	gap: 20px;
 	align-items: center;
-	@media (max-width: 768px) {
-		/* Active le défilement horizontal en mobile */
-		width: 100%;
-		overflow-x: auto;
-		display: flex;
-		flex-wrap: nowrap; /* Pas de retour à la ligne, tout en une seule ligne */
-		scroll-snap-type: x mandatory; /* Un scroll fluide d'une carte à l'autre */
-		padding-bottom: 20px;
-
-		/* Masque les barres de défilement selon le navigateur */
-		scrollbar-width: none; /* Firefox */
-		&::-webkit-scrollbar {
-			display: none; /* Chrome, Safari */
-		}
-
-		/* Applique une taille réduite pour les cartes */
-		& > .ant-card {
-			flex: 0 0 auto;
-			width: 80%; /* Les cartes prendront 80% de l'écran */
-			scroll-snap-align: start; /* Aligne les cartes au début lors du scroll */
-			transform: scale(0.9); /* Réduit légèrement la taille des cartes */
-		}
+	justify-content: center;
+	flex-wrap: wrap;
+	@media (max-width: 947px) {
+		margin-top: 20px
 	}
 `;
 
@@ -105,15 +86,11 @@ export const PricingTitle = styled.h3`
 const PricingPageWrapper = styled.div`
 	position: relative;
 	width: 100%;
-	height: 100%;
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
 	margin-top: 40px;
-	@media (max-width: 768px) {
-		width: 115%;
-	}
 `;
 
 export default PricingPage;
