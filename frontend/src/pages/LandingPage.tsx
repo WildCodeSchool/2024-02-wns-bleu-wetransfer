@@ -265,6 +265,10 @@ const SuggestionsWrapper = styled.div`
 	justify-content: center;
 	align-items: center;
 	gap: 10px;
+
+	@media screen and (max-width: 768px) {
+		flex-direction: column;
+	}
 `;
 
 const Title = styled.h1`
@@ -285,6 +289,7 @@ const CardsWrapper = styled.div`
 	max-width: 100%;
 	@media (max-width: 768px) {
 		flex-direction: column-reverse;
+		margin: 0 30px;
 	}
 `;
 
@@ -301,7 +306,7 @@ const LandingPageWrapper = styled.div`
 
 const FormContainer = styled.div<{ background?: string }>`
 	background: ${({ background }) => (background ? background : "#7b5c8a")};
-	padding: 18px;
+	padding: 18px 40px;
 	border-radius: 20px;
 	text-align: center;
 	width: 500px;
@@ -313,14 +318,8 @@ const FormContainer = styled.div<{ background?: string }>`
 	height: 580px;
 	box-sizing: border-box;
 	@media (max-width: 768px) {
-		width: 120%;
+		width: 100%;
 		height: 100%;
-	}
-	&:nth-of-type(2) {
-		@media (max-width: 768px) {
-			padding-top: 70px;
-			padding-bottom: 90px;
-		}
 	}
 `;
 

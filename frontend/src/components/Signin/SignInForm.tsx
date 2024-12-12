@@ -94,6 +94,9 @@ const RegisterTitleContainer = styled.div`
 	justify-content: center;
 	align-items: center;
 	gap: 5px;
+	@media screen and (max-width: 768px) {
+		flex-direction: column;
+	}
 `;
 
 const Title = styled.h2`
