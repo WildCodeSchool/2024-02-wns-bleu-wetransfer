@@ -1,14 +1,16 @@
 import React from "react";
 import styled from "@emotion/styled";
 import UploadFile from "../components/user/dashboard/UploadFile";
-import UserFiles from "../components/user/dashboard/UserFiles";
+import MyUploads from "../components/user/dashboard/MyUploads.tsx";
+import SharedFilesTable from "../components/user/dashboard/upload files/SharedFilesTable.tsx";
 
 const Dashboard: React.FC = () => {
 	return (
 		<DashboardWrapper>
 			<DashboardLayout>
 				<UploadFile/>
-				<UserFiles/>
+				<MyUploads/>
+				<SharedFilesTable/>
 			</DashboardLayout>
 		</DashboardWrapper>
 	);

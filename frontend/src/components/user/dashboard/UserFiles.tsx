@@ -1,8 +1,7 @@
 import React from "react";
-import {Tabs} from "antd";
 import styled from "@emotion/styled";
-import UserOwnFilesTable from "./upload files/UserOwnFilesTable.tsx";
 import SharedFilesTable from "./upload files/SharedFilesTable.tsx";
+import MyUploads from "./MyUploads.tsx";
 
 
 const UserFiles: React.FC = () => {
@@ -10,22 +9,7 @@ const UserFiles: React.FC = () => {
 	return (
 		<>
 			<TablesContainer>
-				<Tabs
-					type='card'
-					centered
-					items={[
-						{
-							key: 'myfiles',
-							label: "My Files",
-							children: <UserOwnFilesTable/>
-						},
-						{
-							key: 'shared',
-							label: "My Uploads",
-							// children:
-						}
-					]}
-				/>
+				<MyUploads/>
 			</TablesContainer>
 			<SharedFilesTable/>
 		</>
