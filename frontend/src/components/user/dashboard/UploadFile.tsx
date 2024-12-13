@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import styled from "@emotion/styled";
 import { PlusOutlined } from "@ant-design/icons";
 import { Button, Upload, message } from "antd";
@@ -10,23 +10,17 @@ import { GET_CONNECTED_USER } from "../../../graphql/queries";
 const { Dragger } = Upload;
 
 const UploadFile: React.FC = () => {
-  const [email, setEmail] = useState("");
+  const [receiverEmail, setReceiverEmail] = useState("");
   const [emails, setEmails] = useState<string[]>([]);
   const [fileList, setFileList] = useState<AntdUploadFile[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
   const { data, loading, error } = useQuery(GET_CONNECTED_USER);
 
-  useEffect(() => {
-    if (data && data.getConnectedUser) {
-      setEmails([data.getConnectedUser.email]);
-    }
-  }, [data]);
-
   const handleAddEmail = () => {
-    if (email && !emails.includes(email)) {
-      setEmails([...emails, email]);
-      setEmail("");
+    if (receiverEmail && !emails.includes(receiverEmail)) {
+      setEmails([...emails, receiverEmail]);
+      setReceiverEmail("");
     }
   };
 
@@ -80,8 +74,8 @@ const UploadFile: React.FC = () => {
       }
     });
 
-    formData.append("senderEmail", emails[0]);
     formData.append("receiversEmails", emails.join(","));
+    formData.append("senderEmail", data.getConnectedUser.email);
 
     try {
       const response = await axios.post(
@@ -138,8 +132,8 @@ const UploadFile: React.FC = () => {
         <EmailSection>
           <Input
             type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            value={receiverEmail}
+            onChange={(e) => setReceiverEmail(e.target.value)}
             onKeyPress={handleKeyPress}
             placeholder="Enter email"
           />
@@ -149,19 +143,19 @@ const UploadFile: React.FC = () => {
             ))}
           </EmailList>
         </EmailSection>
-        <Upload {...props}>
-          <Button
-            style={{ background: "#65558F", color: "white" }}
-            icon={<PlusOutlined />}
-          >
-            Add File
-          </Button>
-        </Upload>
+        <Button
+          style={{ background: "#65558F", color: "white" }}
+          icon={<PlusOutlined />}
+          onClick={handleAddEmail}
+        >
+          Add Email
+        </Button>
       </BottomSection>
       <TransferButton
         type="primary"
         size="large"
         loading={isLoading}
+        disabled={emails.length === 0}
         onClick={handleUpload}
       >
         Transfer Files
