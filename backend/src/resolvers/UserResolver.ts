@@ -6,7 +6,9 @@ import jwt from "jsonwebtoken";
 import {EntityNotFoundError} from "typeorm";
 import {Context} from "../index";
 import cookie from 'cookie'
+import axios from 'axios'
 import {File} from "../entities/file";
+import { profile } from "console";
 
 @Resolver(User)
 class UserResolver {
@@ -174,6 +176,82 @@ class UserResolver {
 		}, [] as File[]);
 
 		return allFiles || [];
+	},
+
+	@Authorized()
+	@Mutation(() => String)
+	async editUser(
+		@Arg("firstname") firstname: string,
+		@Arg("lastname") lastname: string,
+		@Arg("password") password: string,
+		@Ctx() context: any
+	) {
+		if (!context || !context.id) {
+			throw new Error("User not authenticated");
+		}
+
+		const user = await User.findOne({
+			where: {id: context.id}
+		});
+
+		if (!user) {
+			throw new Error("User not found");
+		}
+
+		password = await argon2.hash(password);
+
+		user.firstname = firstname;
+		user.lastname = lastname;
+		user.password = password;
+
+		await user.save();
+
+		return "User edited";
+	}
+
+	@Authorized()
+	@Mutation(() => String)
+	async editUserProfilePicture(
+		@Arg("fileData") fileData: File,
+		@Ctx() context: any
+	) {
+		if (!context || !context.id) {
+			throw new Error("User not authenticated");
+		}
+
+		const user = await User.findOne({
+			where: {id: context.id}
+		});
+
+		if (!user) {
+			throw new Error("User not found");
+		}
+
+		console.log(">>>>> user found", user)
+		console.log(">>>>> fileData", fileData)
+
+		// let profilePictureName
+
+		// try {
+		// 	profilePictureName = (await axios.post(
+		// 		`http://files:3000/files/user/picture`,
+		// 		{fileData},
+		// 		{
+		// 			headers: {
+		// 				'Content-Type': 'application/json',
+		// 			}
+		// 		}
+		// 	)).data;
+		// } catch (err) {
+		// 	console.error("Error during profile picture upload", err);
+		// 	throw new Error("Internal server error during profile picture upload");
+		// }
+
+		// if (profilePictureName) user.profile_picture_name = profilePictureName;
+
+		// await user.save();
+
+		// return "Profile picture edited";
 	}
 }
 
