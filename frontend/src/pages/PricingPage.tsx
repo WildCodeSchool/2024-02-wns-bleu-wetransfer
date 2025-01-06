@@ -1,9 +1,9 @@
 import styled from "@emotion/styled";
-import { Button, Card } from "antd";
+import {Button, Card} from "antd";
 
-const { Meta } = Card;
+const {Meta} = Card;
 
-interface CardContent {
+export interface CardContent {
 	title: string;
 	description: string;
 	price: number;
@@ -52,7 +52,7 @@ const PricingPage = () => {
 						<Meta
 							title="In this plan :"
 							description={plan.description}
-							style={{ height: 250 }}
+							style={{height: 250}}
 						/>
 					</Card>
 				))}
@@ -61,36 +61,36 @@ const PricingPage = () => {
 	);
 };
 
-const CardTitle = styled.h3`
-	font-size: 27px;
+export const CardTitle = styled.h3`
+    font-size: 25px;
 `;
 
 const CardsContainer = styled.div`
-	width: 100%;
-	height: 500px;
-	display: flex;
-	gap: 20px;
-	align-items: center;
-	justify-content: center;
-	flex-wrap: wrap;
-	@media (max-width: 947px) {
-		margin-top: 20px
-	}
+    width: 100%;
+    height: 500px;
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    @media (max-width: 947px) {
+        margin-top: 20px
+    }
 `;
 
 export const PricingTitle = styled.h3`
-	font-size: 30px;
-	color: white;
+    font-size: 30px;
+    color: white;
 `;
 
 const PricingPageWrapper = styled.div`
-	position: relative;
-	width: 100%;
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	align-items: center;
-	margin-top: 40px;
+    position: relative;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 40px;
 `;
 
 export default PricingPage;

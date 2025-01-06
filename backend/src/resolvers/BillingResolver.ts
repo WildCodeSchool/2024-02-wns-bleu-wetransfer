@@ -1,5 +1,6 @@
 import {Billing} from "../entities/billing";
 import {Ctx, Query, Resolver} from "type-graphql";
+import {Context} from "../index";
 
 @Resolver(Billing)
 class BillingResolver {
@@ -9,10 +10,11 @@ class BillingResolver {
 	}
 
 	@Query(() => Billing, {nullable: true})
-	async getUserBilling(@Ctx() context: any): Promise<Billing | null> {
+	async getUserBilling(@Ctx() context: Context): Promise<Billing | null> {
+
 		try {
 			const billing: Billing | null = await Billing.findOne({
-				where: {user: context.id},
+				where: {user: {id: context.id}},
 				relations: ['plan'],
 			});
 
@@ -21,6 +23,7 @@ class BillingResolver {
 			} else {
 				return null;
 			}
+			return null
 		} catch (error) {
 			console.error("Error fetching user billing:", error);
 			throw new Error("Unable to fetch billing information.");

@@ -80,8 +80,11 @@ class UserResolver {
 				return new Error('Internal Server Error')
 			}
 
-			const userFromDB = await User.findOneByOrFail({email: emailFromClient});
-
+			const userFromDB = await User.findOneOrFail({
+				where: {email: emailFromClient},
+				relations: ['billing', 'billing.plan']
+			});
+			
 			const isPasswordCorrect = await argon2.verify(
 				userFromDB.password,
 				passwordFromClient
@@ -92,7 +95,7 @@ class UserResolver {
 			}
 
 			const token = jwt.sign(
-				{id: userFromDB.id, email: userFromDB.email, role: userFromDB.role},
+				{id: userFromDB.id, email: userFromDB.email, role: userFromDB.role, planId: userFromDB.billing.plan.id},
 				process.env.JWT_SECRET_KEY,
 				{expiresIn: '1h'}
 			);

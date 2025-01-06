@@ -50,9 +50,8 @@ export class Billing extends BaseEntity {
 	@JoinColumn({name: "plan_id", referencedColumnName: "id"})
 	plan: Plan;
 
-	@Field(() => User)
 	@OneToOne(() => User, user => user.billing)
-	@JoinColumn({name: "user_id", referencedColumnName: "id"})
+	@JoinColumn()
 	user: User;
 
 	@BeforeInsert()
