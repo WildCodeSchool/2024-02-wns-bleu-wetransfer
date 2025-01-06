@@ -9,6 +9,7 @@ import {
 } from "../helpers/linkGenerator";
 import jwt from "jsonwebtoken";
 import { Context } from "../index";
+import { sendDownloadLinkEmail } from "../helpers/emailHelper";
 
 @Resolver(Upload)
 class UploadResolver {
@@ -75,6 +76,7 @@ class UploadResolver {
           type: file.mimetype,
           path: file.path,
           file_uid: file.uuid,
+          users_with_access: [user],
         }).save();
 
         uploadFiles.push(newFile);
@@ -104,7 +106,19 @@ class UploadResolver {
 
         const downloadLink: string = generateDownloadLink(downloadToken);
 
-        return downloadLink;
+        await Promise.all(
+          receivers.map((recipientEmail) =>
+            sendDownloadLinkEmail(
+              recipientEmail,
+              downloadLink,
+              senderEmail,
+              message,
+              title
+            )
+          )
+        );
+
+        return "Upload created successfully";
       }
 
       throw new Error("Failed to create upload");
