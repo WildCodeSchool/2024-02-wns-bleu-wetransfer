@@ -1,52 +1,39 @@
 import styled from "@emotion/styled";
-import {Button, Card} from "antd";
+import {Button, Card, Spin} from "antd";
+import {FC} from "react";
+import {useQuery} from "@apollo/client";
+import {GET_ALL_PLANS} from "../graphql/queries.ts";
+import {useNavigate} from "react-router-dom";
 
 const {Meta} = Card;
 
-export interface CardContent {
-	title: string;
-	description: string;
-	price: number;
-	suggested: boolean;
-}
+const PricingPage: FC = () => {
+	const navigate = useNavigate()
 
-const PricingPage = () => {
-	const cardsContent: CardContent[] = [
-		{
-			title: "Free",
-			description: "Il faut décrire le plan",
-			price: 0,
-			suggested: false,
-		},
-		{
-			title: "Premium",
-			description: "Encore une description",
-			price: 10,
-			suggested: true,
-		},
-		{
-			title: "Ultimate",
-			description: "Description du plan Ultimate",
-			price: 1424,
-			suggested: false,
-		},
-	];
+	const {data, loading, error} = useQuery(GET_ALL_PLANS)
+
+	if (loading) return <Spin/>
+
+	if (!data || !data.getAllPlans) return <p>Cannot load plans</p>
+
+	if (error) console.error(error)
 
 	return (
 		<PricingPageWrapper>
 			<PricingTitle>Pricing</PricingTitle>
 			<CardsContainer>
-				{cardsContent.map((plan, index) => (
+				{data?.getAllPlans?.map((plan, index) => (
 					<Card
 						key={index}
 						style={{
 							width: 300,
-							border: plan.suggested
+							border: plan.is_suggested
 								? "5px solid rgba(231,166,26,1)"
 								: "none",
 						}}
-						actions={[<Button type="primary">Subscribe</Button>]}
-						title={<CardTitle>{plan.title}</CardTitle>}
+						actions={[<Button type="primary"
+						                  onClick={() => navigate('/access/register')}>Subscribe</Button>]}
+						title={<CardTitle>{plan.name.toUpperCase()}</CardTitle>}
 						extra={`$${plan.price}/month`}
 					>
 						<Meta

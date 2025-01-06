@@ -1,14 +1,13 @@
 import React from "react";
 import styled from '@emotion/styled';
 import {PricingTitle} from "./PricingPage.tsx";
-import {Badge, Card, Descriptions, Popconfirm, Spin} from 'antd';
+import {Badge, Descriptions, Popconfirm, Spin} from 'antd';
 import {GET_USER_BILLING} from "../graphql/queries.ts";
 import {useQuery} from '@apollo/client';
 import PlanDisplay from "../components/billing/PlanDisplay.tsx";
 import {colors} from "../_colors.ts";
 
 const {Item} = Descriptions;
-const {Meta} = Card;
 
 const BillingPage: React.FC = () => {
 
@@ -30,7 +29,6 @@ const BillingPage: React.FC = () => {
 					<p>An error occured</p>
 					:
 					<>
-
 						<Descriptions title='Billing Information'
 						              style={{background: 'whitesmoke', padding: 20, borderRadius: 12, width: 900}}>
 							<Item label='Subscription Status'>
