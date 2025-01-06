@@ -31,7 +31,7 @@ export const storage = multer.diskStorage({
 	filename: (req, file, cb) => {
 		const fileUuid = uuidv4();
 		const fileExtension = path.extname(file.originalname);
-		const newFilename = ${fileUuid}${fileExtension};
+		const newFilename = `${fileUuid}${fileExtension}`;
 
 		(file as any).original_name = file.originalname;
 
@@ -58,7 +58,7 @@ export const addNewUpload = async (req: Request, res: any) => {
 		for (const file of filesArray) {
 			const fileUuid = uuidv4();
 			const fileExtension = path.extname(file.originalname);
-			const fileFinalName = ${fileUuid}${fileExtension};
+			const fileFinalName = `${fileUuid}${fileExtension}`;
 			const tempPath = file.path;
 			const finalPath = path.join(FINAL_DIR, fileFinalName);
 
@@ -124,7 +124,7 @@ export const deleteFile = async (req: Request, res: any) => {
 	const filePath = path.join(FINAL_DIR, filename as string);
 
 	if (!fs.existsSync(filePath)) {
-		return res.status(404).send(File not found.);
+		return res.status(404).send(`File not found.`);
 	}
 
 	// fs.unlinkSync deletes the file
@@ -157,7 +157,7 @@ export const downloadFiles = async (req: Request, res: any) => {
 		if (fs.existsSync(filePath)) {
 			archive.file(filePath, { name: file });
 		} else {
-			console.warn(File not found: ${file});
+			console.warn(`File not found: ${file}`);
 		}
 	}
 
@@ -189,7 +189,7 @@ export const getOneFile = (req: Request, res: any) => {
 		res.setHeader("Content-Type", "application/octet-stream");
 		res.setHeader(
 			"Content-Disposition",
-			inline; filename="${path.basename(fullPath)}"
+			`inline; filename="${path.basename(fullPath)}"`
 		);
 
 		const fileStream = fs.createReadStream(fullPath);
