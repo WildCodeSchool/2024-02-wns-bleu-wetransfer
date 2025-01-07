@@ -35,10 +35,10 @@ class BillingResolver {
 	async handleUserBilling(
 		@Arg("planId") planId: number,
 		@Arg("unsubscribe", {nullable: true}) unsubscribe: boolean,
-		// @Ctx() context: Context
+		@Ctx() context: Context
 	) {
 		try {
-			await handleUserBilling(53, planId, unsubscribe);
+			await handleUserBilling(context.id, planId, unsubscribe);
 			return "Billing handled successfully";
 		} catch (error) {
 			console.error("Error handling user billing:", error);
