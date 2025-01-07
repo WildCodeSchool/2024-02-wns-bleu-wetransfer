@@ -38,8 +38,8 @@ class BillingResolver {
 		// @Ctx() context: Context
 	) {
 		try {
-			const billing = await handleUserBilling(53, planId, unsubscribe);
-			return billing;
+			await handleUserBilling(53, planId, unsubscribe);
+			return "Billing handled successfully";
 		} catch (error) {
 			console.error("Error handling user billing:", error);
 			throw new Error("Unable to handle billing information." + error);
@@ -54,36 +54,30 @@ export const handleUserBilling = async (userId: number, planId: number, unsubscr
 			id: planId,
 		});
 
-		console.log("user >>>", user);
-		console.log("plan >>>", plan);
+		const currentBilling = await Billing.findOne({
+			where: {
+				user: {id: userId},
+			},
+		});
 
 		if (unsubscribe) {
-
-			const currentBilling = await Billing.findOne({
-			relations: ["user", "plan"], 
-			where: {
-				user: { id: userId },
-				plan: { id: planId },
-			},
-			});
-
-			console.log("current billing >>>", currentBilling);
 			if (!currentBilling) {
-				throw new Error("Billing not found");
+				throw new Error("User did not subscribe to this plan");
 			}
 
-			currentBilling.end_subscription_date = new Date();
-			await currentBilling.save();
-			return "Billing removed";
+			await currentBilling.remove();
+			return;
 		}
 
+		await currentBilling?.remove();
+
 		const billing = new Billing();
+
 		billing.user = user;
 		billing.plan = plan;
 		billing.last_payment_date = new Date();
-		
-		await billing.save();
-		return billing;
+
+		return await billing.save();
 	} catch (error) {
 		throw new Error("Internal server error" + error);
 	}

@@ -27,7 +27,7 @@ export class Plan extends BaseEntity {
 	description: string
 
 	@Field()
-	@Column({type: "boolean"})
+	@Column({type: "boolean", default: false, nullable: true})
 	is_suggested: boolean
 
 	@Field()
