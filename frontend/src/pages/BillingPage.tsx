@@ -1,15 +1,23 @@
 import React from "react";
 import styled from '@emotion/styled';
 import {PricingTitle} from "./PricingPage.tsx";
-import {Badge, Descriptions, Popconfirm, Spin} from 'antd';
+import {Badge, Descriptions, message, Popconfirm, Spin} from 'antd';
 import {GET_USER_BILLING} from "../graphql/queries.ts";
-import {useQuery} from '@apollo/client';
+import {useMutation, useQuery} from '@apollo/client';
 import PlanDisplay from "../components/billing/PlanDisplay.tsx";
 import {colors} from "../_colors.ts";
+import {HANDLE_USER_BILLING} from "../graphql/mutations.ts";
 
 const {Item} = Descriptions;
 
 const BillingPage: React.FC = () => {
+
+	const [handleUserBilling, {userBillingLoading}] = useMutation(HANDLE_USER_BILLING, {
+		onCompleted: () => {
+			message.success("Plan updated")
+			window.location.reload()
+		}
+	})
 
 	const {data, loading, error} = useQuery(GET_USER_BILLING);
 
@@ -55,6 +63,11 @@ const BillingPage: React.FC = () => {
                                     <Popconfirm title="Are you sure to unsubscribe now?"
                                                 description="You'll lose your access immediately"
                                                 okText="Unsubscribe"
+                                                onConfirm={() => handleUserBilling({
+										            variables: {
+											            planId: 1, unsubscribe: false
+										            }
+									            })}
                                     >
                                         <a style={{color: colors.mainOrange}}>Unsubscribe now</a>
                                     </Popconfirm>

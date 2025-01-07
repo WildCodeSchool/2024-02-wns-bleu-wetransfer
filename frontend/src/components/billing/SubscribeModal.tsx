@@ -1,7 +1,9 @@
 import {FC} from "react";
-import {Form, Modal} from "antd";
+import {Form, message, Modal} from "antd";
 import {Plan} from "../../types/plan";
 import {CardTitle} from "../../pages/PricingPage.tsx";
+import {HANDLE_USER_BILLING} from "../../graphql/mutations.ts";
+import {useMutation} from "@apollo/client";
 
 interface SubscribeModalProps {
 	onCancel: () => void,
@@ -11,14 +13,26 @@ interface SubscribeModalProps {
 const SubscribeModal: FC<SubscribeModalProps> = ({onCancel, plan}) => {
 	const [form] = Form.useForm()
 
-	return (
-		<Modal title="Upgrade plan to" open={!!plan} onCancel={onCancel} okText="Subscribe to plan">
-			<CardTitle>{plan?.name.toUpperCase()}</CardTitle>
-			<Form form={form}>
-				<Form.Item>
+	const [handleUserBilling, {userBillingLoading}] = useMutation(HANDLE_USER_BILLING, {
+		onCompleted: () => {
+			message.success("Plan updated")
+			onCancel()
+			window.location.reload()
+		}
+	})
 
-				</Form.Item>
-			</Form>
+
+	return (
+		<Modal title="Upgrade plan to" open={!!plan} onCancel={onCancel} okText="Subscribe to plan" okButtonProps={{
+			onClick: () => handleUserBilling({
+				variables: {
+					planId: plan.id, unsubscribe: false
+				}
+			}),
+			loading: userBillingLoading
+		}}>
+			<CardTitle>{plan?.name.toUpperCase()}</CardTitle>
+			From the subscription date, you'll charged for {plan?.price}€ every month
 		</Modal>
 	)
 }
