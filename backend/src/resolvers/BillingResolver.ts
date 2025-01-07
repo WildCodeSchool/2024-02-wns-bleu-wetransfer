@@ -35,10 +35,10 @@ class BillingResolver {
 	async handleUserBilling(
 		@Arg("planId") planId: number,
 		@Arg("unsubscribe", {nullable: true}) unsubscribe: boolean,
-		@Ctx() context: Context
+		// @Ctx() context: Context
 	) {
 		try {
-			const billing = await handleUserBilling(context.id, planId, unsubscribe);
+			const billing = await handleUserBilling(53, planId, unsubscribe);
 			return billing;
 		} catch (error) {
 			console.error("Error handling user billing:", error);
@@ -54,8 +54,20 @@ export const handleUserBilling = async (userId: number, planId: number, unsubscr
 			id: planId,
 		});
 
+		console.log("user >>>", user);
+		console.log("plan >>>", plan);
+
 		if (unsubscribe) {
-			const currentBilling = await Billing.findOne({ where: { user: { id: userId }, plan: { id: planId } } });
+
+			const currentBilling = await Billing.findOne({
+			relations: ["user", "plan"], 
+			where: {
+				user: { id: userId },
+				plan: { id: planId },
+			},
+			});
+
+			console.log("current billing >>>", currentBilling);
 			if (!currentBilling) {
 				throw new Error("Billing not found");
 			}
