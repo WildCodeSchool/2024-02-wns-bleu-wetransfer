@@ -1,91 +1,40 @@
 import {FC} from "react";
-import { useState } from "react";
 import styled from "@emotion/styled";
-import { Input, Form, Button, Image, Upload } from "antd";
-import { PlusOutlined } from '@ant-design/icons';
-import type { GetProp, UploadFile, UploadProps } from 'antd';
+import {Button, ConfigProvider, Form, Input, message} from "antd";
+import {GET_CONNECTED_USER} from "../graphql/queries.ts";
+import {useQuery} from "@apollo/client";
 
-type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0];
-
-const getBase64 = (file: FileType): Promise<string> =>
-    new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => resolve(reader.result as string);
-      reader.onerror = (error) => reject(error);
-    });
 
 const SettingsPage: FC = () => {
-    const [previewOpen, setPreviewOpen] = useState(false);
-    const [previewImage, setPreviewImage] = useState('');
-    const [fileList, setFileList] = useState<UploadFile[]>([
-        {
-        uid: '-1',
-        name: 'image.png',
-        status: 'done',
-        url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-        },
-        {
-        uid: '-xxx',
-        percent: 50,
-        name: 'image.png',
-        status: 'uploading',
-        url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-        },
-        {
-        uid: '-5',
-        name: 'image.png',
-        status: 'error',
-        },
-    ]);
+	const [form] = Form.useForm()
 
-    const handlePreview = async (file: UploadFile) => {
-        if (!file.url && !file.preview) {
-            file.preview = await getBase64(file.originFileObj as FileType);
-        }
 
-        setPreviewImage(file.url || (file.preview as string));
-        setPreviewOpen(true);
-    };
+	useQuery(GET_CONNECTED_USER, {
+		onCompleted: (data) => {
+			const {firstname, lastname, email} = data.getConnectedUser
 
-    const handleChange: UploadProps['onChange'] = ({ fileList: newFileList }) =>
-    setFileList(newFileList);
+			form.setFieldsValue({
+				firstname,
+				lastname,
+				email
+			})
+		},
+		onError: (err) => {
+			message.error(err.message)
+		}
+	})
 
-    const uploadButton = (
-        <button style={{ border: 0, background: 'none' }} type="button">
-            <PlusOutlined />
-            <div style={{ marginTop: 8 }}>Upload</div>
-        </button>
-    );
+	const handleSubmitForm = (values) => {
+		const {firstname, lastname, password} = values
+
+	}
 
 	return (
-        // 				onFinish={handleSignUp}
-				// {...formItemLayout}
 		<SettingsPageWrapper>
-            <>
-                <Upload
-                    action="https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload"
-                    listType="picture-circle"
-                    fileList={fileList}
-                    onPreview={handlePreview}
-                    onChange={handleChange}
-                >
-                    {fileList.length >= 8 ? null : uploadButton}
-                </Upload>
-                {previewImage && (
-                    <Image
-                    wrapperStyle={{ display: 'none' }}
-                    preview={{
-                        visible: previewOpen,
-                        onVisibleChange: (visible) => setPreviewOpen(visible),
-                        afterOpenChange: (visible) => !visible && setPreviewImage(''),
-                    }}
-                    src={previewImage}
-                    />
-                )}
-            </>
-            <SettingForm
-				name="control-hooks"
+			<Form
+				onFinish={handleSubmitForm}
+				form={form}
+				name="settings"
 			>
 				<Form.Item
 					name="firstname"
@@ -95,12 +44,12 @@ const SettingsPage: FC = () => {
 							message: "Please enter your first name",
 						},
 					]}
-					labelCol={{ span: 24 }}
+					labelCol={{span: 24}}
 				>
-					<StyledInput allowClear placeholder="First name" />
+					<StyledInput allowClear placeholder="First name"/>
 				</Form.Item>
 				<Form.Item
-					labelCol={{ span: 24 }}
+					labelCol={{span: 24}}
 					name="lastname"
 					rules={[
 						{
@@ -109,10 +58,22 @@ const SettingsPage: FC = () => {
 						},
 					]}
 				>
-					<StyledInput allowClear placeholder="Last name" />
+					<StyledInput allowClear placeholder="Last name"/>
 				</Form.Item>
+				<ConfigProvider theme={{
+					token: {colorBgContainerDisabled: "grey"}
+				}}>
+
+					<Form.Item
+						labelCol={{span: 24}}
+						name="email"
+
+					>
+						<StyledInput allowClear placeholder="Email" disabled/>
+					</Form.Item>
+				</ConfigProvider>
 				<Form.Item
-					labelCol={{ span: 24 }}
+					labelCol={{span: 24}}
 					name="password"
 					rules={[
 						{
@@ -128,7 +89,7 @@ const SettingsPage: FC = () => {
 					/>
 				</Form.Item>
 				<Form.Item
-					labelCol={{ span: 24 }}
+					labelCol={{span: 24}}
 					name="confirmPassword"
 					rules={[
 						{
@@ -148,13 +109,12 @@ const SettingsPage: FC = () => {
 						data-testid="submitButton"
 						type="primary"
 						htmlType="submit"
-						loading={false}
 					>
 						Sign up
 					</StyledButton>
 				</Form.Item>
-            </SettingForm>
-        </SettingsPageWrapper>
+			</Form>
+		</SettingsPageWrapper>
 	)
 }
 
@@ -167,33 +127,25 @@ const SettingsPageWrapper = styled.div`
     justify-content: center;
 `
 
-const SettingForm = styled.form`
-    width: 40rem;
-    padding: 2rem;
-    max-width: 120rem;
-    border-radius: 10px;
-    background: #f9f9f9;
-`
-
 const StyledInput = styled(Input)`
-	&.ant-input-affix-wrapper {
-		border-radius: 8px;
-		margin: 0.5rem 0;
-	}
+    &.ant-input-affix-wrapper {
+        border-radius: 8px;
+        margin: 0.5rem 0;
+    }
 `;
 
 const StyledButton = styled(Button)`
-	width: 100%;
-	border-radius: 8px;
-	background-color: orange;
-	border: none;
+    width: 100%;
+    border-radius: 8px;
+    background-color: orange;
+    border: none;
 `;
 
 const StyledPasswordInput = styled(Input.Password)`
-	&.ant-input-password {
-		border-radius: 8px;
-		margin: 0.5rem 0;
-	}
+    &.ant-input-password {
+        border-radius: 8px;
+        margin: 0.5rem 0;
+    }
 `;
 
 export default SettingsPage

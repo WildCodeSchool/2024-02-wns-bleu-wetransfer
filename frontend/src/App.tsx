@@ -10,6 +10,7 @@ import PricingPage from "./pages/PricingPage.tsx";
 import BillingPage from "./pages/BillingPage.tsx";
 import VisitorDownloadPage from "./pages/VisitorDownloadPage.tsx";
 import {FC} from "react";
+import {UserProvider} from "./context/UserContext.tsx";
 
 interface ProtectedRouteProps {
 	isLoggedIn: boolean;
@@ -17,7 +18,6 @@ interface ProtectedRouteProps {
 }
 
 const ProtectedRoute = ({isLoggedIn, children}: ProtectedRouteProps) => {
-	console.log("is logged in", isLoggedIn);
 	if (!isLoggedIn) {
 		return <Navigate to="/"/>;
 	}
@@ -63,9 +63,9 @@ const MainLayout: FC = () => {
 	]);
 
 	return (
-		<>
+		<UserProvider>
 			<RouterProvider router={router}/>
-		</>
+		</UserProvider>
 	)
 }
 
