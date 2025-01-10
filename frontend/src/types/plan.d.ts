@@ -8,5 +8,6 @@ export type Plan = {
 	description: string
 	created_at: Date;
 	updated_at: Date;
+	is_suggested: boolean;
 	billings: Billing[];
 }

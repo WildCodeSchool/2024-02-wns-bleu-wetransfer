@@ -6,7 +6,8 @@ export const GET_ALL_PLANS = gql`
             id,
             name,
             price,
-            description
+            description,
+            is_suggested
         }
     }
 `;
@@ -56,6 +57,7 @@ export const GET_USER_BILLING = gql`
             next_payment_date
             last_payment_date
             plan {
+                id
                 name
                 price
                 description

@@ -52,7 +52,7 @@ export class User extends BaseEntity {
 	@CreateDateColumn()
 	updated_at: Date;
 
-	@OneToOne(() => Billing, billing => billing.user)
+	@OneToOne(() => Billing, billing => billing.user, {cascade: true})
 	billing: Billing;
 
 	@ManyToMany(() => File, file => file.users_with_access)

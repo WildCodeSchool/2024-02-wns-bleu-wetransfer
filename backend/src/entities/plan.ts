@@ -26,9 +26,9 @@ export class Plan extends BaseEntity {
 	@Column()
 	description: string
 
-	// @Field()
-	// @Column({type: "boolean"})
-	// is_suggested: boolean
+	@Field()
+	@Column({type: "boolean", default: false, nullable: true})
+	is_suggested: boolean
 
 	@Field()
 	@CreateDateColumn({type: "timestamp"})

@@ -25,6 +25,7 @@ export type Context = {
 	id: number;
 	email: string;
 	role: string;
+	planId: number
 };
 
 

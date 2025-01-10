@@ -7,6 +7,7 @@ import {EntityNotFoundError} from "typeorm";
 import {Context} from "../index";
 import cookie from 'cookie'
 import {File} from "../entities/file";
+import { handleUserBilling } from "./BillingResolver";
 
 @Resolver(User)
 class UserResolver {
@@ -55,8 +56,10 @@ class UserResolver {
 			return "You have successfully signed up!"
 		}
 
+		let newUser
+
 		try {
-			await User.create({
+			newUser = await User.create({
 				firstname,
 				lastname,
 				email,
@@ -65,6 +68,9 @@ class UserResolver {
 		} catch (err) {
 			throw new Error("Internal server error during sign up");
 		}
+
+		const newUserId = newUser.id;
+		await handleUserBilling(newUserId, 1);
 
 		return "You have successfully signed up!"
 	}
@@ -80,8 +86,11 @@ class UserResolver {
 				return new Error('Internal Server Error')
 			}
 
-			const userFromDB = await User.findOneByOrFail({email: emailFromClient});
-
+			const userFromDB = await User.findOneOrFail({
+				where: {email: emailFromClient},
+				relations: ['billing', 'billing.plan']
+			});
+			
 			const isPasswordCorrect = await argon2.verify(
 				userFromDB.password,
 				passwordFromClient
@@ -92,7 +101,7 @@ class UserResolver {
 			}
 
 			const token = jwt.sign(
-				{id: userFromDB.id, email: userFromDB.email, role: userFromDB.role},
+				{id: userFromDB.id, email: userFromDB.email, role: userFromDB.role, planId: userFromDB.billing.plan.id},
 				process.env.JWT_SECRET_KEY,
 				{expiresIn: '1h'}
 			);

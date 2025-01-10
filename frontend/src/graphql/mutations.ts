@@ -66,3 +66,9 @@ export const EDIT_FILE_NAME = gql`
         editFileName(newName: $newName, id: $editFileNameId)
     }
 `
+
+export const HANDLE_USER_BILLING = gql`
+    mutation HandleUserBilling($planId: Float!, $unsubscribe: Boolean) {
+        handleUserBilling(planId: $planId, unsubscribe: $unsubscribe)
+    }
+`
