@@ -18,6 +18,16 @@ import {startStandaloneServer} from "@apollo/server/standalone";
 import cookie from 'cookie'
 import path from "path";
 import dotenv from 'dotenv'
+import { createClient } from "redis";
+
+export const redisClient = createClient({ url: "redis://redis" });
+
+redisClient.on("error", (err) => {
+  console.log("Redis Client Error", err);
+});
+redisClient.on("connect", () => {
+  console.log("redis connected");
+});
 
 dotenv.config({path: path.join(__dirname, '../../.env')})
 
@@ -30,6 +40,7 @@ export type Context = {
 
 
 const start = async () => {
+	await redisClient.connect();
 	await dataSource.initialize();
 
 	const schema = await buildSchema({
