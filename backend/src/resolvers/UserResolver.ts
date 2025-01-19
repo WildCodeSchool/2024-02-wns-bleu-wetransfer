@@ -8,14 +8,23 @@ import {Context} from "../index";
 import cookie from 'cookie'
 import {File} from "../entities/file";
 import { handleUserBilling } from "./BillingResolver";
+import { redisClient } from "../index";
 
 @Resolver(User)
 class UserResolver {
 	@Query(() => [User])
 	async getAllUser() {
-		return await User.find();
+		const cacheResult = await redisClient.get('allUsers');
+
+		if (cacheResult) {
+			return JSON.parse(cacheResult);
+		}
+
+		const users = await User.find();
+		await redisClient.set('allUsers', JSON.stringify(users), { EX: 10 });
 	}
 
+	// This function is used to create a user for end-to-end testing only
 	async initUserE2E() {
 		try {
 			await User.create({
@@ -164,8 +173,6 @@ class UserResolver {
 			throw new Error("User not authenticated");
 		}
 
-		console.log(context.id)
-
 		const user = await User.findOne({
 			where: {id: context.id},
 			relations: ['uploads', 'uploads.files'],
@@ -175,6 +182,12 @@ class UserResolver {
 			throw new Error("User not found");
 		}
 
+		const cacheResult = await redisClient.get(`userFiles:${context.id}`);
+
+		if (cacheResult) {
+			return JSON.parse(cacheResult);
+		}
+
 		const allFiles = user.uploads.reduce((acc, upload) => {
 			if (upload.files) {
 				acc = acc.concat(upload.files);
@@ -182,7 +195,9 @@ class UserResolver {
 			return acc;
 		}, [] as File[]);
 
-		return allFiles || [];
+		await redisClient.set(`userFiles:${context.id}`, JSON.stringify(allFiles), { EX: 30 });
+		
+		return allFiles || [];	
 	}
 }
 
