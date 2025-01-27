@@ -5,7 +5,7 @@ import path from "path";
 
 dotenv.config({path: path.join(__dirname, '../../../.env')})
 
-export const createDownloadToken = (payload: any, expiresIn: string): string => {
+export const createDownloadToken = (payload: any, expiresIn: any): string => {
 	const secretKey = process.env.JWT_SECRET_KEY
 
 	if (!secretKey) {

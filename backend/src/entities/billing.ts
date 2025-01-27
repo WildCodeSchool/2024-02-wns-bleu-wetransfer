@@ -29,13 +29,13 @@ export class Billing extends BaseEntity {
 	@Column({nullable: true})
 	end_subscription_date: Date;
 
-	@Field()
-	@Column()
-	next_payment_date: Date;
-
-	@Field()
+	@Field({nullable: true})
 	@Column()
 	last_payment_date: Date;
+
+	@Field({nullable: true})
+	@Column()
+	next_payment_date: Date;
 
 	@Field()
 	@CreateDateColumn()

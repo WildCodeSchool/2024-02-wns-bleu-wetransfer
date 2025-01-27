@@ -10,5 +10,6 @@ RUN npm install loglevel --verbose
 COPY tsconfig.json tsconfig.json
 
 COPY src src
+COPY migrations migrations
 
 CMD npm start
