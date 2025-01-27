@@ -1,0 +1,32 @@
+name: jest-and-docker-ci
+
+on: push
+
+jobs:
+  test-front:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+      - name: Goto frontend and run tests
+        run: cd frontend && npm i && npm test
+
+  test-back:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+      - name: Copy production env file
+        run: echo "${{ secrets.PRODUCTION_ENV_FILE }}" > .env
+      - name: Goto backend and run tests
+        run: cd backend && npm i && npm test
+
+  test-e2e:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+      - name: Copy production env file
+        run: echo "${{ secrets.PRODUCTION_ENV_FILE }}" > .env
+      - name: Goto e2e and run tests
+        run: docker compose -f docker-compose.e2e.yml up --build --exit-code-from e2e

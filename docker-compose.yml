@@ -1,0 +1,77 @@
+services:
+  backend:
+    build: ./backend
+    volumes:
+      - ./backend/src:/app/src
+      - ./backend/migrations:/app/migrations
+    env_file:
+      - .env
+    healthcheck:
+      test: 'curl --fail --request POST --header ''content-type: application/json'' --url ''http://localhost:4000/graphql'' --data ''{"query":"query { __typename }"}'' || exit 1'
+      interval: 1s
+      timeout: 2s
+      retries: 100
+    depends_on:
+      db:
+        condition: service_healthy
+  frontend:
+    build: ./frontend
+    volumes:
+      - ./frontend/src:/app/src
+    depends_on:
+      backend:
+        condition: service_healthy
+    env_file:
+      - .env
+    healthcheck:
+      test: "curl --fail --request GET --url 'http://localhost:5173' || exit 1"
+      interval: 1s
+      timeout: 2s
+      retries: 100
+  db:
+    image: postgres:16
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -d postgres -U postgres"]
+      interval: 1s
+      timeout: 2s
+      retries: 100
+    environment:
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./postgres-data/data:/var/lib/postgresql/data
+  adminer:
+    image: adminer
+    ports:
+      - 8080:8080
+  files:
+    build: ./files
+    healthcheck:
+      test: "curl --fail --request GET --url 'http://localhost:3000' || exit 1"
+      interval: 1s
+      timeout: 2s
+    env_file:
+      - .env
+    volumes:
+      - ./files/src:/app/src
+  apigateway:
+    image: nginx
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+      backend:
+        condition: service_healthy
+      frontend:
+        condition: service_healthy
+      files:
+        condition: service_healthy
+    ports:
+      - "7002:80"
+  redis:
+    image: redis
+  redis-commander:
+    image: rediscommander/redis-commander
+    environment:
+      - REDIS_HOSTS=redis
+    ports:
+      - "8081:8081"

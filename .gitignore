@@ -1,0 +1,9 @@
+postgres-data/
+/files/src/.env
+/files/node_modules/
+/node_modules/
+node_modules/
+.idea/
+.DS_Store
+.env
+/frontend/package-lock.json
