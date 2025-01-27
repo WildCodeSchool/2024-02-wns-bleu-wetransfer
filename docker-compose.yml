@@ -3,6 +3,7 @@ services:
     build: ./backend
     volumes:
       - ./backend/src:/app/src
+      - ./backend/migrations:/app/migrations
     env_file:
       - .env
     healthcheck:
