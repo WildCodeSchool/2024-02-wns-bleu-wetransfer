@@ -1,0 +1,18 @@
+Comment redéployer rapidement son application à partir (ou non) de sauvegardes
+Comment mettre en place les bonnes pratiques de sauvegarde
+Comment vérifier et tester la bonne intégrité des sauvegardes
+
+Date et objectifs du document
+
+27/01/2025
+This document purpose is to help restore & restart the application with the latest DB dump in case of a crash.
+
+Application architecture:
+
+Contraintes techniques et infrastructure nécessaire:
+
+Notice de mise en place des routines de sauvegarde et de leur vérification:
+
+Notice de restauration pour démarrer depuis une sauvegarde:
+
+
