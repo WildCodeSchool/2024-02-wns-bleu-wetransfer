@@ -21,4 +21,4 @@ for filename in os.listdir(DUMPS_FOLDER):
             print(f"Deleting {file_path}...")
             os.remove(file_path)
 
-print("Cleaning done.")
+print("Cleaning done...")
