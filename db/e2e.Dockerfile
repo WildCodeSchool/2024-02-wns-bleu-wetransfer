@@ -1,6 +1,5 @@
 FROM postgres:16
 
-# Copier les fichiers nécessaires dans le container
 COPY ./dumps /db/dumps
 
 RUN echo "Attente de PostgreSQL avant de procéder à l'importation..." && \
