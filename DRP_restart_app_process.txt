@@ -3,7 +3,10 @@ Comment mettre en place les bonnes pratiques de sauvegarde
 Comment vérifier et tester la bonne intégrité des sauvegardes
 
 commande kron à faire sur le serveur utilisé :
-fichier à exécutier pour générer un dump sql (!avoir le container de la db qui tourne!) : ./db/generate_dump.sh
+crontab -e
+y ajouter :  * 5 * * * sh /home/wns_student/dump.sh
+
+fichier à exécuter pour générer un dump sql (!avoir le container de la db qui tourne!) : ./db/generate_dump.sh
 Date et objectifs du document
 
 27/01/2025
