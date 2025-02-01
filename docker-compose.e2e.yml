@@ -25,6 +25,7 @@ services:
 
   db:
     image: postgres:16
+    context: ./db
     build: ./db/e2e.Dockerfile
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -d postgres -U postgres"]
