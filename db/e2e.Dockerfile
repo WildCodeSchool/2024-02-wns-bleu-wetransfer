@@ -1,7 +1,7 @@
 FROM postgres:16
 
 WORKDIR /app
-
+RUN mkdir dumps
 COPY dumps /dumps
 
 RUN echo "Attente de PostgreSQL avant de procéder à l'importation..." && \
