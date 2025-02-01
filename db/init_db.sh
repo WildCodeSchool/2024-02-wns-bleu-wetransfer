@@ -6,7 +6,7 @@ until pg_isready -U postgres; do
     sleep 2
 done
 
-psql -U postgres -d postgres -c "CREATE DATABASE IF NOT EXISTS \"wild-transfer\""
+psql -U postgres -d postgres -c "DO \$\$ BEGIN IF NOT EXISTS (SELECT 1 FROM pg_database WHERE datname = 'wild-transfer') THEN CREATE DATABASE \"wild-transfer\"; END IF; END \$\$"
 
 LATEST_DUMP=$(ls -t '/dumps' | head -n 1)
 if [ -z "$LATEST_DUMP" ]; then
