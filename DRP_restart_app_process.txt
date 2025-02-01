@@ -19,3 +19,5 @@ Contraintes techniques et infrastructure nécessaire:
 Notice de mise en place des routines de sauvegarde et de leur vérification:
 
 Notice de restauration pour démarrer depuis une sauvegarde:
+
+Mettre le dernier fichier dump.sql dans le dossier /db/dump et démarrer le script à la racine du projet 'restore_app.sh'
