@@ -1,6 +1,7 @@
 services:
   backend:
     build: ./backend
+    container_name: backend
     volumes:
       - ./backend/src:/app/src
       - ./backend/migrations:/app/migrations
@@ -30,6 +31,8 @@ services:
       retries: 100
   db:
     image: postgres:16
+    build: ./db
+    container_name: db
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -d postgres -U postgres"]
       interval: 1s
@@ -40,6 +43,9 @@ services:
     volumes:
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
       - ./postgres-data/data:/var/lib/postgresql/data
+      - ./db/dumps:/dumps
+    env_file:
+      - .env
   adminer:
     image: adminer
     ports:
