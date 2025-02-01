@@ -2,6 +2,8 @@ FROM postgres:16
 
 WORKDIR /app
 
+CMD ["postgres"]
+
 RUN echo "Attente de PostgreSQL avant de procéder à l'importation..." && \
     until pg_isready -U postgres; do \
         echo "Attente de PostgreSQL..."; \
@@ -17,6 +19,3 @@ RUN echo "Attente de PostgreSQL avant de procéder à l'importation..." && \
         psql -U postgres -d "wild-transfer" < "db/dumps/$LATEST_DUMP"; \
     fi && \
     pkill postgres
-
-# Démarrer PostgreSQL
-CMD ["postgres"]
