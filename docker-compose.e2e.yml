@@ -37,7 +37,7 @@ services:
       POSTGRES_PASSWORD: postgres
     volumes:
       - ./db/dumps:/dumps
-      - ./db/init-db.sh:/docker-entrypoint-initdb.d/init-db.sh
+      - ./db/init_db.sh:/docker-entrypoint-initdb.d/init_db.sh
 
   files:
     build: ./files
