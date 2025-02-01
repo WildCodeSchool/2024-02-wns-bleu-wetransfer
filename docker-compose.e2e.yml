@@ -25,6 +25,7 @@ services:
 
   db:
     image: postgres:16
+    build: ./db/e2e.Dockerfile
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -d postgres -U postgres"]
       interval: 1s
@@ -33,8 +34,7 @@ services:
     environment:
       POSTGRES_PASSWORD: postgres
     volumes:
-      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
-      - ./postgres-data/data:/var/lib/postgresql/data
+      - ./db/dumps:/dumps
 
   files:
     build: ./files
