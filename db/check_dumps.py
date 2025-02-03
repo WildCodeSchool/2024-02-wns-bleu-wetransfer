@@ -4,7 +4,6 @@ import os
 import time
 
 DUMPS_FOLDER = os.path.join(os.getcwd(), "db", "dumps")
-print("DUMP FOLDER", DUMPS_FOLDER)
 
 DAYS_TO_KEEP = 7
 
