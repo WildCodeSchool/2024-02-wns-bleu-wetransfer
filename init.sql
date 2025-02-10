@@ -1,1 +1,1 @@
-CREATE DATABASE "wild-transfer" NOT EXISTS
+CREATE DATABASE "wild-transfer"
