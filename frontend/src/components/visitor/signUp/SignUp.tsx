@@ -1,16 +1,15 @@
-import { FC } from "react";
-import { Input, Form, Button, Checkbox, notification } from "antd";
-import { useMutation } from "@apollo/client";
+import {FC} from "react";
+import {Button, Checkbox, Form, Input, message, notification} from "antd";
+import {useMutation} from "@apollo/client";
 import styled from "@emotion/styled";
-import { SIGN_UP_USER } from "../../../graphql/mutations";
-import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import {SIGN_UP_USER} from "../../../graphql/mutations";
+import {Link, useNavigate} from "react-router-dom";
 
 type NotificationType = "success" | "info" | "warning" | "error";
 
 const SignUp: FC = () => {
-  const [api, contextHolder] = notification.useNotification();
-  const navigate = useNavigate();
+	const [api, contextHolder] = notification.useNotification();
+	const navigate = useNavigate();
 
 	const openNotificationWithIcon = (
 		type: NotificationType,
@@ -23,13 +22,9 @@ const SignUp: FC = () => {
 		});
 	};
 
-	const [signUpUser, { loading }] = useMutation(SIGN_UP_USER, {
+	const [signUpUser, {loading}] = useMutation(SIGN_UP_USER, {
 		onCompleted(data) {
-			openNotificationWithIcon(
-				"success",
-				"You have successfully signed up!",
-				"Success"
-			);
+			message.success("You have successfully signed up !")
 			navigate("/access/login");
 		},
 		onError(error) {
@@ -70,12 +65,12 @@ const SignUp: FC = () => {
 							message: "Please enter your first name",
 						},
 					]}
-					labelCol={{ span: 24 }}
+					labelCol={{span: 24}}
 				>
-					<StyledInput allowClear placeholder="First name" />
+					<StyledInput allowClear placeholder="First name"/>
 				</Form.Item>
 				<Form.Item
-					labelCol={{ span: 24 }}
+					labelCol={{span: 24}}
 					name="lastname"
 					rules={[
 						{
@@ -84,10 +79,10 @@ const SignUp: FC = () => {
 						},
 					]}
 				>
-					<StyledInput allowClear placeholder="Last name" />
+					<StyledInput allowClear placeholder="Last name"/>
 				</Form.Item>
 				<Form.Item
-					labelCol={{ span: 24 }}
+					labelCol={{span: 24}}
 					name="email"
 					rules={[
 						{
@@ -97,10 +92,10 @@ const SignUp: FC = () => {
 						},
 					]}
 				>
-					<StyledInput allowClear placeholder="Email address" />
+					<StyledInput allowClear placeholder="Email address"/>
 				</Form.Item>
 				<Form.Item
-					labelCol={{ span: 24 }}
+					labelCol={{span: 24}}
 					name="password"
 					rules={[
 						{
@@ -116,7 +111,7 @@ const SignUp: FC = () => {
 					/>
 				</Form.Item>
 				<Form.Item
-					labelCol={{ span: 24 }}
+					labelCol={{span: 24}}
 					name="confirmPassword"
 					rules={[
 						{
@@ -172,71 +167,71 @@ const SignUp: FC = () => {
 
 const formItemLayout = {
 	labelCol: {
-		xs: { span: 24 },
+		xs: {span: 24},
 	},
 	wrapperCol: {
-		sm: { span: 24 },
+		sm: {span: 24},
 	},
 };
 
 const InputWrapper = styled.div`
-	width: 20rem;
-	padding: 2rem;
-	text-align: center;
-	@media (max-width: 768px) {
-		width: 75%;
-	}
-	@media (max-width: 550px) {
-		width: 90%;
-	}
+    width: 20rem;
+    padding: 2rem;
+    text-align: center;
+    @media (max-width: 768px) {
+        width: 75%;
+    }
+    @media (max-width: 550px) {
+        width: 90%;
+    }
 `;
 
 const Title = styled.h2`
-	font-size: 1.8rem;
-	margin-bottom: 1.5rem;
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
 `;
 
 const StyledForm = styled(Form)`
-	.ant-form-item {
-		margin-bottom: 0.5rem; /* Ajustez la valeur selon vos besoins */
-	}
+    .ant-form-item {
+        margin-bottom: 0.5rem; /* Ajustez la valeur selon vos besoins */
+    }
 `;
 
 const StyledInput = styled(Input)`
-	&.ant-input-affix-wrapper {
-		border-radius: 8px;
-		margin: 0.5rem 0;
-	}
+    &.ant-input-affix-wrapper {
+        border-radius: 8px;
+        margin: 0.5rem 0;
+    }
 `;
 
 const StyledPasswordInput = styled(Input.Password)`
-	&.ant-input-password {
-		border-radius: 8px;
-		margin: 0.5rem 0;
-	}
+    &.ant-input-password {
+        border-radius: 8px;
+        margin: 0.5rem 0;
+    }
 `;
 
 const StyledButton = styled(Button)`
-	width: 100%;
-	border-radius: 8px;
-	background-color: orange;
-	border: none;
+    width: 100%;
+    border-radius: 8px;
+    background-color: orange;
+    border: none;
 `;
 
 const SignInText = styled.p`
-	margin-top: 1rem;
+    margin-top: 1rem;
 `;
 
 const SignInLink = styled.a`
-	color: #4a90e2;
+    color: #4a90e2;
 `;
 
 const StyledCheckbox = styled.div`
-	display: flex;
-	align-items: flex-start;
-	margin-top: 1rem;
-	margin-bottom: 1rem;
-	text-align: justify;
+    display: flex;
+    align-items: flex-start;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    text-align: justify;
 `;
 
 export default SignUp;
