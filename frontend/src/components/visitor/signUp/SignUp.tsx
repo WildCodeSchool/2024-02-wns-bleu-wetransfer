@@ -10,6 +10,7 @@ type NotificationType = "success" | "info" | "warning" | "error";
 const SignUp: FC = () => {
 	const [api, contextHolder] = notification.useNotification();
 	const navigate = useNavigate();
+	const [form] = Form.useForm()
 
 	const openNotificationWithIcon = (
 		type: NotificationType,
@@ -56,6 +57,7 @@ const SignUp: FC = () => {
 				name="control-hooks"
 				onFinish={handleSignUp}
 				{...formItemLayout}
+				form={form}
 			>
 				<Form.Item
 					name="firstname"
@@ -113,10 +115,20 @@ const SignUp: FC = () => {
 				<Form.Item
 					labelCol={{span: 24}}
 					name="confirmPassword"
+					dependencies={['password']}
 					rules={[
 						{
 							required: true,
 							message: "Please confirm your password",
+						},
+						{
+							validator: (_, value) => {
+								if (value !== form.getFieldValue('password')) {
+									return Promise.reject(new Error('Passwords doesn\'t match'));
+								}
+								return Promise.resolve();
+							},
+							message: "Passwords doesn't match",
 						},
 					]}
 				>
@@ -126,6 +138,7 @@ const SignUp: FC = () => {
 						placeholder="Confirm password"
 					/>
 				</Form.Item>
+
 				<Form.Item
 					name="conditions"
 					valuePropName="checked"
