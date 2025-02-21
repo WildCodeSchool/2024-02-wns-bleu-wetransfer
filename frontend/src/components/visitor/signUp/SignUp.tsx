@@ -25,7 +25,7 @@ const SignUp: FC = () => {
 	const [signUpUser, {loading}] = useMutation(SIGN_UP_USER, {
 		onCompleted(data) {
 			message.success("You have successfully signed up !")
-			navigate("/access/login");
+			navigate("/dashboard");
 		},
 		onError(error) {
 			openNotificationWithIcon("error", error.message, "Error");

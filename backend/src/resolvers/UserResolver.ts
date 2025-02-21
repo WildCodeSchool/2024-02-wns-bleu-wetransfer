@@ -4,11 +4,10 @@ import {Arg, AuthenticationError, Authorized, Ctx, Mutation, Query, Resolver} fr
 import argon2 from "argon2";
 import jwt from "jsonwebtoken";
 import {EntityNotFoundError} from "typeorm";
-import {Context} from "../index";
+import {Context, redisClient} from "../index";
 import cookie from 'cookie'
 import {File} from "../entities/file";
-import { handleUserBilling } from "./BillingResolver";
-import { redisClient } from "../index";
+import {handleUserBilling} from "./BillingResolver";
 
 @Resolver(User)
 class UserResolver {
@@ -21,7 +20,7 @@ class UserResolver {
 		}
 
 		const users = await User.find();
-		await redisClient.set('allUsers', JSON.stringify(users), { EX: 10 });
+		await redisClient.set('allUsers', JSON.stringify(users), {EX: 10});
 	}
 
 	// This function is used to create a user for end-to-end testing only
@@ -45,6 +44,7 @@ class UserResolver {
 		@Arg("email") email: string,
 		@Arg("password") password: string,
 		@Arg("confirmPassword") confirmPassword: string,
+		@Ctx() context: any
 	) {
 		if (password !== confirmPassword) {
 			throw new Error("Passwords does not match");
@@ -81,6 +81,21 @@ class UserResolver {
 		const newUserId = newUser.id;
 		await handleUserBilling(newUserId, 1);
 
+		const token: string = jwt.sign(
+			{id: newUser.id, email: newUser.email, role: newUser.role},
+			process.env.JWT_SECRET_KEY!,
+			{expiresIn: '1h'}
+		);
+
+		const serializedCookie = cookie.serialize("token", token, {
+			httpOnly: true,
+			sameSite: "strict",
+			maxAge: 3600,
+			path: "/",
+		});
+
+		context.res.setHeader("Set-Cookie", serializedCookie);
+
 		return "You have successfully signed up!"
 	}
 
@@ -99,7 +114,7 @@ class UserResolver {
 				where: {email: emailFromClient},
 				relations: ['billing', 'billing.plan']
 			});
-			
+
 			const isPasswordCorrect = await argon2.verify(
 				userFromDB.password,
 				passwordFromClient
@@ -195,9 +210,9 @@ class UserResolver {
 			return acc;
 		}, [] as File[]);
 
-		await redisClient.set(`userFiles:${context.id}`, JSON.stringify(allFiles), { EX: 30 });
-		
-		return allFiles || [];	
+		await redisClient.set(`userFiles:${context.id}`, JSON.stringify(allFiles), {EX: 30});
+
+		return allFiles || [];
 	}
 }
 

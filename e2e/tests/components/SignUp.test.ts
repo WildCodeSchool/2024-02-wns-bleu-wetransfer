@@ -19,13 +19,11 @@ test("Test registering new user", async ({page}) => {
 	await page.getByTestId('conditions').click()
 	await page.getByTestId('registerButton').click()
 
-	await page.waitForLoadState("networkidle");
-	
-	await expect(page).toHaveURL("http://localhost:7002/access/register")
+	await expect(page).toHaveURL("http://localhost:7002/dashboard")
 });
 
 test("Test registering existing user", async ({page}) => {
-	await page.goto("http://apigateway/access/register")
+	await page.goto("/access/register")
 	await page.waitForLoadState("networkidle");
 
 	await page.getByPlaceholder('First name').fill('Lucas')
