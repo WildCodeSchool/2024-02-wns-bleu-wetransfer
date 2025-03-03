@@ -1,4 +1,6 @@
-import {DataSource} from "typeorm";
+import { DataSource } from "typeorm";
+
+const isDevelopment = process.env.NODE_ENV === "development";
 
 export const dataSource = new DataSource({
 	type: "postgres",
@@ -8,8 +10,10 @@ export const dataSource = new DataSource({
 	password: "postgres",
 	database: "wild-transfer",
 	synchronize: false,
-	migrations: ["migrations/*.ts"],
+	migrations: [isDevelopment ? "migrations/*.ts" : "dist/migrations/*.js"],
 	migrationsTableName: "migrations",
 	logging: ["error", "query", "schema"],
-	entities: ["src/entities/*.ts"],
+	entities: [
+		isDevelopment ? "src/entities/*.ts" : "dist/entities/*.js"
+	],
 });

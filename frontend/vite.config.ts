@@ -13,10 +13,10 @@ export default defineConfig({
   ],
   server: {
     host: true,
-    hmr: {
+    hmr: process.env.PROJECT_STATUS === 'DEV' ? {
       path: "/hmr",
       port: 7002,
-    },
+    } : false,
     watch: { usePolling: true },
   },
   css: {
