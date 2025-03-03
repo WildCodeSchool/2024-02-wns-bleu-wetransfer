@@ -1,6 +1,11 @@
-import { DataSource } from "typeorm";
-
-const isDevelopment = process.env.NODE_ENV === "development";
+import {Visitor} from "../entities/visitor";
+import {Plan} from "../entities/plan";
+import {Billing} from "../entities/billing";
+import {Upload} from "../entities/upload";
+import {File} from "../entities/file";
+import {User} from "../entities/user";
+import {Report} from "../entities/report";
+import {DataSource} from "typeorm";
 
 export const dataSource = new DataSource({
 	type: "postgres",
@@ -10,10 +15,16 @@ export const dataSource = new DataSource({
 	password: "postgres",
 	database: "wild-transfer",
 	synchronize: false,
-	migrations: [isDevelopment ? "migrations/*.ts" : "dist/migrations/*.js"],
+	migrations: ["migrations/*.ts"],
 	migrationsTableName: "migrations",
 	logging: ["error", "query", "schema"],
 	entities: [
-		isDevelopment ? "src/entities/*.ts" : "dist/entities/*.js"
+		Plan,
+		Visitor,
+		Billing,
+		Upload,
+		File,
+		User,
+		Report,
 	],
-});
+})
