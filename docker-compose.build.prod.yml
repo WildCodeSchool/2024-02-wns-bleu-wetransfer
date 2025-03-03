@@ -33,8 +33,9 @@ services:
         environment:
             POSTGRES_PASSWORD: postgres
         volumes:
-            - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+            - ./db/init_db.sh:/docker-entrypoint-initdb.d/init_db.sh
             - ./postgres-data/data:/var/lib/postgresql/data
+            - ./db/dumps:/dumps
     files:
         image: lucasboillot/wildtransfer-files
         build:
