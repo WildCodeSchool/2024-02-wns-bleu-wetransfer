@@ -14,7 +14,7 @@ describe('Testing /backend/helpers/', () => {
 	});
 
 	test('...generateDownloadLink.test.ts: generateDownloadLink', () => {
-		const FRONTEND_URL: string = process.env.FRONTEND_URL;
+		const FRONTEND_URL: string = process.env.FRONTEND_URL!;
 		expect(generateDownloadLink("test")).toBe(FRONTEND_URL + "/access/download?token=test");
 	});
 });
