@@ -41,7 +41,13 @@ export type Context = {
 
 const start = async () => {
 	await redisClient.connect();
-	await dataSource.initialize();
+	await dataSource.initialize()
+		.then(() => {
+			console.log('Data Source has been initialized!');
+		})
+		.catch((err) => {
+			console.error('Error during Data Source initialization', err);
+		});
 
 	const schema = await buildSchema({
 		resolvers: [
