@@ -1,4 +1,4 @@
-	import {DataSource} from "typeorm";
+import {DataSource} from "typeorm";
 
 export const dataSource = new DataSource({
 	type: "postgres",
@@ -11,5 +11,5 @@ export const dataSource = new DataSource({
 	migrations: ["migrations/*.ts"],
 	migrationsTableName: "migrations",
 	logging: ["error", "query", "schema"],
-	entities: ["src/entities/*.ts"],
+	entities: [process.env.PROJECT_STATUS === 'DEV' ? "src/entities/*.ts" : "dist/entities/*.js"],
 });
