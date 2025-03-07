@@ -1,4 +1,4 @@
-name: STAGING Compile and push backend image
+name: Compile and push Frontend image
 
 on:
   push:
@@ -24,9 +24,9 @@ jobs:
         name: Set up Docker Buildx
 
       - uses: docker/build-push-action@v2
-        name: Build and push server
+        name: Build and push client
         with:
-          context: ./backend
-          file: ./backend/Dockerfile.prod
+          context: ./frontend
+          file: ./frontend/Dockerfile
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKER_HUB_SERVER_IMAGE_NAME }}:staging, ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKER_HUB_SERVER_IMAGE_NAME }}:latest
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKER_HUB_CLIENT_IMAGE_NAME }}:latest

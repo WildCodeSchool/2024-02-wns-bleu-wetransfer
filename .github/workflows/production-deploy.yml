@@ -1,0 +1,16 @@
+name: Deploy to Production
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send webhook
+        run: |
+          curl -X POST https://ops.042024-bleu-2.wns.wilders.dev/hooks/update-production-wetransfer \
+          -H "Content-Type: application/json" \
+          --data '{"trigger": "push-to-main"}'
