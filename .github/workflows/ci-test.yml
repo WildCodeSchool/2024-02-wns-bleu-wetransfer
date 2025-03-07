@@ -1,4 +1,4 @@
-name: jest-and-docker-ci
+name: CI TESTS
 
 on: push
 

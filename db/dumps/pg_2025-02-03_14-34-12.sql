@@ -757,6 +757,7 @@ COPY public."user" (id, firstname, lastname, email, password, profile_picture_na
 156	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-29 21:56:08.071986	2025-01-29 21:56:08.071986
 157	Lucas	Boillot	test@test.com	123456	\N	user	2025-02-01 11:09:36.276296	2025-02-01 11:09:36.276296
 158	Lucas	Boillot	test@test.com	123456	\N	user	2025-02-01 11:29:36.409328	2025-02-01 11:29:36.409328
+159	Lucas	Boillot	test@test.com	123456	\N	user	2025-02-03 13:27:06.530373	2025-02-03 13:27:06.530373
 \.
 
 
@@ -824,7 +825,7 @@ SELECT pg_catalog.setval('public.upload_id_seq', 7, true);
 -- Name: user_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.user_id_seq', 158, true);
+SELECT pg_catalog.setval('public.user_id_seq', 159, true);
 
 
 --

@@ -30,22 +30,24 @@ services:
       timeout: 2s
       retries: 100
   db:
-    image: postgres:16
+    image: postgres:17
     build: ./db
     container_name: db
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -d postgres -U postgres"]
+      test: ["CMD", "pg_isready", "-d", "wild-transfer", "-U", "postgres"]
       interval: 1s
       timeout: 2s
       retries: 100
     environment:
       POSTGRES_PASSWORD: postgres
     volumes:
-      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
-      - ./postgres-data/data:/var/lib/postgresql/data
+      - ./db/init_db.sh:/docker-entrypoint-initdb.d/init.sh
+      - ./db/postgres-data/data:/var/lib/postgresql/data
       - ./db/dumps:/dumps
     env_file:
       - .env
+    ports:
+      - "5432:5432"
   adminer:
     image: adminer
     ports:

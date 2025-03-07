@@ -41,7 +41,18 @@ export type Context = {
 
 const start = async () => {
 	await redisClient.connect();
-	await dataSource.initialize();
+
+	let connected = false;
+	while (!connected) {
+		try {
+			await dataSource.initialize();
+			console.log("Connected to the database");
+			connected = true;
+		} catch (error) {
+			console.log("Database connection failed, retrying...", error);
+			await new Promise(resolve => setTimeout(resolve, 5000));
+		}
+	}
 
 	const schema = await buildSchema({
 		resolvers: [
@@ -77,6 +88,8 @@ const start = async () => {
 			}
 		},
 	});
+
+	console.log("database connected 2");
 
 	const app = express();
 	const httpServer = http.createServer(app);
