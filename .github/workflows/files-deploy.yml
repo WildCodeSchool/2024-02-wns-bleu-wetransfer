@@ -1,4 +1,4 @@
-name: STAGING Compile and push files image
+name: Compile and push Files image
 
 on:
     push:
@@ -28,4 +28,4 @@ jobs:
                     context: ./files
                     file: ./files/Dockerfile.prod
                     push: true
-                    tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKER_HUB_FILES_IMAGE_NAME }}:staging, ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKER_HUB_FILES_IMAGE_NAME }}:latest
+                    tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKER_HUB_FILES_IMAGE_NAME }}:latest
