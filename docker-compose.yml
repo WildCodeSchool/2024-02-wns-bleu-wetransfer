@@ -30,7 +30,7 @@ services:
       timeout: 2s
       retries: 100
   db:
-    image: postgres:16
+    image: postgres:17
     build: ./db
     container_name: db
     healthcheck:
@@ -46,6 +46,8 @@ services:
       - ./db/dumps:/dumps
     env_file:
       - .env
+    ports:
+      - "5432:5432"
   adminer:
     image: adminer
     ports:

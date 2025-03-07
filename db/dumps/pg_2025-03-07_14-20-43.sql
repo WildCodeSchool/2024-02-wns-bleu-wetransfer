@@ -28,7 +28,7 @@ DROP ROLE postgres;
 --
 
 CREATE ROLE postgres;
-ALTER ROLE postgres WITH SUPERUSER INHERIT CREATEROLE CREATEDB LOGIN REPLICATION BYPASSRLS PASSWORD 'SCRAM-SHA-256$4096:+gI43ZmlkH3YrEzEbZeuRQ==$XaSirGcksbZYVHce6tUEYp2oDUdiR15qRfmf3Vs4Obo=:Rl+OQV6FTwlPf7eCAwEUoxaIg4vPetoWK9IAJ8bdEok=';
+ALTER ROLE postgres WITH SUPERUSER INHERIT CREATEROLE CREATEDB LOGIN REPLICATION BYPASSRLS PASSWORD 'SCRAM-SHA-256$4096:I06c60ZLxXfFjvn/Tlcg5g==$InPlf/QmU7OYYUiP6214fwLbVQn8EdHFPuvKDl98wko=:VotdZz+QbEr66JqrTwA89TMMN3bQYRt/elk24uNiIJE=';
 
 --
 -- User Configurations
@@ -53,12 +53,13 @@ ALTER ROLE postgres WITH SUPERUSER INHERIT CREATEROLE CREATEDB LOGIN REPLICATION
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 16.6 (Debian 16.6-1.pgdg120+1)
--- Dumped by pg_dump version 16.6 (Debian 16.6-1.pgdg120+1)
+-- Dumped from database version 17.4 (Debian 17.4-1.pgdg120+2)
+-- Dumped by pg_dump version 17.4 (Debian 17.4-1.pgdg120+2)
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
 SET idle_in_transaction_session_timeout = 0;
+SET transaction_timeout = 0;
 SET client_encoding = 'UTF8';
 SET standard_conforming_strings = on;
 SELECT pg_catalog.set_config('search_path', '', false);
@@ -83,6 +84,7 @@ ALTER DATABASE template1 OWNER TO postgres;
 SET statement_timeout = 0;
 SET lock_timeout = 0;
 SET idle_in_transaction_session_timeout = 0;
+SET transaction_timeout = 0;
 SET client_encoding = 'UTF8';
 SET standard_conforming_strings = on;
 SELECT pg_catalog.set_config('search_path', '', false);
@@ -110,6 +112,7 @@ ALTER DATABASE template1 IS_TEMPLATE = true;
 SET statement_timeout = 0;
 SET lock_timeout = 0;
 SET idle_in_transaction_session_timeout = 0;
+SET transaction_timeout = 0;
 SET client_encoding = 'UTF8';
 SET standard_conforming_strings = on;
 SELECT pg_catalog.set_config('search_path', '', false);
@@ -138,12 +141,13 @@ GRANT CONNECT ON DATABASE template1 TO PUBLIC;
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 16.6 (Debian 16.6-1.pgdg120+1)
--- Dumped by pg_dump version 16.6 (Debian 16.6-1.pgdg120+1)
+-- Dumped from database version 17.4 (Debian 17.4-1.pgdg120+2)
+-- Dumped by pg_dump version 17.4 (Debian 17.4-1.pgdg120+2)
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
 SET idle_in_transaction_session_timeout = 0;
+SET transaction_timeout = 0;
 SET client_encoding = 'UTF8';
 SET standard_conforming_strings = on;
 SELECT pg_catalog.set_config('search_path', '', false);
@@ -167,6 +171,7 @@ ALTER DATABASE postgres OWNER TO postgres;
 SET statement_timeout = 0;
 SET lock_timeout = 0;
 SET idle_in_transaction_session_timeout = 0;
+SET transaction_timeout = 0;
 SET client_encoding = 'UTF8';
 SET standard_conforming_strings = on;
 SELECT pg_catalog.set_config('search_path', '', false);
@@ -194,12 +199,13 @@ COMMENT ON DATABASE postgres IS 'default administrative connection database';
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 16.6 (Debian 16.6-1.pgdg120+1)
--- Dumped by pg_dump version 16.6 (Debian 16.6-1.pgdg120+1)
+-- Dumped from database version 17.4 (Debian 17.4-1.pgdg120+2)
+-- Dumped by pg_dump version 17.4 (Debian 17.4-1.pgdg120+2)
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
 SET idle_in_transaction_session_timeout = 0;
+SET transaction_timeout = 0;
 SET client_encoding = 'UTF8';
 SET standard_conforming_strings = on;
 SELECT pg_catalog.set_config('search_path', '', false);
@@ -217,11 +223,13 @@ CREATE DATABASE "wild-transfer" WITH TEMPLATE = template0 ENCODING = 'UTF8' LOCA
 
 ALTER DATABASE "wild-transfer" OWNER TO postgres;
 
+\encoding SQL_ASCII
 \connect -reuse-previous=on "dbname='wild-transfer'"
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
 SET idle_in_transaction_session_timeout = 0;
+SET transaction_timeout = 0;
 SET client_encoding = 'UTF8';
 SET standard_conforming_strings = on;
 SELECT pg_catalog.set_config('search_path', '', false);
@@ -242,8 +250,8 @@ CREATE TABLE public.billing (
     id integer NOT NULL,
     subscription_date timestamp without time zone DEFAULT now() NOT NULL,
     end_subscription_date timestamp without time zone,
-    next_payment_date timestamp without time zone NOT NULL,
     last_payment_date timestamp without time zone NOT NULL,
+    next_payment_date timestamp without time zone NOT NULL,
     created_at timestamp without time zone DEFAULT now() NOT NULL,
     updated_at timestamp without time zone DEFAULT now() NOT NULL,
     plan_id integer,
@@ -363,9 +371,9 @@ CREATE TABLE public.plan (
     price integer NOT NULL,
     billing character varying NOT NULL,
     description character varying NOT NULL,
+    is_suggested boolean DEFAULT false,
     created_at timestamp without time zone DEFAULT now() NOT NULL,
-    updated_at timestamp without time zone DEFAULT now() NOT NULL,
-    is_suggested boolean DEFAULT false
+    updated_at timestamp without time zone DEFAULT now() NOT NULL
 );
 
 
@@ -623,9 +631,8 @@ ALTER TABLE ONLY public.visitor ALTER COLUMN id SET DEFAULT nextval('public.visi
 -- Data for Name: billing; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY public.billing (id, subscription_date, end_subscription_date, next_payment_date, last_payment_date, created_at, updated_at, plan_id, user_id) FROM stdin;
-86	2025-01-10 14:38:21.563421	\N	2025-02-10 14:38:21.563	2025-01-10 14:38:21.562	2025-01-10 14:38:21.563421	2025-01-10 14:38:21.563421	1	53
-87	2025-01-19 16:56:05.224293	\N	2025-02-19 16:56:05.224	2025-01-19 16:56:05.223	2025-01-19 16:56:05.224293	2025-01-19 16:56:05.224293	1	142
+COPY public.billing (id, subscription_date, end_subscription_date, last_payment_date, next_payment_date, created_at, updated_at, plan_id, user_id) FROM stdin;
+1	2025-03-07 09:20:01.979202	\N	2025-03-07 09:20:01.978	2025-04-07 09:20:01.979	2025-03-07 09:20:01.979202	2025-03-07 09:20:01.979202	1	11
 \.
 
 
@@ -634,9 +641,6 @@ COPY public.billing (id, subscription_date, end_subscription_date, next_payment_
 --
 
 COPY public.file (id, file_uid, name, default_name, path, size, privacy_status, type, created_at, updated_at, "uploadId") FROM stdin;
-11	d3a061bd-4436-4cec-bba2-3bd8cbbd8fa1	Screenshot 2024-12-24 at 16.23.08.png	d3a061bd-4436-4cec-bba2-3bd8cbbd8fa1.png	/app/src/uploads/final/d3a061bd-4436-4cec-bba2-3bd8cbbd8fa1.png	106479	public	image/png	2025-01-10 13:12:06.496047	2025-01-10 13:12:06.496047	5
-12	478e26b5-27da-4f72-9cd5-8be529e98135	Screenshot 2024-12-24 at 16.18.50.png	478e26b5-27da-4f72-9cd5-8be529e98135.png	/app/src/uploads/final/478e26b5-27da-4f72-9cd5-8be529e98135.png	261735	public	image/png	2025-01-10 13:13:39.626239	2025-01-10 13:13:39.626239	6
-13	998dd17d-6ace-49e0-b647-58657fdb5a25	Screenshot 2024-12-11 at 15.39.19.png	998dd17d-6ace-49e0-b647-58657fdb5a25.png	/app/src/uploads/final/998dd17d-6ace-49e0-b647-58657fdb5a25.png	261899	public	image/png	2025-01-10 14:36:48.883986	2025-01-10 14:36:48.883986	7
 \.
 
 
@@ -645,6 +649,7 @@ COPY public.file (id, file_uid, name, default_name, path, size, privacy_status, 
 --
 
 COPY public.migrations (id, "timestamp", name) FROM stdin;
+1	1741337533605	TestInitDb1741337533605
 \.
 
 
@@ -652,10 +657,10 @@ COPY public.migrations (id, "timestamp", name) FROM stdin;
 -- Data for Name: plan; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY public.plan (id, name, price, billing, description, created_at, updated_at, is_suggested) FROM stdin;
-3	VIP	50		Description :)	2025-01-06 13:40:20.666859	2025-01-06 13:40:20.666859	f
-2	PREMIUM	25		Description :)	2025-01-06 13:40:03.78765	2025-01-06 13:40:03.78765	t
-1	CLASSIC	0		Description :)	2025-01-06 13:39:13.411215	2025-01-06 13:39:13.411215	f
+COPY public.plan (id, name, price, billing, description, is_suggested, created_at, updated_at) FROM stdin;
+1	CLASSIC	0	Monthly	Description :)	f	2025-03-07 09:18:35.629297	2025-03-07 09:18:35.629297
+2	PREMIUM	10	Monthly	Description :)	t	2025-03-07 09:19:15.838505	2025-03-07 09:19:15.838505
+3	VIP	25	Monthly	Description :)	f	2025-03-07 09:19:29.253932	2025-03-07 09:19:29.253932
 \.
 
 
@@ -672,9 +677,6 @@ COPY public.report (id, comment, status, created_at, updated_at, "fileId") FROM 
 --
 
 COPY public.upload (id, title, message, is_activated, receivers, created_at, updated_at, "visitorId", "userId") FROM stdin;
-5	lucas	lucas	t	{lucasnimes30000@gmail.com}	2025-01-10 13:12:06.540207	2025-01-10 13:12:06.540207	\N	53
-6	Default Title	Default Message	t	{lucasnimes30000@gmail.com}	2025-01-10 13:13:39.665037	2025-01-10 13:13:39.665037	\N	53
-7	lucas	lucas	t	{lucasnimes30000@gmail.com}	2025-01-10 14:36:48.917708	2025-01-10 14:36:48.917708	\N	53
 \.
 
 
@@ -683,80 +685,7 @@ COPY public.upload (id, title, message, is_activated, receivers, created_at, upd
 --
 
 COPY public."user" (id, firstname, lastname, email, password, profile_picture_name, role, created_at, updated_at) FROM stdin;
-53	lucas	lucas	lucasnimes30000@gmail.com	$argon2id$v=19$m=65536,t=3,p=4$LR2QqpvsMnpQ9JLFEroQ1A$xYacM7zWdY4oljLipnUvLVBnjCB3blLd7fZDOwp+H7I	\N	user	2025-01-07 09:38:17.014035	2025-01-07 09:38:17.014035
-54	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-07 09:40:38.976366	2025-01-07 09:40:38.976366
-55	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-07 09:41:40.989144	2025-01-07 09:41:40.989144
-56	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-07 09:47:56.064186	2025-01-07 09:47:56.064186
-57	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-07 09:54:28.28189	2025-01-07 09:54:28.28189
-58	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-07 09:55:34.041662	2025-01-07 09:55:34.041662
-59	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-07 09:55:35.28449	2025-01-07 09:55:35.28449
-60	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-07 10:00:08.027815	2025-01-07 10:00:08.027815
-61	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-07 10:00:24.596973	2025-01-07 10:00:24.596973
-62	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-07 10:01:22.318288	2025-01-07 10:01:22.318288
-63	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-07 10:02:01.251147	2025-01-07 10:02:01.251147
-64	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-07 10:02:07.340461	2025-01-07 10:02:07.340461
-65	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-07 10:02:17.859252	2025-01-07 10:02:17.859252
-66	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-07 10:02:50.890648	2025-01-07 10:02:50.890648
-67	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-07 10:11:56.623198	2025-01-07 10:11:56.623198
-100	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-07 10:13:40.365834	2025-01-07 10:13:40.365834
-101	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-07 10:20:39.24375	2025-01-07 10:20:39.24375
-102	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-07 10:20:43.090203	2025-01-07 10:20:43.090203
-103	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-07 10:22:34.634218	2025-01-07 10:22:34.634218
-104	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-07 10:22:53.969426	2025-01-07 10:22:53.969426
-105	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-07 10:26:46.079507	2025-01-07 10:26:46.079507
-106	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-07 10:27:03.570299	2025-01-07 10:27:03.570299
-107	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-07 10:27:22.828872	2025-01-07 10:27:22.828872
-108	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-07 10:29:00.177416	2025-01-07 10:29:00.177416
-109	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-07 10:31:08.752161	2025-01-07 10:31:08.752161
-110	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-07 10:31:23.112469	2025-01-07 10:31:23.112469
-111	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-07 10:31:45.569297	2025-01-07 10:31:45.569297
-112	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-07 10:32:12.330642	2025-01-07 10:32:12.330642
-113	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-07 10:32:32.176884	2025-01-07 10:32:32.176884
-114	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-07 10:32:55.566454	2025-01-07 10:32:55.566454
-115	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-07 10:34:00.179412	2025-01-07 10:34:00.179412
-116	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-07 10:34:10.213148	2025-01-07 10:34:10.213148
-117	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-07 10:34:22.210837	2025-01-07 10:34:22.210837
-118	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-07 10:37:03.5514	2025-01-07 10:37:03.5514
-119	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-07 10:37:57.61025	2025-01-07 10:37:57.61025
-120	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-07 10:38:14.615905	2025-01-07 10:38:14.615905
-121	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-07 10:38:53.226085	2025-01-07 10:38:53.226085
-122	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-07 10:39:51.37516	2025-01-07 10:39:51.37516
-123	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-07 13:06:30.794629	2025-01-07 13:06:30.794629
-124	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-10 13:04:45.012768	2025-01-10 13:04:45.012768
-125	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-10 13:10:27.31264	2025-01-10 13:10:27.31264
-126	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-10 13:14:33.490992	2025-01-10 13:14:33.490992
-127	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-10 13:16:53.873329	2025-01-10 13:16:53.873329
-128	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-19 16:42:27.388377	2025-01-19 16:42:27.388377
-129	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-19 16:43:44.292952	2025-01-19 16:43:44.292952
-130	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-19 16:44:16.01883	2025-01-19 16:44:16.01883
-131	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-19 16:45:00.464994	2025-01-19 16:45:00.464994
-132	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-19 16:45:24.040301	2025-01-19 16:45:24.040301
-133	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-19 16:45:34.237577	2025-01-19 16:45:34.237577
-134	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-19 16:45:51.661098	2025-01-19 16:45:51.661098
-135	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-19 16:46:20.836651	2025-01-19 16:46:20.836651
-136	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-19 16:46:40.88446	2025-01-19 16:46:40.88446
-137	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-19 16:47:11.463341	2025-01-19 16:47:11.463341
-138	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-19 16:47:20.900668	2025-01-19 16:47:20.900668
-139	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-19 16:47:28.23716	2025-01-19 16:47:28.23716
-140	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-19 16:48:03.421674	2025-01-19 16:48:03.421674
-141	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-19 16:55:06.585616	2025-01-19 16:55:06.585616
-142	aa	aa	aa@aa.com	$argon2id$v=19$m=65536,t=3,p=4$k10jxGFYeb0LShfwnB9npQ$dgkuTEGMkX1bla5NP509OrjdBZscOHsXkOANKTuWhFU	\N	user	2025-01-19 16:56:05.206466	2025-01-19 16:56:05.206466
-143	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-19 17:00:56.593433	2025-01-19 17:00:56.593433
-144	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-19 17:03:34.922346	2025-01-19 17:03:34.922346
-145	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-27 19:23:13.465292	2025-01-27 19:23:13.465292
-146	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-27 19:25:20.964846	2025-01-27 19:25:20.964846
-147	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-27 19:26:24.882699	2025-01-27 19:26:24.882699
-148	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-27 19:28:14.368804	2025-01-27 19:28:14.368804
-149	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-27 19:28:38.949044	2025-01-27 19:28:38.949044
-150	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-27 19:49:09.116995	2025-01-27 19:49:09.116995
-151	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-27 19:50:51.450851	2025-01-27 19:50:51.450851
-152	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-27 20:06:27.961972	2025-01-27 20:06:27.961972
-153	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-27 20:11:01.926842	2025-01-27 20:11:01.926842
-154	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-27 20:12:12.885406	2025-01-27 20:12:12.885406
-155	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-27 20:37:16.865224	2025-01-27 20:37:16.865224
-156	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-29 21:56:08.071986	2025-01-29 21:56:08.071986
-157	Lucas	Boillot	test@test.com	123456	\N	user	2025-02-01 11:09:36.276296	2025-02-01 11:09:36.276296
-158	Lucas	Boillot	test@test.com	123456	\N	user	2025-02-01 11:29:36.409328	2025-02-01 11:29:36.409328
+11	Lucas	Boillot	test@test.com	$argon2id$v=19$m=65536,t=3,p=4$CLrSnvnpZo6vVS7jf6qmgQ$3Hcs2TMv8B3tE7r7jeKYYmrSl+H75MJMMeAyAvefReY	\N	user	2025-03-07 09:20:01.914604	2025-03-07 09:20:01.914604
 \.
 
 
@@ -765,8 +694,6 @@ COPY public."user" (id, firstname, lastname, email, password, profile_picture_na
 --
 
 COPY public.user_access_file (file_id, user_id) FROM stdin;
-11	53
-12	53
 \.
 
 
@@ -782,21 +709,21 @@ COPY public.visitor (id, email, email_is_verified, code, created_at, updated_at)
 -- Name: billing_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.billing_id_seq', 87, true);
+SELECT pg_catalog.setval('public.billing_id_seq', 1, true);
 
 
 --
 -- Name: file_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.file_id_seq', 13, true);
+SELECT pg_catalog.setval('public.file_id_seq', 1, false);
 
 
 --
 -- Name: migrations_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.migrations_id_seq', 1, true);
+SELECT pg_catalog.setval('public.migrations_id_seq', 2, true);
 
 
 --
@@ -817,14 +744,14 @@ SELECT pg_catalog.setval('public.report_id_seq', 1, false);
 -- Name: upload_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.upload_id_seq', 7, true);
+SELECT pg_catalog.setval('public.upload_id_seq', 1, false);
 
 
 --
 -- Name: user_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.user_id_seq', 158, true);
+SELECT pg_catalog.setval('public.user_id_seq', 11, true);
 
 
 --
@@ -907,11 +834,11 @@ ALTER TABLE ONLY public.billing
 
 
 --
--- Name: billing REL_9ca061d016ac9dd27dd85dd842; Type: CONSTRAINT; Schema: public; Owner: postgres
+-- Name: billing REL_6ec7451dce8b34da53e553f81d; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY public.billing
-    ADD CONSTRAINT "REL_9ca061d016ac9dd27dd85dd842" UNIQUE (user_id);
+    ADD CONSTRAINT "REL_6ec7451dce8b34da53e553f81d" UNIQUE (user_id);
 
 
 --
