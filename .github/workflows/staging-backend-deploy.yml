@@ -2,7 +2,8 @@ name: [STAGING] Compile and push backend image
 
 on:
   push:
-    branches: ["develop"]
+    branches:
+      - develop
 
   workflow_dispatch:
 
