@@ -632,6 +632,7 @@ ALTER TABLE ONLY public.visitor ALTER COLUMN id SET DEFAULT nextval('public.visi
 --
 
 COPY public.billing (id, subscription_date, end_subscription_date, last_payment_date, next_payment_date, created_at, updated_at, plan_id, user_id) FROM stdin;
+1	2025-03-07 09:20:01.979202	\N	2025-03-07 09:20:01.978	2025-04-07 09:20:01.979	2025-03-07 09:20:01.979202	2025-03-07 09:20:01.979202	1	11
 \.
 
 
@@ -657,6 +658,9 @@ COPY public.migrations (id, "timestamp", name) FROM stdin;
 --
 
 COPY public.plan (id, name, price, billing, description, is_suggested, created_at, updated_at) FROM stdin;
+1	CLASSIC	0	Monthly	Description :)	f	2025-03-07 09:18:35.629297	2025-03-07 09:18:35.629297
+2	PREMIUM	10	Monthly	Description :)	t	2025-03-07 09:19:15.838505	2025-03-07 09:19:15.838505
+3	VIP	25	Monthly	Description :)	f	2025-03-07 09:19:29.253932	2025-03-07 09:19:29.253932
 \.
 
 
@@ -681,7 +685,7 @@ COPY public.upload (id, title, message, is_activated, receivers, created_at, upd
 --
 
 COPY public."user" (id, firstname, lastname, email, password, profile_picture_name, role, created_at, updated_at) FROM stdin;
-10	Lucas	Boillot	test@test.com	$argon2id$v=19$m=65536,t=3,p=4$k/3yxCpg4N8RWtiBkcHE6g$tI0SpXXrQ6XKLS66RxkIMetdSduYNE+7M/rSUaUiDLw	\N	user	2025-03-07 09:13:52.41875	2025-03-07 09:13:52.41875
+11	Lucas	Boillot	test@test.com	$argon2id$v=19$m=65536,t=3,p=4$CLrSnvnpZo6vVS7jf6qmgQ$3Hcs2TMv8B3tE7r7jeKYYmrSl+H75MJMMeAyAvefReY	\N	user	2025-03-07 09:20:01.914604	2025-03-07 09:20:01.914604
 \.
 
 
@@ -705,7 +709,7 @@ COPY public.visitor (id, email, email_is_verified, code, created_at, updated_at)
 -- Name: billing_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.billing_id_seq', 1, false);
+SELECT pg_catalog.setval('public.billing_id_seq', 1, true);
 
 
 --
@@ -726,7 +730,7 @@ SELECT pg_catalog.setval('public.migrations_id_seq', 2, true);
 -- Name: plan_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.plan_id_seq', 1, false);
+SELECT pg_catalog.setval('public.plan_id_seq', 3, true);
 
 
 --
@@ -747,7 +751,7 @@ SELECT pg_catalog.setval('public.upload_id_seq', 1, false);
 -- Name: user_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.user_id_seq', 10, true);
+SELECT pg_catalog.setval('public.user_id_seq', 11, true);
 
 
 --
