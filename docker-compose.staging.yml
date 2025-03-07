@@ -1,10 +1,8 @@
 services:
     backend:
         image: lucasboillot/wildtransfer-backend
-        build:
-            dockerfile: Dockerfile.prod
         env_file:
-            - .env
+            - .env.production
         healthcheck:
             test: 'curl --fail --request POST --header ''content-type: application/json'' --url ''http://localhost:4000/graphql'' --data ''{"query":"query { __typename }"}'' || exit 1'
             interval: 1s
@@ -15,16 +13,13 @@ services:
                 condition: service_healthy
     frontend:
         image: lucasboillot/wildtransfer-frontend
-        depends_on:
-            backend:
-                condition: service_healthy
         healthcheck:
             test: "curl --fail --request GET --url 'http://localhost:5173' || exit 1"
             interval: 1s
             timeout: 2s
             retries: 100
     db:
-        image: postgres:16
+        image: postgres
         healthcheck:
             test: [ "CMD-SHELL", "pg_isready -d postgres -U postgres" ]
             interval: 1s
@@ -35,12 +30,11 @@ services:
         volumes:
             - ./init.sql:/docker-entrypoint-initdb.d/init.sql
             - ./postgres-data/data:/var/lib/postgresql/data
+            - ./../production/dumps:/opt/dumps
     files:
         image: lucasboillot/wildtransfer-files
-        build:
-            dockerfile: Dockerfile.prod
         env_file:
-            - .env
+            - .env.production
         healthcheck:
             test: "curl --fail --request GET --url 'http://localhost:3000' || exit 1"
             interval: 1s
@@ -66,4 +60,4 @@ services:
         environment:
             - REDIS_HOSTS=redis
         ports:
-            - "8082:8081"
+            - "8081:8081"
