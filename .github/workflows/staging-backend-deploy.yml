@@ -1,4 +1,4 @@
-name: [STAGING] Compile and push backend image
+name: STAGING Compile and push backend image
 
 on:
   push:
