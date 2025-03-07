@@ -4,12 +4,13 @@ on:
     push:
         branches: ["develop"]
     pull_request:
-        types:
-            - closed
+        types: [closed]
         branches: ["develop"]
 
 jobs:
     build:
+        if: ${{ github.event.pull_request.merged }}
+
         runs-on: ubuntu-latest
 
         steps:
