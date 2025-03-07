@@ -3,6 +3,10 @@ name: [STAGING] Compile and push backend image
 on:
   push:
     branches: ["develop"]
+  pull_request:
+    types:
+      - closed
+    branches: ["develop"]
 
 jobs:
   build:
