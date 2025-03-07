@@ -27,12 +27,26 @@ class UserResolver {
 	// This function is used to create a user for end-to-end testing only
 	async initUserE2E() {
 		try {
+			const user = await User.findOne({
+				where: {email: "test@test.com"}
+			});
+
+			if (user) return
+
+			const password = await argon2.hash("123456");
+
 			await User.create({
 				firstname: "Lucas",
 				lastname: "Boillot",
 				email: "test@test.com",
-				password: "123456",
+				password: password,
 			}).save();
+
+			const newUserId = await User.findOne({
+				where: {email: "test@test.com"}
+			}) as User;
+			
+			await handleUserBilling(newUserId.id, 1);
 		} catch (err) {
 			console.error("Error during user creation", err);
 		}

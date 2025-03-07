@@ -43,6 +43,10 @@ export class File extends BaseEntity {
 	path: string;
 
 	@Field()
+	@Column()
+	test: string;
+
+	@Field()
 	@Column({type: "integer", nullable: true})
 	size: number;
 
