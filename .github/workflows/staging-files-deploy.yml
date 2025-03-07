@@ -3,14 +3,11 @@ name: [STAGING] Compile and push files image
 on:
     push:
         branches: ["develop"]
-    pull_request:
-        types: [closed]
-        branches: ["develop"]
+
+    workflow_dispatch:
 
 jobs:
     build:
-    if: github.event.pull_request.merged == true || github.event_name == 'push'
-
         runs-on: ubuntu-latest
 
         steps:
