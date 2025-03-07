@@ -2,8 +2,8 @@ name: [STAGING] Compile and push files image
 
 on:
     push:
-        branches: ["develop"]
-
+        branches:
+            - develop
     workflow_dispatch:
 
 jobs:
