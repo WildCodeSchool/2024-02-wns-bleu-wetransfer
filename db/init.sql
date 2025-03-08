@@ -239,15 +239,15 @@ SET default_table_access_method = heap;
 --
 
 CREATE TABLE public.billing (
-    id integer NOT NULL,
-    subscription_date timestamp without time zone DEFAULT now() NOT NULL,
-    end_subscription_date timestamp without time zone,
-    next_payment_date timestamp without time zone NOT NULL,
-    last_payment_date timestamp without time zone NOT NULL,
-    created_at timestamp without time zone DEFAULT now() NOT NULL,
-    updated_at timestamp without time zone DEFAULT now() NOT NULL,
-    plan_id integer,
-    user_id integer
+                                id integer NOT NULL,
+                                subscription_date timestamp without time zone DEFAULT now() NOT NULL,
+                                end_subscription_date timestamp without time zone,
+                                next_payment_date timestamp without time zone NOT NULL,
+                                last_payment_date timestamp without time zone NOT NULL,
+                                created_at timestamp without time zone DEFAULT now() NOT NULL,
+                                updated_at timestamp without time zone DEFAULT now() NOT NULL,
+                                plan_id integer,
+                                user_id integer
 );
 
 
@@ -280,17 +280,17 @@ ALTER SEQUENCE public.billing_id_seq OWNED BY public.billing.id;
 --
 
 CREATE TABLE public.file (
-    id integer NOT NULL,
-    file_uid character varying,
-    name character varying,
-    default_name character varying,
-    path character varying,
-    size integer,
-    privacy_status character varying DEFAULT 'public'::character varying,
-    type character varying,
-    created_at timestamp without time zone DEFAULT now() NOT NULL,
-    updated_at timestamp without time zone DEFAULT now() NOT NULL,
-    "uploadId" integer
+                             id integer NOT NULL,
+                             file_uid character varying,
+                             name character varying,
+                             default_name character varying,
+                             path character varying,
+                             size integer,
+                             privacy_status character varying DEFAULT 'public'::character varying,
+                             type character varying,
+                             created_at timestamp without time zone DEFAULT now() NOT NULL,
+                             updated_at timestamp without time zone DEFAULT now() NOT NULL,
+                             "uploadId" integer
 );
 
 
@@ -323,9 +323,9 @@ ALTER SEQUENCE public.file_id_seq OWNED BY public.file.id;
 --
 
 CREATE TABLE public.migrations (
-    id integer NOT NULL,
-    "timestamp" bigint NOT NULL,
-    name character varying NOT NULL
+                                   id integer NOT NULL,
+                                   "timestamp" bigint NOT NULL,
+                                   name character varying NOT NULL
 );
 
 
@@ -358,14 +358,14 @@ ALTER SEQUENCE public.migrations_id_seq OWNED BY public.migrations.id;
 --
 
 CREATE TABLE public.plan (
-    id integer NOT NULL,
-    name character varying NOT NULL,
-    price integer NOT NULL,
-    billing character varying NOT NULL,
-    description character varying NOT NULL,
-    created_at timestamp without time zone DEFAULT now() NOT NULL,
-    updated_at timestamp without time zone DEFAULT now() NOT NULL,
-    is_suggested boolean DEFAULT false
+                             id integer NOT NULL,
+                             name character varying NOT NULL,
+                             price integer NOT NULL,
+                             billing character varying NOT NULL,
+                             description character varying NOT NULL,
+                             created_at timestamp without time zone DEFAULT now() NOT NULL,
+                             updated_at timestamp without time zone DEFAULT now() NOT NULL,
+                             is_suggested boolean DEFAULT false
 );
 
 
@@ -398,12 +398,12 @@ ALTER SEQUENCE public.plan_id_seq OWNED BY public.plan.id;
 --
 
 CREATE TABLE public.report (
-    id integer NOT NULL,
-    comment character varying NOT NULL,
-    status character varying NOT NULL,
-    created_at timestamp without time zone DEFAULT now() NOT NULL,
-    updated_at timestamp without time zone DEFAULT now() NOT NULL,
-    "fileId" integer
+                               id integer NOT NULL,
+                               comment character varying NOT NULL,
+                               status character varying NOT NULL,
+                               created_at timestamp without time zone DEFAULT now() NOT NULL,
+                               updated_at timestamp without time zone DEFAULT now() NOT NULL,
+                               "fileId" integer
 );
 
 
@@ -436,15 +436,15 @@ ALTER SEQUENCE public.report_id_seq OWNED BY public.report.id;
 --
 
 CREATE TABLE public.upload (
-    id integer NOT NULL,
-    title character varying NOT NULL,
-    message text,
-    is_activated boolean DEFAULT true NOT NULL,
-    receivers text[] NOT NULL,
-    created_at timestamp without time zone DEFAULT now() NOT NULL,
-    updated_at timestamp without time zone DEFAULT now() NOT NULL,
-    "visitorId" integer,
-    "userId" integer
+                               id integer NOT NULL,
+                               title character varying NOT NULL,
+                               message text,
+                               is_activated boolean DEFAULT true NOT NULL,
+                               receivers text[] NOT NULL,
+                               created_at timestamp without time zone DEFAULT now() NOT NULL,
+                               updated_at timestamp without time zone DEFAULT now() NOT NULL,
+                               "visitorId" integer,
+                               "userId" integer
 );
 
 
@@ -477,15 +477,15 @@ ALTER SEQUENCE public.upload_id_seq OWNED BY public.upload.id;
 --
 
 CREATE TABLE public."user" (
-    id integer NOT NULL,
-    firstname character varying NOT NULL,
-    lastname character varying NOT NULL,
-    email character varying NOT NULL,
-    password character varying NOT NULL,
-    profile_picture_name character varying,
-    role character varying DEFAULT 'user'::character varying NOT NULL,
-    created_at timestamp without time zone DEFAULT now() NOT NULL,
-    updated_at timestamp without time zone DEFAULT now() NOT NULL
+                               id integer NOT NULL,
+                               firstname character varying NOT NULL,
+                               lastname character varying NOT NULL,
+                               email character varying NOT NULL,
+                               password character varying NOT NULL,
+                               profile_picture_name character varying,
+                               role character varying DEFAULT 'user'::character varying NOT NULL,
+                               created_at timestamp without time zone DEFAULT now() NOT NULL,
+                               updated_at timestamp without time zone DEFAULT now() NOT NULL
 );
 
 
@@ -496,8 +496,8 @@ ALTER TABLE public."user" OWNER TO postgres;
 --
 
 CREATE TABLE public.user_access_file (
-    file_id integer NOT NULL,
-    user_id integer NOT NULL
+                                         file_id integer NOT NULL,
+                                         user_id integer NOT NULL
 );
 
 
@@ -530,12 +530,12 @@ ALTER SEQUENCE public.user_id_seq OWNED BY public."user".id;
 --
 
 CREATE TABLE public.visitor (
-    id integer NOT NULL,
-    email character varying NOT NULL,
-    email_is_verified boolean DEFAULT false NOT NULL,
-    code integer DEFAULT 123456 NOT NULL,
-    created_at timestamp without time zone DEFAULT now() NOT NULL,
-    updated_at timestamp without time zone DEFAULT now() NOT NULL
+                                id integer NOT NULL,
+                                email character varying NOT NULL,
+                                email_is_verified boolean DEFAULT false NOT NULL,
+                                code integer DEFAULT 123456 NOT NULL,
+                                created_at timestamp without time zone DEFAULT now() NOT NULL,
+                                updated_at timestamp without time zone DEFAULT now() NOT NULL
 );
 
 
@@ -624,8 +624,6 @@ ALTER TABLE ONLY public.visitor ALTER COLUMN id SET DEFAULT nextval('public.visi
 --
 
 COPY public.billing (id, subscription_date, end_subscription_date, next_payment_date, last_payment_date, created_at, updated_at, plan_id, user_id) FROM stdin;
-86	2025-01-10 14:38:21.563421	\N	2025-02-10 14:38:21.563	2025-01-10 14:38:21.562	2025-01-10 14:38:21.563421	2025-01-10 14:38:21.563421	1	53
-87	2025-01-19 16:56:05.224293	\N	2025-02-19 16:56:05.224	2025-01-19 16:56:05.223	2025-01-19 16:56:05.224293	2025-01-19 16:56:05.224293	1	142
 \.
 
 
@@ -634,9 +632,6 @@ COPY public.billing (id, subscription_date, end_subscription_date, next_payment_
 --
 
 COPY public.file (id, file_uid, name, default_name, path, size, privacy_status, type, created_at, updated_at, "uploadId") FROM stdin;
-11	d3a061bd-4436-4cec-bba2-3bd8cbbd8fa1	Screenshot 2024-12-24 at 16.23.08.png	d3a061bd-4436-4cec-bba2-3bd8cbbd8fa1.png	/app/src/uploads/final/d3a061bd-4436-4cec-bba2-3bd8cbbd8fa1.png	106479	public	image/png	2025-01-10 13:12:06.496047	2025-01-10 13:12:06.496047	5
-12	478e26b5-27da-4f72-9cd5-8be529e98135	Screenshot 2024-12-24 at 16.18.50.png	478e26b5-27da-4f72-9cd5-8be529e98135.png	/app/src/uploads/final/478e26b5-27da-4f72-9cd5-8be529e98135.png	261735	public	image/png	2025-01-10 13:13:39.626239	2025-01-10 13:13:39.626239	6
-13	998dd17d-6ace-49e0-b647-58657fdb5a25	Screenshot 2024-12-11 at 15.39.19.png	998dd17d-6ace-49e0-b647-58657fdb5a25.png	/app/src/uploads/final/998dd17d-6ace-49e0-b647-58657fdb5a25.png	261899	public	image/png	2025-01-10 14:36:48.883986	2025-01-10 14:36:48.883986	7
 \.
 
 
@@ -672,9 +667,6 @@ COPY public.report (id, comment, status, created_at, updated_at, "fileId") FROM 
 --
 
 COPY public.upload (id, title, message, is_activated, receivers, created_at, updated_at, "visitorId", "userId") FROM stdin;
-5	lucas	lucas	t	{lucasnimes30000@gmail.com}	2025-01-10 13:12:06.540207	2025-01-10 13:12:06.540207	\N	53
-6	Default Title	Default Message	t	{lucasnimes30000@gmail.com}	2025-01-10 13:13:39.665037	2025-01-10 13:13:39.665037	\N	53
-7	lucas	lucas	t	{lucasnimes30000@gmail.com}	2025-01-10 14:36:48.917708	2025-01-10 14:36:48.917708	\N	53
 \.
 
 
@@ -683,81 +675,6 @@ COPY public.upload (id, title, message, is_activated, receivers, created_at, upd
 --
 
 COPY public."user" (id, firstname, lastname, email, password, profile_picture_name, role, created_at, updated_at) FROM stdin;
-53	lucas	lucas	lucasnimes30000@gmail.com	$argon2id$v=19$m=65536,t=3,p=4$LR2QqpvsMnpQ9JLFEroQ1A$xYacM7zWdY4oljLipnUvLVBnjCB3blLd7fZDOwp+H7I	\N	user	2025-01-07 09:38:17.014035	2025-01-07 09:38:17.014035
-54	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-07 09:40:38.976366	2025-01-07 09:40:38.976366
-55	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-07 09:41:40.989144	2025-01-07 09:41:40.989144
-56	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-07 09:47:56.064186	2025-01-07 09:47:56.064186
-57	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-07 09:54:28.28189	2025-01-07 09:54:28.28189
-58	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-07 09:55:34.041662	2025-01-07 09:55:34.041662
-59	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-07 09:55:35.28449	2025-01-07 09:55:35.28449
-60	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-07 10:00:08.027815	2025-01-07 10:00:08.027815
-61	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-07 10:00:24.596973	2025-01-07 10:00:24.596973
-62	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-07 10:01:22.318288	2025-01-07 10:01:22.318288
-63	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-07 10:02:01.251147	2025-01-07 10:02:01.251147
-64	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-07 10:02:07.340461	2025-01-07 10:02:07.340461
-65	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-07 10:02:17.859252	2025-01-07 10:02:17.859252
-66	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-07 10:02:50.890648	2025-01-07 10:02:50.890648
-67	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-07 10:11:56.623198	2025-01-07 10:11:56.623198
-100	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-07 10:13:40.365834	2025-01-07 10:13:40.365834
-101	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-07 10:20:39.24375	2025-01-07 10:20:39.24375
-102	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-07 10:20:43.090203	2025-01-07 10:20:43.090203
-103	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-07 10:22:34.634218	2025-01-07 10:22:34.634218
-104	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-07 10:22:53.969426	2025-01-07 10:22:53.969426
-105	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-07 10:26:46.079507	2025-01-07 10:26:46.079507
-106	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-07 10:27:03.570299	2025-01-07 10:27:03.570299
-107	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-07 10:27:22.828872	2025-01-07 10:27:22.828872
-108	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-07 10:29:00.177416	2025-01-07 10:29:00.177416
-109	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-07 10:31:08.752161	2025-01-07 10:31:08.752161
-110	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-07 10:31:23.112469	2025-01-07 10:31:23.112469
-111	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-07 10:31:45.569297	2025-01-07 10:31:45.569297
-112	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-07 10:32:12.330642	2025-01-07 10:32:12.330642
-113	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-07 10:32:32.176884	2025-01-07 10:32:32.176884
-114	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-07 10:32:55.566454	2025-01-07 10:32:55.566454
-115	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-07 10:34:00.179412	2025-01-07 10:34:00.179412
-116	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-07 10:34:10.213148	2025-01-07 10:34:10.213148
-117	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-07 10:34:22.210837	2025-01-07 10:34:22.210837
-118	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-07 10:37:03.5514	2025-01-07 10:37:03.5514
-119	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-07 10:37:57.61025	2025-01-07 10:37:57.61025
-120	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-07 10:38:14.615905	2025-01-07 10:38:14.615905
-121	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-07 10:38:53.226085	2025-01-07 10:38:53.226085
-122	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-07 10:39:51.37516	2025-01-07 10:39:51.37516
-123	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-07 13:06:30.794629	2025-01-07 13:06:30.794629
-124	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-10 13:04:45.012768	2025-01-10 13:04:45.012768
-125	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-10 13:10:27.31264	2025-01-10 13:10:27.31264
-126	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-10 13:14:33.490992	2025-01-10 13:14:33.490992
-127	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-10 13:16:53.873329	2025-01-10 13:16:53.873329
-128	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-19 16:42:27.388377	2025-01-19 16:42:27.388377
-129	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-19 16:43:44.292952	2025-01-19 16:43:44.292952
-130	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-19 16:44:16.01883	2025-01-19 16:44:16.01883
-131	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-19 16:45:00.464994	2025-01-19 16:45:00.464994
-132	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-19 16:45:24.040301	2025-01-19 16:45:24.040301
-133	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-19 16:45:34.237577	2025-01-19 16:45:34.237577
-134	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-19 16:45:51.661098	2025-01-19 16:45:51.661098
-135	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-19 16:46:20.836651	2025-01-19 16:46:20.836651
-136	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-19 16:46:40.88446	2025-01-19 16:46:40.88446
-137	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-19 16:47:11.463341	2025-01-19 16:47:11.463341
-138	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-19 16:47:20.900668	2025-01-19 16:47:20.900668
-139	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-19 16:47:28.23716	2025-01-19 16:47:28.23716
-140	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-19 16:48:03.421674	2025-01-19 16:48:03.421674
-141	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-19 16:55:06.585616	2025-01-19 16:55:06.585616
-142	aa	aa	aa@aa.com	$argon2id$v=19$m=65536,t=3,p=4$k10jxGFYeb0LShfwnB9npQ$dgkuTEGMkX1bla5NP509OrjdBZscOHsXkOANKTuWhFU	\N	user	2025-01-19 16:56:05.206466	2025-01-19 16:56:05.206466
-143	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-19 17:00:56.593433	2025-01-19 17:00:56.593433
-144	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-19 17:03:34.922346	2025-01-19 17:03:34.922346
-145	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-27 19:23:13.465292	2025-01-27 19:23:13.465292
-146	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-27 19:25:20.964846	2025-01-27 19:25:20.964846
-147	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-27 19:26:24.882699	2025-01-27 19:26:24.882699
-148	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-27 19:28:14.368804	2025-01-27 19:28:14.368804
-149	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-27 19:28:38.949044	2025-01-27 19:28:38.949044
-150	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-27 19:49:09.116995	2025-01-27 19:49:09.116995
-151	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-27 19:50:51.450851	2025-01-27 19:50:51.450851
-152	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-27 20:06:27.961972	2025-01-27 20:06:27.961972
-153	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-27 20:11:01.926842	2025-01-27 20:11:01.926842
-154	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-27 20:12:12.885406	2025-01-27 20:12:12.885406
-155	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-27 20:37:16.865224	2025-01-27 20:37:16.865224
-156	Lucas	Boillot	test@test.com	123456	\N	user	2025-01-29 21:56:08.071986	2025-01-29 21:56:08.071986
-157	Lucas	Boillot	test@test.com	123456	\N	user	2025-02-01 11:09:36.276296	2025-02-01 11:09:36.276296
-158	Lucas	Boillot	test@test.com	123456	\N	user	2025-02-01 11:29:36.409328	2025-02-01 11:29:36.409328
-159	Lucas	Boillot	test@test.com	123456	\N	user	2025-02-03 13:27:06.530373	2025-02-03 13:27:06.530373
 \.
 
 
@@ -766,8 +683,6 @@ COPY public."user" (id, firstname, lastname, email, password, profile_picture_na
 --
 
 COPY public.user_access_file (file_id, user_id) FROM stdin;
-11	53
-12	53
 \.
 
 
@@ -1000,4 +915,3 @@ ALTER TABLE ONLY public.user_access_file
 --
 -- PostgreSQL database cluster dump complete
 --
-

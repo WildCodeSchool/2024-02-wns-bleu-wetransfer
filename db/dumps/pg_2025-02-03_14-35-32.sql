@@ -239,15 +239,15 @@ SET default_table_access_method = heap;
 --
 
 CREATE TABLE public.billing (
-    id integer NOT NULL,
-    subscription_date timestamp without time zone DEFAULT now() NOT NULL,
-    end_subscription_date timestamp without time zone,
-    next_payment_date timestamp without time zone NOT NULL,
-    last_payment_date timestamp without time zone NOT NULL,
-    created_at timestamp without time zone DEFAULT now() NOT NULL,
-    updated_at timestamp without time zone DEFAULT now() NOT NULL,
-    plan_id integer,
-    user_id integer
+                                id integer NOT NULL,
+                                subscription_date timestamp without time zone DEFAULT now() NOT NULL,
+                                end_subscription_date timestamp without time zone,
+                                next_payment_date timestamp without time zone NOT NULL,
+                                last_payment_date timestamp without time zone NOT NULL,
+                                created_at timestamp without time zone DEFAULT now() NOT NULL,
+                                updated_at timestamp without time zone DEFAULT now() NOT NULL,
+                                plan_id integer,
+                                user_id integer
 );
 
 
@@ -280,17 +280,17 @@ ALTER SEQUENCE public.billing_id_seq OWNED BY public.billing.id;
 --
 
 CREATE TABLE public.file (
-    id integer NOT NULL,
-    file_uid character varying,
-    name character varying,
-    default_name character varying,
-    path character varying,
-    size integer,
-    privacy_status character varying DEFAULT 'public'::character varying,
-    type character varying,
-    created_at timestamp without time zone DEFAULT now() NOT NULL,
-    updated_at timestamp without time zone DEFAULT now() NOT NULL,
-    "uploadId" integer
+                             id integer NOT NULL,
+                             file_uid character varying,
+                             name character varying,
+                             default_name character varying,
+                             path character varying,
+                             size integer,
+                             privacy_status character varying DEFAULT 'public'::character varying,
+                             type character varying,
+                             created_at timestamp without time zone DEFAULT now() NOT NULL,
+                             updated_at timestamp without time zone DEFAULT now() NOT NULL,
+                             "uploadId" integer
 );
 
 
@@ -323,9 +323,9 @@ ALTER SEQUENCE public.file_id_seq OWNED BY public.file.id;
 --
 
 CREATE TABLE public.migrations (
-    id integer NOT NULL,
-    "timestamp" bigint NOT NULL,
-    name character varying NOT NULL
+                                   id integer NOT NULL,
+                                   "timestamp" bigint NOT NULL,
+                                   name character varying NOT NULL
 );
 
 
@@ -358,14 +358,14 @@ ALTER SEQUENCE public.migrations_id_seq OWNED BY public.migrations.id;
 --
 
 CREATE TABLE public.plan (
-    id integer NOT NULL,
-    name character varying NOT NULL,
-    price integer NOT NULL,
-    billing character varying NOT NULL,
-    description character varying NOT NULL,
-    created_at timestamp without time zone DEFAULT now() NOT NULL,
-    updated_at timestamp without time zone DEFAULT now() NOT NULL,
-    is_suggested boolean DEFAULT false
+                             id integer NOT NULL,
+                             name character varying NOT NULL,
+                             price integer NOT NULL,
+                             billing character varying NOT NULL,
+                             description character varying NOT NULL,
+                             created_at timestamp without time zone DEFAULT now() NOT NULL,
+                             updated_at timestamp without time zone DEFAULT now() NOT NULL,
+                             is_suggested boolean DEFAULT false
 );
 
 
@@ -398,12 +398,12 @@ ALTER SEQUENCE public.plan_id_seq OWNED BY public.plan.id;
 --
 
 CREATE TABLE public.report (
-    id integer NOT NULL,
-    comment character varying NOT NULL,
-    status character varying NOT NULL,
-    created_at timestamp without time zone DEFAULT now() NOT NULL,
-    updated_at timestamp without time zone DEFAULT now() NOT NULL,
-    "fileId" integer
+                               id integer NOT NULL,
+                               comment character varying NOT NULL,
+                               status character varying NOT NULL,
+                               created_at timestamp without time zone DEFAULT now() NOT NULL,
+                               updated_at timestamp without time zone DEFAULT now() NOT NULL,
+                               "fileId" integer
 );
 
 
@@ -436,15 +436,15 @@ ALTER SEQUENCE public.report_id_seq OWNED BY public.report.id;
 --
 
 CREATE TABLE public.upload (
-    id integer NOT NULL,
-    title character varying NOT NULL,
-    message text,
-    is_activated boolean DEFAULT true NOT NULL,
-    receivers text[] NOT NULL,
-    created_at timestamp without time zone DEFAULT now() NOT NULL,
-    updated_at timestamp without time zone DEFAULT now() NOT NULL,
-    "visitorId" integer,
-    "userId" integer
+                               id integer NOT NULL,
+                               title character varying NOT NULL,
+                               message text,
+                               is_activated boolean DEFAULT true NOT NULL,
+                               receivers text[] NOT NULL,
+                               created_at timestamp without time zone DEFAULT now() NOT NULL,
+                               updated_at timestamp without time zone DEFAULT now() NOT NULL,
+                               "visitorId" integer,
+                               "userId" integer
 );
 
 
@@ -477,15 +477,15 @@ ALTER SEQUENCE public.upload_id_seq OWNED BY public.upload.id;
 --
 
 CREATE TABLE public."user" (
-    id integer NOT NULL,
-    firstname character varying NOT NULL,
-    lastname character varying NOT NULL,
-    email character varying NOT NULL,
-    password character varying NOT NULL,
-    profile_picture_name character varying,
-    role character varying DEFAULT 'user'::character varying NOT NULL,
-    created_at timestamp without time zone DEFAULT now() NOT NULL,
-    updated_at timestamp without time zone DEFAULT now() NOT NULL
+                               id integer NOT NULL,
+                               firstname character varying NOT NULL,
+                               lastname character varying NOT NULL,
+                               email character varying NOT NULL,
+                               password character varying NOT NULL,
+                               profile_picture_name character varying,
+                               role character varying DEFAULT 'user'::character varying NOT NULL,
+                               created_at timestamp without time zone DEFAULT now() NOT NULL,
+                               updated_at timestamp without time zone DEFAULT now() NOT NULL
 );
 
 
@@ -496,8 +496,8 @@ ALTER TABLE public."user" OWNER TO postgres;
 --
 
 CREATE TABLE public.user_access_file (
-    file_id integer NOT NULL,
-    user_id integer NOT NULL
+                                         file_id integer NOT NULL,
+                                         user_id integer NOT NULL
 );
 
 
@@ -530,12 +530,12 @@ ALTER SEQUENCE public.user_id_seq OWNED BY public."user".id;
 --
 
 CREATE TABLE public.visitor (
-    id integer NOT NULL,
-    email character varying NOT NULL,
-    email_is_verified boolean DEFAULT false NOT NULL,
-    code integer DEFAULT 123456 NOT NULL,
-    created_at timestamp without time zone DEFAULT now() NOT NULL,
-    updated_at timestamp without time zone DEFAULT now() NOT NULL
+                                id integer NOT NULL,
+                                email character varying NOT NULL,
+                                email_is_verified boolean DEFAULT false NOT NULL,
+                                code integer DEFAULT 123456 NOT NULL,
+                                created_at timestamp without time zone DEFAULT now() NOT NULL,
+                                updated_at timestamp without time zone DEFAULT now() NOT NULL
 );
 
 
@@ -915,4 +915,3 @@ ALTER TABLE ONLY public.user_access_file
 --
 -- PostgreSQL database cluster dump complete
 --
-
