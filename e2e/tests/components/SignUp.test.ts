@@ -28,7 +28,7 @@ test("Test registering new user", async ({page}) => {
 test("Test registering existing user", async ({page}) => {
 	const firstname = "Martin";
 	const lastname = "Weill";
-	const email = "martin@gmail.com";
+	const email = "test@test.com";
 	const password = "password123456?";
 	const confirmPassword = "password123456?";
 
